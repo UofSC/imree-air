@@ -17,7 +17,8 @@ package imree
 	 */
 	public class Main extends Sprite 
 	{
-		
+		public var connection:serverConnect;
+		public var stack:exhibit;
 		public function Main():void 
 		{
 			stage.scaleMode = StageScaleMode.NO_SCALE;
@@ -25,13 +26,12 @@ package imree
 			stage.addEventListener(Event.DEACTIVATE, deactivate);
 			Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
 			
+			stage.addChild(this);
 			
-			var current_show:exhibit = new exhibit();
-			current_show.api_url = "http://localhost/imree-php/api/";
+			connection = new serverConnect("http://imree.tcl.sc.edu/imree/api/");
 			
-			stage.addChild(current_show);
-			
-			
+			stack = new exhibit();
+			this.addChild(stack);
 			
 		}
 		

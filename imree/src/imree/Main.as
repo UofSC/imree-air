@@ -28,7 +28,7 @@ package imree
 			
 			stage.addChild(this);
 			
-			connection = new serverConnect("http://imree.tcl.sc.edu/imree/api/");
+			connection = new serverConnect("http://imree.tcl.sc.edu/imree-php/api/");
 			
 			stack = new exhibit();
 			this.addChild(stack);

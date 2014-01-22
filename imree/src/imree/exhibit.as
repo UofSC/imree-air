@@ -23,6 +23,7 @@ package imree
 			
 			//this is an example query that can run against index.php inside imree-php/air/
 			main.connection.server_command("group", '', test_complete);
+			
 			function test_complete(xml:XML):void {
 				trace(xml);
 			}

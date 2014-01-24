@@ -39,13 +39,19 @@ package imree
 				request.method = URLRequestMethod.POST;
 				request.data = post_data;				
 				
-			var xmlloader:XMLLoader = new XMLLoader(request, { onComplete:getxmldata } );
+			var xmlloader:XMLLoader = new XMLLoader(request, { onComplete:getxmldata, onFail:failed } );
 			xmlloader.load();
 			
 			function getxmldata(e:LoaderEvent):void {
 				if (onCompleteFunction !== null) {
 					onCompleteFunction(e.target.content);
 				}
+			}
+			function failed(e:LoaderEvent):void {
+				trace("Failed to load something");
+				trace(XMLLoader(e.currentTarget).url);
+				
+				
 			}
 		}
 	}

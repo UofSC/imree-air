@@ -6,6 +6,8 @@ package imree
 	import flash.net.URLRequest;
 	import flash.net.URLRequestMethod;
 	import flash.net.URLVariables;
+	import imree.data_helpers.data_asset;
+	import imree.data_helpers.data_group;
 	
 	/**
 	 * ...
@@ -22,10 +24,11 @@ package imree
 			main = Main(this.parent);
 			
 			//this is an example query that can run against index.php inside imree-php/air/
-			main.connection.server_command("group", '', test_complete);
+			main.connection.server_command("group", '1', test_complete);
 			
 			function test_complete(xml:XML):void {
-				trace(xml);
+				var dat:data_group = new data_group(xml);
+				var asset:data_asset = new data_asset(xml);
 			}
 			
 		}

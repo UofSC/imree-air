@@ -20,7 +20,7 @@ package imree.data_helpers
 				
 		public function data_asset(asset_xml:XML) 
 		{
-			
+			this.xml = asset_xml;
 			this.asset_group_assignment_id = asset_xml.asset_group_assignment_id;
 			this.asset_name = asset_xml.asset_name;
 			this.asset_id = asset_xml.asset_id;
@@ -30,8 +30,10 @@ package imree.data_helpers
 			this.asset_parent_id = asset_xml.asset_parent_id;
 			this.asset_date_added = asset_xml.asset_date_added;
 			this.asset_date_created = asset_xml.asset_date_created;
+			
+			
+			}
 		}
 		
 	}
 
-}

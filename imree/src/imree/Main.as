@@ -30,6 +30,10 @@ package imree
 			
 			connection = new serverConnect("http://imree.tcl.sc.edu/imree-php/api/");
 			
+			var layouts:layout = new layout();
+			stage.addChild(layouts);
+			var layout_answer = layouts.asset_grid_solver();
+			
 			stack = new exhibit();
 			this.addChild(stack);
 			

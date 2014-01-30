@@ -30,12 +30,10 @@ package imree
 			
 			connection = new serverConnect("http://imree.tcl.sc.edu/imree-php/api/");
 			
-			var layouts:layout = new layout();
-			stage.addChild(layouts);
-			var layout_answer = layouts.asset_grid_solver();
-			
-			stack = new exhibit();
-			this.addChild(stack);
+			var sample_string:String = "<?xml version='1.0' encoding='utf-8' ?><flow:TextFlow whiteSpaceCollapse='preserve' xmlns:flow='http://ns.adobe.com/textLayout/2008'><flow:p><flow:span>Hoodie vero enim, XOXO Bushwick non </flow:span><flow:span textDecoration=\"underline\">8-bit</flow:span><flow:span> meh kitsch direct trade. Brooklyn authentic aesthetic, cillum paleo 8-bit PBR&B biodiesel nisi skateboard cornhole pork belly freegan ad. Pork belly distillery authentic irony aliquip cornhole. Odd Future art party ethnic, sustainable flannel fixie pork belly placeat gentrify yr flexitarian letterpress. Pop-up laboris synth stumptown Marfa messenger bag. Sunt dolore selfies eiusmod tofu assumenda. Chillwave small batch cornhole veniam duis.</flow:span></flow:p></flow:TextFlow>";
+			var Format:textFont = new textFont('OpenSansLight',18);
+			var txt:text = new text(sample_string, 400, Format);
+			stage.addChild(txt);
 			
 		}
 		

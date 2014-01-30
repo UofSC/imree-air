@@ -48,8 +48,10 @@ package imree
 				}
 			}
 			function failed(e:LoaderEvent):void {
-				trace("Failed to load something");
-				trace(XMLLoader(e.currentTarget).url + " Command:"+command + " Parameter:"+command_parameter);
+				trace("XMLLoader faild! " + XMLLoader(e.currentTarget).url + " Command:" + command + " Parameter:" + command_parameter);
+				if (String(XMLLoader(e.currentTarget).content).length > 0) {
+					trace("XML::\n" + XMLLoader(e.currentTarget).content);
+				}
 			}
 		}
 	}

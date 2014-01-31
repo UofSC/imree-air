@@ -50,10 +50,24 @@ package imree
 		
 		private function load_imree():void {
 			//The following lines are not part of the final project, I'm just testing the text and textfont classes
-			var sample_string:String = "<?xml version='1.0' encoding='utf-8' ?><flow:TextFlow whiteSpaceCollapse='preserve' xmlns:flow='http://ns.adobe.com/textLayout/2008'><flow:p><flow:span>Hoodie vero enim, XOXO Bushwick non </flow:span><flow:span textDecoration=\"underline\">8-bit</flow:span><flow:span> meh kitsch direct trade. Brooklyn authentic aesthetic, cillum paleo 8-bit PBR&B biodiesel nisi skateboard cornhole pork belly freegan ad. Pork belly distillery authentic irony aliquip cornhole. Odd Future art party ethnic, sustainable flannel fixie pork belly placeat gentrify yr flexitarian letterpress. Pop-up laboris synth stumptown Marfa messenger bag. Sunt dolore selfies eiusmod tofu assumenda. Chillwave small batch cornhole veniam duis.</flow:span></flow:p></flow:TextFlow>";
+			
+			/*
+			 * var sample_string:String = "<?xml version='1.0' encoding='utf-8' ?><flow:TextFlow whiteSpaceCollapse='preserve' xmlns:flow='http://ns.adobe.com/textLayout/2008'><flow:p><flow:span>Hoodie vero enim, XOXO Bushwick non </flow:span><flow:span textDecoration=\"underline\">8-bit</flow:span><flow:span> meh kitsch direct trade. Brooklyn authentic aesthetic, cillum paleo 8-bit PBR&B biodiesel nisi skateboard cornhole pork belly freegan ad. Pork belly distillery authentic irony aliquip cornhole. Odd Future art party ethnic, sustainable flannel fixie pork belly placeat gentrify yr flexitarian letterpress. Pop-up laboris synth stumptown Marfa messenger bag. Sunt dolore selfies eiusmod tofu assumenda. Chillwave small batch cornhole veniam duis.</flow:span></flow:p></flow:TextFlow>";
 			var Format:textFont = new textFont('OpenSansLight',18);
 			var txt:text = new text(sample_string, 400, Format);
 			stage.addChild(txt);
+			*/
+			
+			var items:Vector.<accordion_item> = new Vector.<accordion_item>();
+			items.push(new accordion_item("Sample headline 1", "Aasdf as dfasdfasdfa sdf asdf asdf asdf asdf asdf adsf asdf asdf"));
+			items.push(new accordion_item("Sample headline 2", "Aasdf as dfasdfasdfa sdf asdf asdf asdf asdf asdf adsf asdf asdf"));
+			items.push(new accordion_item("Sample headline 3", "Aasdf as dfasdfasdfa sdf asdf asdf asdf asdf asdf adsf asdf asdf"));
+			items.push(new accordion_item("Sample headline 4", "Aasdf as dfasdfasdfa sdf asdf asdf asdf asdf asdf adsf asdf asdf"));
+			items.push(new accordion_item("Sample headline 5", "Aasdf as dfasdfasdfa sdf asdf asdf asdf asdf asdf adsf asdf asdf"));
+			items.push(new accordion_item("Sample headline 6", "Aasdf as dfasdfasdfa sdf asdf asdf asdf asdf asdf adsf asdf asdf"));
+			items.push(new accordion_item("Sample headline 7", "Aasdf poop dfasdfasdfa sdf asdf asdf asdf asdf asdf adsf asdf asdf"));
+			var acc:accordion = new accordion(items);
+			stage.addChild(acc);
 		}
 		
 		private function deactivate(e:Event):void 

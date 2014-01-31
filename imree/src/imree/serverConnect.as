@@ -40,7 +40,7 @@ package imree
 				request.data = post_data;				
 				
 			var xmlloader:XMLLoader = new XMLLoader(request, { onComplete:getxmldata, onFail:failed } );
-			xmlloader.load();
+			xmlloader.load(true);
 			
 			function getxmldata(e:LoaderEvent):void {
 				if (onCompleteFunction !== null) {
@@ -49,9 +49,7 @@ package imree
 			}
 			function failed(e:LoaderEvent):void {
 				trace("Failed to load something");
-				trace(XMLLoader(e.currentTarget).url);
-				
-				
+				trace(XMLLoader(e.currentTarget).url + " Command:"+command + " Parameter:"+command_parameter);
 			}
 		}
 	}

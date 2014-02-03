@@ -25,6 +25,7 @@ package imree
 		public var name:String;
 		public var leading:Number;
 		public var align:String;
+		public var padding:Number;
 				
 		[Embed(source = "../fonts/AbrahamLincoln.ttf", fontName = 'AbrahamLincoln')] public var AbrahamLincolnFont:Class;
 		[Embed(source = "../fonts/Lavanderia Delicate.otf", fontName = 'LavanderiaDelicate')] public var LavanderiaDelicateFont:Class;
@@ -60,6 +61,7 @@ package imree
 			this.underline = false;
 			this.leading = 1.25;
 			this.align = TextAlign.LEFT;
+			this.padding = 5;
 			
 		}
 		public function describe():TextLayoutFormat {

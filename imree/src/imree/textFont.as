@@ -61,7 +61,7 @@ package imree
 			this.underline = false;
 			this.leading = 1.25;
 			this.align = TextAlign.LEFT;
-			this.padding = 5;
+			this.padding = 0;
 			
 		}
 		public function describe():TextLayoutFormat {

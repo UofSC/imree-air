@@ -5,6 +5,7 @@ package imree
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
+	import flash.display.Stage;
 	import flash.events.MouseEvent;
 	import flash.ui.Multitouch;
 	import flash.ui.MultitouchInputMode;
@@ -44,7 +45,7 @@ package imree
 		}
 		
 		private function load_signage():void {
-			var stack:signage_stack = new signage_stack(connection, stage.stageWidth, stage.stageHeight);
+			var stack:signage_stack = new signage_stack(connection, this.stage.stageWidth, this.stage.stageHeight);
 			stage.addChild(stack);
 		}
 		

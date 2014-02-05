@@ -28,7 +28,7 @@ package imree
 		 * We're using http://www.adobe.com/devnet-apps/tlf/demo/ to help us write 
 		 */
 		public var format:textFont;
-		public function text(str:String, width:int = 300, Format:textFont = null) {
+		public function text(str:String, width:int = 300, Format:textFont = null, height:Number = 10000) {
 			if (Format === null) {
 				Format = new textFont();
 			}
@@ -43,9 +43,8 @@ package imree
 			textFlow.paddingTop = Format.padding;
 			textFlow.paddingLeft = Format.padding;
 			textFlow.paddingRight = Format.padding;
-			
 			var controller:ContainerController = new ContainerController(this, 500, 200);
-			controller.setCompositionSize(width, 9999);
+			controller.setCompositionSize(width,height);
 			textFlow.flowComposer.addController(controller);
             textFlow.flowComposer.updateAllControllers();
 

@@ -17,10 +17,14 @@ package imree.shortcuts
 		 * @param	color
 		 * @param	alpha
 		 */
-		public function box(width:Number, height:Number, color:uint = 0x000000, alpha:Number = 0, border:Boolean = false) {
+		public function box(width:Number, height:Number, color:uint = 0x000000, alpha:Number = 0, border_width:* = 0, border_color:uint = 0x000000) {
+			if (border_width === true) {
+				border_width = 1;
+			}
+			
 			this.graphics.beginFill(color, alpha);
-			if (border) {
-				this.graphics.lineStyle(1, 0x000000);
+			if (border_width > 0) {
+				this.graphics.lineStyle(border_width, border_color);
 			}
 			this.graphics.drawRect(0, 0, width, height);
 			this.graphics.endFill();

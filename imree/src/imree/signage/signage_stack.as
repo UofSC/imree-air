@@ -1,6 +1,9 @@
 package imree.signage 
 {
 	import flash.display.Sprite;
+	import imree.data_helpers.position_data;
+	import imree.layout;
+	import imree.Main;
 	import imree.serverConnect;
 	import imree.signage.signage_feed_data;
 	import com.greensock.loading.XMLLoader;
@@ -23,12 +26,20 @@ package imree.signage
 		public var feeds_ready:int;
 		public var feeds:Vector.<signage_feed_data>;
 		public var feeds_active:Vector.<signage_feed_data>;
+		public var stack:Vector.<signage_feed_display>;
+		public var target_w:int;
+		public var target_h:int;
+		
 		private var server:serverConnect;
+		private var our_parent:Main;
 		
 		
-		public function signage_stack(server:serverConnect, width:Number=500, height:Number=500)
+		public function signage_stack(server:serverConnect, w:int = 500, h:int = 500)
 		{
 			this.server = server;
+			this.our_parent = Main(this.parent);
+			this.target_w = w;
+			this.target_h = h;
 			this.feeds = new Vector.<signage_feed_data>();
 			server.server_command("signage_items", '', signage_items_xml_loaded);
 		}
@@ -79,8 +90,18 @@ package imree.signage
 		
 		public function draw():void {
 			this.feeds_active = this.feeds.filter(feed_has_items);
+			var solver:Vector.<position_data> = new layout().static_column_solver(this.feeds_active.length, this.target_w, this.target_h, 10);
+			this.stack = new Vector.<signage_feed_display>();
+			var i:int = 0;
 			for each(var feed:signage_feed_data in this.feeds_active) {
 				trace("We're loading feed name " + feed.name);
+				var feed_display:signage_feed_display = new signage_feed_display(feed, solver[i].width, solver[i].height, 'static_column');
+				this.addChild(feed_display);
+				feed_display.draw();
+				feed_display.x = solver[i].x;
+				feed_display.y = solver[i].y;
+				this.stack.push(feed_display);
+				i++;
 			}
 		}
 		public function feed_has_items(item:signage_feed_data,index:int,arr:Vector.<signage_feed_data>):Boolean {

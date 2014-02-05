@@ -55,10 +55,10 @@ package imree.signage
 					
 					for each(var item:XML in x.descendants(t.node_item)) {
 						var item_data:signage_feed_item_data = new signage_feed_item_data();
-							item_data.headline = item[t.node_headline] as String;
-							item_data.description = item[t.node_desc] as String;
-							item_data.image_url = item[t.node_img] as String;
-							item_data.location = item[t.node_location] as String;
+							item_data.headline = String(item[t.node_headline]);
+							item_data.description = String(item[t.node_desc]);
+							item_data.image_url = String(item[t.node_img]);
+							item_data.location = String(item[t.node_location]);
 							if (item[t.node_datetime].toString().length === 19) {
 								var date_help:date_helper = new date_helper(item[t.node_datetime].toString());
 								item_data.datetime = date_help.from_mysql();

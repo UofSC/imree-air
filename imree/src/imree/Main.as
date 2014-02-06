@@ -9,6 +9,7 @@ package imree
 	import flash.events.MouseEvent;
 	import flash.ui.Multitouch;
 	import flash.ui.MultitouchInputMode;
+	import imree.data_helpers.position_data;
 	import imree.shortcuts.box;
 	import imree.exhibit;
 	import imree.signage.signage_stack;
@@ -52,6 +53,23 @@ package imree
 		private function load_imree():void {
 			//The following lines are not part of the final project, I'm just testing the text and textfont classes
 			
+			var big:position_data = new position_data(200, 200);
+			var small:position_data = new position_data(100, 100);
+			var arr:Array = [big,small,small,small, small, small, small, small, big, small, small, small, small, big, small, small, small,small,small,small, small, small, small, small, big, small, small, small, small, big, small, small, small,small,small,small, small, small, small, small, big, small, small, small, small, big, small, small, small, small, small, small, big, small, small,big, small, small, small,big, small, small, small, small, small, small];
+			arr.sortOn(randomize);
+			var sample:Vector.<position_data> = Vector.<position_data>(arr);
+			
+			var ly:layout = new layout();
+			var result:Vector.<position_data> = ly.abstract_box_solver(sample, stage.stageWidth, stage.stageHeight);
+			trace(result[0].x, result[1].x);
+			for each(var pos:position_data in result) {
+				var bk:box = new box(pos.width, pos.height, Math.random() * 0xFFFFFF, .5);
+				stage.addChild(bk);
+				
+				bk.x = pos.x;
+				bk.y = pos.y;
+			}
+			
 			/*
 			 * var sample_string:String = "<?xml version='1.0' encoding='utf-8' ?><flow:TextFlow whiteSpaceCollapse='preserve' xmlns:flow='http://ns.adobe.com/textLayout/2008'><flow:p><flow:span>Hoodie vero enim, XOXO Bushwick non </flow:span><flow:span textDecoration=\"underline\">8-bit</flow:span><flow:span> meh kitsch direct trade. Brooklyn authentic aesthetic, cillum paleo 8-bit PBR&B biodiesel nisi skateboard cornhole pork belly freegan ad. Pork belly distillery authentic irony aliquip cornhole. Odd Future art party ethnic, sustainable flannel fixie pork belly placeat gentrify yr flexitarian letterpress. Pop-up laboris synth stumptown Marfa messenger bag. Sunt dolore selfies eiusmod tofu assumenda. Chillwave small batch cornhole veniam duis.</flow:span></flow:p></flow:TextFlow>";
 			var Format:textFont = new textFont('OpenSansLight',18);
@@ -68,13 +86,16 @@ package imree
 			items.push(new accordion_item("Sample headline 6", "Vice Wes Anderson pour-over, flexitarian sunt authentic +1 cardigan chillwave letterpress plaid mollit whatever elit Odd Future. Deep v est butcher semiotics. Fugiat nisi PBR&B ea ad tempor officia, cornhole keytar authentic Pitchfork mumblecore literally. Adipisicing street art sed, Brooklyn chia kitsch do cred id keytar laboris sunt. Cliche you probably haven't heard of them Etsy, VHS id mlkshk pork belly Neutra pour-over asymmetrical gluten-free iPhone food truck brunch sriracha. Meggings consectetur four loko Bushwick chillwave polaroid, freegan ugh ethical bespoke mustache pickled Tumblr fugiat. Dreamcatcher mollit synth pork belly, freegan lomo selfies esse quis stumptown 90's drinking vinegar."));
 			items.push(new accordion_item("Sample headline 7", "Dolor distillery hashtag direct trade viral et, photo booth High Life umami. Cardigan VHS umami twee. Typewriter put a bird on it assumenda irony aute Cosby sweater. Dolore in proident, gluten-free iPhone Marfa keffiyeh asymmetrical aesthetic pug. Tumblr duis pickled small batch master cleanse, dolor qui paleo disrupt cray hoodie street art. Banh mi occaecat kitsch disrupt, asymmetrical proident sartorial squid excepteur retro brunch fashion axe. Odio art party Pitchfork, church-key retro veniam kale chips slow-carb velit 3 wolf moon lomo delectus viral twee consequat."));
 			var acc:accordion = new accordion(items);
-			stage.addChild(acc);
+			//stage.addChild(acc);
 		}
 		
 		private function deactivate(e:Event):void 
 		{
 			// make sure the app behaves well (or exits) when in background
 			//NativeApplication.nativeApplication.exit();
+		}
+		public function randomize ( a : *, b : * ) : int {
+			return ( Math.random() > .5 ) ? 1 : -1;
 		}
 		
 	}

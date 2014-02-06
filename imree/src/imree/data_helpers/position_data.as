@@ -18,6 +18,10 @@ package imree.data_helpers
 			this.y = _y;
 		}
 		
+		public function toString():String {
+			return "[POSITION x=" + this.x + ", y=" + this.y + ", width=" + this.width + ", height=" + this.height + "]";
+		}
+		
 	}
 
 }

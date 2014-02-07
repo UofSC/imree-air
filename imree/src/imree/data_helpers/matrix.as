@@ -8,7 +8,7 @@ package imree.data_helpers
 	public class matrix extends Object
 	{
 		public var data:Array;
-		public function matrix(rows:int, columns:int) {
+		public function matrix(columns:int, rows:int) {
 			data = [];
 			for (var y:int = 0; y < columns; y++) {
 				var row:Array = [];

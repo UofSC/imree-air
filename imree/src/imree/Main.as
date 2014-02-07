@@ -7,6 +7,7 @@ package imree
 	import flash.display.StageScaleMode;
 	import flash.display.Stage;
 	import flash.events.MouseEvent;
+	import flash.geom.Rectangle;
 	import flash.ui.Multitouch;
 	import flash.ui.MultitouchInputMode;
 	import imree.data_helpers.position_data;
@@ -51,23 +52,30 @@ package imree
 		}
 		
 		private function load_imree():void {
-			//The following lines are not part of the final project, I'm just testing the text and textfont classes
 			
-			var big:position_data = new position_data(200, 200);
-			var small:position_data = new position_data(100, 100);
-			var arr:Array = [big,small,small,small, small, small, small, small, big, small, small, small, small, big, small, small, small,small,small,small, small, small, small, small, big, small, small, small, small, big, small, small, small,small,small,small, small, small, small, small, big, small, small, small, small, big, small, small, small, small, small, small, big, small, small,big, small, small, small,big, small, small, small, small, small, small];
-			arr.sortOn(randomize);
-			var sample:Vector.<position_data> = Vector.<position_data>(arr);
-			
+			var sample:Vector.<position_data> = new Vector.<position_data>();
+			for (var i:int = 0; i < 500; i++) {
+				var w:int = Math.round((Math.random() * 3));
+				var h:int = Math.round((Math.random() * 2));
+				sample.push(new position_data(100 * w, 100 * h));
+			}
+			var stack_container:Sprite = new Sprite();
+			stage.addChild(stack_container);
 			var ly:layout = new layout();
-			var result:Vector.<position_data> = ly.abstract_box_solver(sample, stage.stageWidth, stage.stageHeight);
-			trace(result[0].x, result[1].x);
+			var result:Vector.<position_data> = ly.abstract_box_solver(sample, stage.stageWidth, stage.stageHeight, 1, "left");
 			for each(var pos:position_data in result) {
 				var bk:box = new box(pos.width, pos.height, Math.random() * 0xFFFFFF, .5);
-				stage.addChild(bk);
-				
+				stack_container.addChild(bk);
 				bk.x = pos.x;
 				bk.y = pos.y;
+			}
+			stack_container.addEventListener(MouseEvent.MOUSE_DOWN, d0);
+			stack_container.addEventListener(MouseEvent.MOUSE_UP, d1);
+			function d0(e:MouseEvent):void {
+				stack_container.startDrag(false, new Rectangle(stack_container.width * -1, 0, stack_container.width, 0));
+			}
+			function d1(e:MouseEvent):void {
+				stack_container.stopDrag();
 			}
 			
 			/*

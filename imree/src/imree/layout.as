@@ -72,7 +72,7 @@ package imree
 				return r;
 			}
 		}
-		public function abstract_box_solver(items:Vector.<position_data>, width:int, height:int, padding:int = 10, from:String = "top", allow_overflow:Boolean = true):Vector.<position_data> {
+		public function abstract_box_solver(items:Vector.<position_data>, width:int, height:int, padding:int = 5, from:String = "top", allow_overflow:Boolean = true):Vector.<position_data> {
 			var widths:Vector.<int> = new Vector.<int>();
 			var heights:Vector.<int> = new Vector.<int>();
 			for each(var p:position_data in items) {
@@ -81,12 +81,13 @@ package imree
 			}
 			var gcd_width:int = gcd_list(widths);
 			var gcd_height:int = gcd_list(heights);
-			var columns:int = Math.floor(width / gcd_width);
-			var rows:int = Math.floor(height / gcd_height);
+			var columns:int = Math.floor(width / (gcd_width + padding));
+			var rows:int = Math.floor(height / (gcd_height + padding));
+						
 			if (from === "top" && allow_overflow) {
-				rows = rows * 100;
+				rows = rows * 20;
 			} else if (from === "left" && allow_overflow) {
-				columns = columns * 100;
+				columns = columns * 20;
 			}
 			
 			var result:Vector.<position_data> = new Vector.<position_data>();
@@ -94,9 +95,11 @@ package imree
 			for (var i:int = 0; i < items.length; i++) {
 				var units_wide:int = items[i].width / gcd_width; //should always be a whole number (int)
 				var units_tall:int = items[i].height / gcd_height; //likewise
-				var location:Point = m.fit_region(units_wide, units_tall, from, 1);
+				var location:Point = m.fit_region(units_tall, units_wide, from, 1);
 				if (location !== null) {
-					result.push(new position_data(items[i].width, items[i].height, gcd_width * location.x, gcd_height * location.y));
+					var x:int = (gcd_width + padding) * location.x + ((units_wide - 1) * padding/2);
+					var y:int = (gcd_height+ padding ) * location.y + ((units_tall - 1) * padding/2);
+					result.push(new position_data(items[i].width, items[i].height, x, y));
 				} else {
 					result.push(new position_data(0, 0, -100, -100));
 				}

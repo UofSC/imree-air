@@ -20,6 +20,10 @@ package imree.signage
 		public var margin:int;
 		public var max_items:int;
 		public var min_size:int;
+		
+		public var feed_headline:String;
+		public var feed_description:String;
+		
 		public var feed_background_color:uint;
 		public var feed_background_alpha:Number;
 		public var feed_border_width:int;
@@ -41,14 +45,14 @@ package imree.signage
 			this.t = this;
 			
 			//defaults:
-			this.padding = 10;
+			this.padding = 1;
 			this.margin = 10;
 			this.min_size = 200;
 			this.max_items = Math.floor(this.target_w / this.min_size);
 			this.feed_background_color = 0xFFFFFF;
 			this.feed_background_alpha = 0;
-			this.feed_border_width = 0;
-			this.feed_border_color = 0x666666;
+			this.feed_border_width = 10;
+			this.feed_border_color = 0x800000;
 			this.item_background_color = 0xFFFFFF;
 			this.item_background_alpha = 0;
 		}

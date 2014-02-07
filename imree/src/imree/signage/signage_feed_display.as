@@ -19,6 +19,7 @@ package imree.signage
 		public var padding:int;
 		public var margin:int;
 		public var max_items:int;
+		public var min_size:int;
 		public var feed_background_color:uint;
 		public var feed_background_alpha:Number;
 		public var feed_border_width:int;
@@ -42,7 +43,8 @@ package imree.signage
 			//defaults:
 			this.padding = 10;
 			this.margin = 10;
-			this.max_items = 6;
+			this.min_size = 200;
+			this.max_items = Math.floor(this.target_w / this.min_size);
 			this.feed_background_color = 0xFFFFFF;
 			this.feed_background_alpha = 0;
 			this.feed_border_width = 0;

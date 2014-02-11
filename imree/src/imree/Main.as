@@ -8,11 +8,13 @@ package imree
 	import flash.display.Stage;
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
+	import flash.sampler.NewObjectSample;
 	import flash.ui.Multitouch;
 	import flash.ui.MultitouchInputMode;
 	import imree.data_helpers.position_data;
 	import imree.shortcuts.box;
 	import imree.exhibit;
+	import imree.shortcuts.openzoomer;
 	import imree.signage.signage_stack;
 	
 	/**
@@ -49,6 +51,9 @@ package imree
 		private function load_signage():void {
 			var stack:signage_stack = new signage_stack(connection, this.stage.stageWidth, this.stage.stageHeight);
 			stage.addChild(stack);
+			
+			//var openzoom:openzoomer = new openzoomer();
+			//stage.addChild(openzoom);
 		}
 		
 		private function load_imree():void {

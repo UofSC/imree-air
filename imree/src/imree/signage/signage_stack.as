@@ -7,6 +7,7 @@ package imree.signage
 	import imree.serverConnect;
 	import imree.signage.signage_feed_data;
 	import com.greensock.loading.XMLLoader;
+	import fl.controls.ComboBox;
 	
 	import flash.events.MouseEvent;
 	import com.greensock.TweenMax;
@@ -126,14 +127,11 @@ package imree.signage
 			if (this.data_classes) {
 				//draw classes
 			}
-			trace(stage.stageWidth, stage.stageHeight);
-			
-			
-						
+									
 			
 			this.data_classes = this.data_news;
 			if (this.data_classes) {
-				var classesdisplay: signage_feed_display = new signage_feed_display(this.data_classes, stage.stageWidth *.6 , stage.stageHeight * .7);
+				var classesdisplay: signage_feed_display = new signage_feed_display(this.data_classes, stage.stageWidth *.5 , stage.stageHeight * .4);
 				stage.addChild(classesdisplay);
 				
 				classesdisplay.feed_background_color = 0x330033;
@@ -146,104 +144,102 @@ package imree.signage
 				trace('added classes display');
 			}
 			
-			/*this.data_building_constituents = this.data_exhibits;
+			this.data_building_constituents = this.data_exhibits;
 			if (this.data_building_constituents) {
-				var constituentsdisplay: signage_feed_display = new signage_feed_display(this.data_building_constituents, (stage.stageWidth - classesdisplay.width), stage.stageHeight);
-				stage.addChild(constituentsdisplay);
-				constituentsdisplay.draw();
+				var constituentsdisplay: signage_feed_display = new signage_feed_display(this.data_building_constituents, stage.stageWidth * .5, stage.stageHeight * .4);
+				stage.addChild(constituentsdisplay);				
 				constituentsdisplay.feed_background_color = 0xFFFFFF;
 				constituentsdisplay.feed_border_color = 0x800000;
-				constituentsdisplay.feed_border_width = 10;
-				constituentsdisplay.x = stage.stageWidth/2;
-				constituentsdisplay.y = stage.stageHeight;
-				
+				constituentsdisplay.feed_border_width = 5;
+				constituentsdisplay.draw();
+				constituentsdisplay.x = 0;
+				constituentsdisplay.y = stage.stageHeight - constituentsdisplay.height;
 				trace('added constituents display');
 				
 			
 			}
 			
-			/*this.data_open_sessions = this.data_news;
+			this.data_open_sessions = this.data_news;
 			if (this.data_open_sessions) {
-				var open_sessions_display: signage_feed_display = new signage_feed_display(this.data_open_sessions, (stage.stageWidth - 300), 150 );
-				stage.addChild(open_sessions_display);
-				open_sessions_display.draw();
+				var open_sessions_display: signage_feed_display = new signage_feed_display(this.data_open_sessions, stage.stageWidth * .5, stage.stageHeight * .1);
+				stage.addChild(open_sessions_display);				
 				open_sessions_display.feed_background_color = 0xFFFFFF;
 				open_sessions_display.feed_border_color = 0x800000;				
-				open_sessions_display.feed_border_width = 10;
-				open_sessions_display.x = stage.stageWidth - 450;
-				open_sessions_display.y = stage.stageHeight - 500;
+				open_sessions_display.feed_border_width = 5;
+				open_sessions_display.draw();
+				open_sessions_display.x = stage.stageWidth - open_sessions_display.width;
+				open_sessions_display.y = stage.stageHeight - (constituentsdisplay.height + open_sessions_display.height);
 				trace('added open_sessions display');
 			}
 			
 				if (this.data_exhibits) {
-				var exhibitdisplay: signage_feed_display = new signage_feed_display(this.data_exhibits, 450, 325);
-				stage.addChild(exhibitdisplay);
-				exhibitdisplay.draw();
+				var exhibitdisplay: signage_feed_display = new signage_feed_display(this.data_exhibits, stage.stageWidth *.5, stage.stageHeight * .3);
+				stage.addChild(exhibitdisplay);				
 				exhibitdisplay.feed_background_color = 0xFFFFFF;
 				exhibitdisplay.feed_border_color = 0x800000;
-				exhibitdisplay.feed_border_width = 10;
-				exhibitdisplay.x = stage.stageWidth - 450;
-				exhibitdisplay.y = (stage.stageHeight - open_sessions_display.height) - constituentsdisplay.height + 100;
+				exhibitdisplay.feed_border_width = 5;
+				exhibitdisplay.draw();
+				exhibitdisplay.x = stage.stageWidth - exhibitdisplay.width;
+				exhibitdisplay.y = stage.stageHeight - (constituentsdisplay.height + open_sessions_display.height + exhibitdisplay.height);
 				trace('added exhibits display');
 			}
 			
 				if (this.data_events) {
-				var eventsdisplay: signage_feed_display = new signage_feed_display(this.data_events, 318, 400) ;
+				var eventsdisplay: signage_feed_display = new signage_feed_display(this.data_events, stage.stageWidth * .5, stage.stageHeight * .31) ;
 				stage.addChild(eventsdisplay);
-				eventsdisplay.draw();
 				eventsdisplay.feed_background_alpha = 1;
 				eventsdisplay.feed_background_color = 0xFFFFFF;
 				eventsdisplay.feed_border_color =0x800000;
-				eventsdisplay.feed_border_width = 1;
+				eventsdisplay.feed_border_width = 5;
+				eventsdisplay.draw();
 				eventsdisplay.x = 0;
-				eventsdisplay.y = stage.stageHeight - classesdisplay.height + 25;
+				eventsdisplay.y = stage.stageHeight - (classesdisplay.height + eventsdisplay.height);
 				trace('added events display');
 			
 			}
 			
 			this.data_featured_event = this.data_news;
 			if (this.data_featured_event) {
-				var featured_evt_display: signage_feed_display = new signage_feed_display(this.data_featured_event, 318, 100);
+				var featured_evt_display: signage_feed_display = new signage_feed_display(this.data_featured_event, stage.stageWidth * .5, stage.stageHeight * .1);
 				stage.addChild(featured_evt_display);
 				featured_evt_display.draw();
 				featured_evt_display.feed_background_color = 0xFFFFFF;
 				featured_evt_display.feed_border_color = 0x800000;
-				featured_evt_display.feed_border_width = 10;
+				featured_evt_display.feed_border_width = 5;
 				featured_evt_display.x = 0;
-				featured_evt_display.y = stage.stageHeight - (eventsdisplay.height * 2) - 50 ;
+				featured_evt_display.y = stage.stageHeight - (classesdisplay.height + eventsdisplay.height + featured_evt_display.height);
 				trace('added featured evt display');
 			}
 			
 			
 				if (this.data_news) {
-				var newsdisplay: signage_feed_display = new signage_feed_display(this.data_news, stage.stageWidth, 150);
-				stage.addChild(newsdisplay);
-				newsdisplay.draw();
+				var newsdisplay: signage_feed_display = new signage_feed_display(this.data_news, stage.stageWidth, stage.stageHeight * .1);
+				stage.addChild(newsdisplay);				
 				newsdisplay.feed_background_alpha = 1;
 				newsdisplay.feed_background_color = 0xFFFFFF;
-				newsdisplay.feed_border_color =0x800000;
-				newsdisplay.feed_border_width = 1;
+				newsdisplay.feed_border_color =0xFFFFFF;
+				newsdisplay.feed_border_width = 5;
+				newsdisplay.draw();
 				newsdisplay.x = 0;
-				newsdisplay.y = stage.stageHeight / 2 - 475;
+				newsdisplay.y = stage.stageHeight - (classesdisplay.height + eventsdisplay.height + featured_evt_display.height + newsdisplay.height);
 				trace('added news display');
 			}
 			
 			this.data_alerts = this.data_exhibits;
 			if (this.data_alerts) {
-				var alertdisplay: signage_feed_display = new signage_feed_display(this.data_alerts, stage.stageWidth, (stage.stageHeight / 2 - 475));
-				stage.addChild(alertdisplay);
-				alertdisplay.draw();
+				var alertdisplay: signage_feed_display = new signage_feed_display(this.data_alerts, stage.stageWidth, stage.stageHeight *.04);
+				stage.addChild(alertdisplay);				
 				alertdisplay.feed_background_color = 0xFFFFFF;
 				alertdisplay.feed_border_color = 0x800000;
-				alertdisplay.feed_border_width = 10;
+				alertdisplay.feed_border_width = 5;
+				alertdisplay.draw();
 				alertdisplay.x = 0;
-				alertdisplay.y = 0;
-			
+				alertdisplay.y = stage.stageHeight - (classesdisplay.height + eventsdisplay.height + featured_evt_display.height + newsdisplay.height + alertdisplay.height);
 				trace('added alert display');
-			}*/
+			}
 			
-							
-		}
+	}		
+		
 		public function feed_has_items(item:signage_feed_data,index:int,arr:Vector.<signage_feed_data>):Boolean {
 			var result:Boolean = false;
 			if (item.items.length > 0) {

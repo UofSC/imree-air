@@ -1,5 +1,6 @@
 package imree.signage 
 {
+	import fl.controls.List;
 	import flash.display.Sprite;
 	import imree.data_helpers.position_data;
 	import imree.layout;
@@ -113,6 +114,10 @@ package imree.signage
 			if (this.feeds_ready === this.feeds_count) {
 				draw();
 			}
+			
+			
+			
+			
 		}
 		
 		public function draw():void {
@@ -129,6 +134,7 @@ package imree.signage
 			}
 									
 			
+			
 			this.data_classes = this.data_news;
 			if (this.data_classes) {
 				var classesdisplay: signage_feed_display = new signage_feed_display(this.data_classes, stage.stageWidth *.5 , stage.stageHeight * .4);
@@ -139,7 +145,7 @@ package imree.signage
 				classesdisplay.feed_border_width = 5;
 				classesdisplay.feed_background_alpha = 1;
 				classesdisplay.draw();
-				classesdisplay.x = stage.stageWidth - classesdisplay.width;
+				classesdisplay.x = 0;
 				classesdisplay.y = stage.stageHeight - classesdisplay.height;
 				trace('added classes display');
 			}
@@ -152,14 +158,14 @@ package imree.signage
 				constituentsdisplay.feed_border_color = 0x800000;
 				constituentsdisplay.feed_border_width = 5;
 				constituentsdisplay.draw();
-				constituentsdisplay.x = 0;
+				constituentsdisplay.x = stage.stageWidth - constituentsdisplay.width;
 				constituentsdisplay.y = stage.stageHeight - constituentsdisplay.height;
 				trace('added constituents display');
 				
 			
 			}
 			
-			this.data_open_sessions = this.data_news;
+			this.data_open_sessions = this.data_events;
 			if (this.data_open_sessions) {
 				var open_sessions_display: signage_feed_display = new signage_feed_display(this.data_open_sessions, stage.stageWidth * .5, stage.stageHeight * .1);
 				stage.addChild(open_sessions_display);				
@@ -198,7 +204,7 @@ package imree.signage
 			
 			}
 			
-			this.data_featured_event = this.data_news;
+			this.data_featured_event = this.data_events;
 			if (this.data_featured_event) {
 				var featured_evt_display: signage_feed_display = new signage_feed_display(this.data_featured_event, stage.stageWidth * .5, stage.stageHeight * .1);
 				stage.addChild(featured_evt_display);
@@ -237,6 +243,7 @@ package imree.signage
 				alertdisplay.y = stage.stageHeight - (classesdisplay.height + eventsdisplay.height + featured_evt_display.height + newsdisplay.height + alertdisplay.height);
 				trace('added alert display');
 			}
+			
 			
 	}		
 		

@@ -28,6 +28,7 @@ package imree
 		public var padding:Number;
 				
 		[Embed(source = "../fonts/AbrahamLincoln.ttf", fontName = 'AbrahamLincoln')] public var AbrahamLincolnFont:Class;
+		/**
 		[Embed(source = "../fonts/Lavanderia Delicate.otf", fontName = 'LavanderiaDelicate')] public var LavanderiaDelicateFont:Class;
 		[Embed(source = "../fonts/Lavanderia Regular.otf", fontName = 'LavanderiaRegular')] public var LavanderiaRegularFont:Class;
 		[Embed(source = "../fonts/Lavanderia Sturdy.otf", fontName = 'LavanderiaSturdy')] public var LavanderiaSturdyFont:Class;
@@ -46,7 +47,7 @@ package imree
 		[Embed(source = "../fonts/OpenSans-Regular.ttf", fontName = 'OpenSans')] public var OpenSansFont:Class;
 		[Embed(source = "../fonts/OpenSans-Semibold.ttf", fontName = 'OpenSansSemibold')] public var OpenSansSemiboldFont:Class;
 		[Embed(source = "../fonts/OpenSans-SemiboldItalic.ttf", fontName = 'OpenSansSemiboldItalic')] public var OpenSansSemiboldItalicFont:Class;
-		
+		*/
 		public function textFont(name:String = '_sans', size:int=12) {
 			if (name.substr(0, 1) === '_') {
 				this.lookup = FontLookup.DEVICE
@@ -82,7 +83,7 @@ package imree
 				f.fontLookup = FontLookup.EMBEDDED_CFF;
 				f.fontFamily = this.name;
 				f.color = this.color;
-				f.lineHeight = this.size * leading;
+				f.lineHeight = this.size + leading;
 				
 				f.fontSize = this.size;
 				//f.fontWeight = weight;

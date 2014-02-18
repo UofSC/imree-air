@@ -1,6 +1,12 @@
 package imree
 {
+	
+	import com.greensock.data.TweenLiteVars;
+	import com.greensock.easing.Cubic;
+	import com.greensock.TimelineLite;
+	import com.greensock.TweenLite;
 	import flash.desktop.NativeApplication;
+	import flash.display.DisplayObject;
 	import flash.events.Event;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
@@ -8,9 +14,13 @@ package imree
 	import flash.display.Stage;
 	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
+	import flash.text.TextFormat;
 	import flash.ui.Multitouch;
 	import flash.ui.MultitouchInputMode;
+	import imree.data_helpers.data_value_pair;
 	import imree.data_helpers.position_data;
+	import imree.display_helpers.authentication;
+	import imree.display_helpers.list_exhibits;
 	import imree.shortcuts.box;
 	import imree.exhibit;
 	import imree.signage.signage_stack;
@@ -23,6 +33,7 @@ package imree
 	{
 		public var connection:serverConnect;
 		public var stack:exhibit;
+		public var animator:animate;
 		public function Main():void 
 		{
 			stage.scaleMode = StageScaleMode.NO_SCALE;
@@ -31,6 +42,9 @@ package imree
 			Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
 			
 			stage.addChild(this);
+			
+			animator = new animate();
+			animator.off_direction = "up";
 			
 			connection = new serverConnect("http://imree.tcl.sc.edu/imree-php/api/");
 			connection.server_command("signage_mode", '', sign_mode_loader);
@@ -53,6 +67,18 @@ package imree
 		
 		private function load_imree():void {
 			
+			this.addChild(new list_exhibits(connection,exhibit_selected));
+			function exhibit_selected(e:Event):void {
+				trace(e);
+			}
+			
+			var auth:authentication = new authentication(connection, loggedIn);
+			this.addChild(auth);
+			
+			function loggedIn(e:*= null):void {
+				animator.off_stage(auth);
+			}
+			/**
 			var sample:Vector.<position_data> = new Vector.<position_data>();
 			for (var i:int = 0; i < 500; i++) {
 				var w:int = Math.round((Math.random() * 3));
@@ -77,6 +103,7 @@ package imree
 			function d1(e:MouseEvent):void {
 				stack_container.stopDrag();
 			}
+			*/
 			
 			/*
 			 * var sample_string:String = "<?xml version='1.0' encoding='utf-8' ?><flow:TextFlow whiteSpaceCollapse='preserve' xmlns:flow='http://ns.adobe.com/textLayout/2008'><flow:p><flow:span>Hoodie vero enim, XOXO Bushwick non </flow:span><flow:span textDecoration=\"underline\">8-bit</flow:span><flow:span> meh kitsch direct trade. Brooklyn authentic aesthetic, cillum paleo 8-bit PBR&B biodiesel nisi skateboard cornhole pork belly freegan ad. Pork belly distillery authentic irony aliquip cornhole. Odd Future art party ethnic, sustainable flannel fixie pork belly placeat gentrify yr flexitarian letterpress. Pop-up laboris synth stumptown Marfa messenger bag. Sunt dolore selfies eiusmod tofu assumenda. Chillwave small batch cornhole veniam duis.</flow:span></flow:p></flow:TextFlow>";
@@ -105,6 +132,7 @@ package imree
 		public function randomize ( a : *, b : * ) : int {
 			return ( Math.random() > .5 ) ? 1 : -1;
 		}
+		
 		
 	}
 	

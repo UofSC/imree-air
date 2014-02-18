@@ -1,5 +1,6 @@
 package imree 
 {
+	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.text.engine.FontPosture;
 	import flash.text.engine.Kerning;
@@ -47,7 +48,21 @@ package imree
 			controller.setCompositionSize(width,height);
 			textFlow.flowComposer.addController(controller);
             textFlow.flowComposer.updateAllControllers();
-
+			
+		}
+		public function center_x(target:DisplayObject=null):void {
+			if (target === null) {
+				x = (stage.stageWidth - this.width) / 2;
+				} else {
+				x = target.width / 2 - this.width / 2 ;
+			}
+		}
+		public function center_y(target:DisplayObject=null):void {
+			if (target === null) {
+				y = stage.stageHeight / 2 - this.height / 2;
+			} else {
+				y = target.height / 2 - this.height / 2 ;
+			}
 		}
 		
 	}

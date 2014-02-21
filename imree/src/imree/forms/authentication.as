@@ -48,7 +48,7 @@ package imree.forms
 				
 				var elements:Vector.<f_element> = new Vector.<f_element>();
 					elements.push(new f_element_text("Username", 'username','steelmaj@mailbox.sc.edu'));
-					elements.push(new f_element_password("Password", 'password',''));
+					elements.push(new f_element_password("Password", 'password','helpinghand'));
 				var form:f_data = new f_data(elements);
 					form.layout(16, 380, 300);
 					form.onSubmit = auth;

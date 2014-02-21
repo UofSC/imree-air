@@ -29,8 +29,10 @@ package imree.forms
 		override public function draw(label_width:int = 100, input_w:int = 200, padding:int = 10 ):void {
 			ui = new Sprite();
 			super.draw();
+			this.visible = false;
 		}
-		
+		override public function set_disable():void {}
+		override public function set_enabled():void {}
 	}
 
 }

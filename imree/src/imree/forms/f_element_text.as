@@ -18,6 +18,7 @@ package imree.forms
 	public class f_element_text extends f_element
 	{
 		private var txt:TextField;
+		public var is_password:Boolean;
 		public function f_element_text(_label:String, _data_column_name:String, _value:String = "") {
 			label = _label;
 			value = _value;
@@ -53,8 +54,12 @@ package imree.forms
 				textbox.type = TextFieldType.INPUT;
 				txt = textbox;
 				ui.addChild(textbox);
-				
-			super.draw();
+			
+			if (is_password) {
+				txt.displayAsPassword = true;
+			}
+			loader_x = label_width + input_w + padding + 2;
+			super.draw(label_width, input_w, padding);
 		}
 		override public function get_value():* {
 			return txt.text;
@@ -62,6 +67,26 @@ package imree.forms
 		override public function set_value(e:*):void {
 			txt.replaceText(0, txt.text.length, String(e));
 			super.set_value(e);
+		}
+		override public function set_disable():void {
+			if (txt != null) {
+				txt.selectable = false;
+				txt.type = TextFieldType.DYNAMIC;
+				txt.borderColor = 0xFF99FF;
+				txt.mouseEnabled = false;
+				txt.tabEnabled = false;
+				txt.restrict = "";
+			}
+		}
+		override public function set_enabled():void {
+			if (txt != null) {
+				txt.selectable = true;
+				txt.type = TextFieldType.INPUT;
+				txt.borderColor = 0xFFFFFF;
+				txt.mouseEnabled = true;
+				txt.tabEnabled = true;
+				txt.restrict = null;
+			}
 		}
 	}
 

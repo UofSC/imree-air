@@ -23,7 +23,14 @@ package imree
 		public function serverConnect(URI:String="") {
 			this.uri = URI;
 		}
-		
+		public function clone():serverConnect {
+			var n:serverConnect = new serverConnect();
+			n.uri = uri;
+			n.session_key = session_key;
+			n.username = username;
+			n.password = password;
+			return n;
+		}
 		public function server_command(command:String, command_parameter:*, onCompleteFunction:Function=null, elevatedPrivileges:Boolean = false):void {
 			if (this.uri.length < 1) {
 				trace("No connection uri set. Use   ... = new serverConnect('http://site.com/imree/api/'); ... ");
@@ -78,6 +85,9 @@ package imree
 		}
 		public function set_password(str:String):void {
 			password = str;
+		}
+		public function password_is_set():Boolean {
+			return password != null;
 		}
 		
 	}

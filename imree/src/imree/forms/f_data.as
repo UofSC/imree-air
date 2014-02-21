@@ -50,18 +50,37 @@ package imree.forms
 			w = _width;
 			h = _height;
 		}
+		/**
+		 * Not really required in order to get, update, or insert... but its a shortcut to add the four required parameters in one line. 
+		 */
 		public function connect(_conn:serverConnect, _row_id:int, _table:String, _table_key_column_name:String):void {
-			if (_row_id > 0 && _table.length > 0) {
+			if (_table.length > 0) {
 				f_method = "update";
 				f_row_id = _row_id;
 				f_table = _table;
 				t.conn = _conn;
 				f_table_key_column_name = _table_key_column_name;
 			}
+			if (_row_id == 0) {
+				f_method = "insert";
+			}
+		}
+		public function prepared_for_mysql():Boolean {
+			return 	conn.password_is_set() && 
+					conn.username != null && 
+					conn != null && 
+					f_method != null &&
+					f_method.length > 0 && 
+					f_table != null && 
+					f_table.length > 0 && 
+					f_table_key_column_name != null && 
+					f_table_key_column_name.length > 0;
 		}
 		public function draw():void {
+			trace("method: " + f_method, "row:" + f_row_id, "f_table" + f_table);
 			if (f_method === "update" && f_row_id > 0 && f_table.length > 0) {
-				data_get();
+				data_get_row();
+				
 			}
 			var j:int = 0;
 			for each(var i:f_element in t.elements) {
@@ -81,8 +100,7 @@ package imree.forms
 			}
 		}
 		
-		public function data_get(e:*=null):void {
-			var loaders:Vector.<DisplayObject> = new Vector.<DisplayObject>();
+		public function data_get_row(e:*=null):void {
 			var obj:Object = new Object();
 			obj.table = f_table;
 			obj.row_id = f_row_id;
@@ -90,19 +108,12 @@ package imree.forms
 			obj.columns = new Object();
 			for(var i:String in elements) {
 				obj.columns[i] = elements[i].data_column_name;
-				var loader:loading_spinner_sprite = new loading_spinner_sprite(18);
-				loader.x = elements[i].width - 22;
-				loader.y = elements[i].y + 2;
-				loaders.push(loader);
-				t.addChild(loader);
+				elements[i].indicate_waiting();
 			}
 			conn.server_command("query", obj, data_ready, true);
 			function data_ready(xml:XML):void {
-				for each (loader in loaders) {
-					t.removeChild(loader);
-					loader = null;
-				}
 				for each (var row:f_element in elements) {
+					row.indicate_ready();
 					row.set_value(xml['result']['item'][row.data_column_name]);
 				}
 			}
@@ -112,10 +123,15 @@ package imree.forms
 		}
 		
 		public function submit(e:*=null):void {
-			if (onSubmit === null) {
-				trace("Form Submitted without onSubmit listener");
-				for each(var i:f_element in elements) {
-					trace("\t" + i.label + ": " + i.get_value());
+			if (onSubmit === null ) {
+				if (t.prepared_for_mysql()) {
+					trace("Sending " + f_method + " request for table " + f_table + " where row_id = " + f_row_id + "...");
+					
+				} else {
+					trace("Form Submitted without onSubmit listener nor MySQL connection information");
+					for each(var i:f_element in elements) {
+						trace("\t" + i.label + ": " + i.get_value());
+					}
 				}
 			} else {
 				var values:Object = new Object();

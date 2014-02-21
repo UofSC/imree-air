@@ -12,6 +12,7 @@ package imree.forms
 	import flash.text.TextFormat;
 	import flash.text.TextFieldType;
 	import flash.text.TextFieldAutoSize;
+	import flash.utils.getQualifiedClassName;
 	import imree.data_helpers.data_value_pair;
 	
 	import imree.forms.*;
@@ -24,7 +25,8 @@ package imree.forms
 		private var special_height:Number;
 		private var prompt:String;
 		private var unselected_value:*;
-		public function f_element_select(_label:String, _data_column_name:String, _options:Vector.<data_value_pair>, _prompt:String = null, _value:*=null) {
+		private var dynamic_options:f_element_DynamicOptions;
+		public function f_element_select(_label:String, _data_column_name:String, _options:Object, _prompt:String = null, _value:*=null) {
 			this.label = _label;
 			data_column_name = _data_column_name;
 			prompt = _prompt;
@@ -35,7 +37,12 @@ package imree.forms
 			} else {
 				this.value = _value;
 			}
-			this.options = _options;
+			trace(getQualifiedClassName(_options));
+			if (getQualifiedClassName(_options) == "imree.forms::f_element_select_DynamicOptions") {
+				this.dynamic_options = f_element_DynamicOptions(_options);
+			} else {
+				this.options = Vector.<data_value_pair>(_options);
+			}
 			super();
 		}
 		
@@ -46,23 +53,26 @@ package imree.forms
 			label_display.y += 5;
 			ui.addChild(label_display);
 			
-			var dat:Array = [];
-			for each(var i:data_value_pair in options) {
-				dat.push( {label:i.label.toString(), data:i.value } );
-			}
-			
 			var combo:ComboBox = new ComboBox();
 			component = combo;
 			combo.width = input_w;
 			combo.x = label_width + padding;
 			special_height = combo.height; //height before items added
+			
+			
+			var dat:Array = [];
+			for each(var i:data_value_pair in options) {
+				dat.push( {label:i.label.toString(), data:i.value } );
+			}
 			if (prompt === null) {
 				combo.selectedIndex = 0;
 			} else {
 				combo.prompt = prompt;
 			}
-			combo.dataProvider = new DataProvider(dat);
 			
+			
+			combo.dataProvider = new DataProvider(dat);
+			loader_x = combo.x + combo.width + 2;
 			ui.addChild(combo);
 			super.draw();
 		}
@@ -85,6 +95,9 @@ package imree.forms
 				}
 			}
 			super.set_value(e);
+		}
+		override public function element_ready():Boolean {
+			return dynamic_options == null || dynamic_options.is_ready;
 		}
 		
 	}

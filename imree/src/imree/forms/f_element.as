@@ -1,4 +1,4 @@
-package imree.display_helpers 
+package imree.forms 
 {
 	import fl.core.UIComponent;
 	import flash.display.Sprite;
@@ -20,6 +20,7 @@ package imree.display_helpers
 		public var options:Vector.<data_value_pair>;
 		public var ui:Sprite;
 		public var component:UIComponent;
+		public var initial_val:String;
 		private var t:f_element;
 		
 		public function f_element() {
@@ -35,6 +36,9 @@ package imree.display_helpers
 		}
 		public function get_height():Number {
 			return height;
+		}
+		public function set_value(e:*):void {
+			this.value = e;
 		}
 	}
 

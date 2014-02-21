@@ -1,4 +1,4 @@
-package imree.display_helpers 
+package imree.forms 
 {
 	import flash.accessibility.Accessibility;
 	import flash.display.Sprite;
@@ -47,22 +47,22 @@ package imree.display_helpers
 				title.center_x(auth_wrapper);
 				
 				var elements:Vector.<f_element> = new Vector.<f_element>();
-				elements.push(new f_element_text("Username", 'username','steelmaj@mailbox.sc.edu'));
-				elements.push(new f_element_password("Password", 'password',''));
-				var form:f_data = new f_data(elements, auth, 16, 380, 300);
-				form.draw();
-				form.y = 50;
-				form.onSubmit = auth;
+					elements.push(new f_element_text("Username", 'username','steelmaj@mailbox.sc.edu'));
+					elements.push(new f_element_password("Password", 'password',''));
+				var form:f_data = new f_data(elements);
+					form.layout(16, 380, 300);
+					form.onSubmit = auth;
+					form.draw();
+					form.y = 50;
 				auth_wrapper.addChild(form);
+				
+				
 			} else {
 				//how you say already logged in?
 			}
 		}
 		private function auth(elements:Object):void {
 			
-			for (var k:* in elements) {
-				trace(k + ": " + elements[k]);
-			}
 			conn.server_command('login', { username:elements.username, password:elements.password}, response );
 			function response(xml:XML):void {
 				if (xml.result == "false") {

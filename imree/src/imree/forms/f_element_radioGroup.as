@@ -1,4 +1,4 @@
-package imree.display_helpers 
+package imree.forms 
 {
 	/**
 	 * ...
@@ -15,7 +15,7 @@ package imree.display_helpers
 	import flash.text.TextFieldType;
 	import flash.text.TextFieldAutoSize;
 	import imree.data_helpers.data_value_pair;
-	import imree.display_helpers.f_element;
+	import imree.forms.f_element;
 	import imree.shortcuts.box;
 	import imree.text;
 	import imree.textFont;
@@ -24,10 +24,11 @@ package imree.display_helpers
 	{
 		private var group:RadioButtonGroup;
 		private var special_height:int;
-		public function f_element_radioGroup(_label:String, _data_column_name:String, _options:Vector.<data_value_pair>, unselected_value:*=null) {
+		public function f_element_radioGroup(_label:String, _data_column_name:String, _options:Vector.<data_value_pair>, _value:*=null) {
 			this.label = _label;
 			this.data_column_name = _data_column_name;
-			this.value = unselected_value;
+			this.value = _value;
+			this.initial_val = _value;
 			this.options = _options;
 			super();
 		}

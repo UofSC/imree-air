@@ -24,12 +24,6 @@ package imree
 			this.uri = URI;
 		}
 		
-		/**
-		 * This sends command:command_parameter to the PHP server and returns XML data to onCompleteFunction
-		 * @param	command				The command to be executed
-		 * @param	command_parameters	The paramater to pass with command [optional]
-		 * @param	onCompleteFunction	The function to be executed when xml data is received. This function should accept one parameter of type :XML
-		 */
 		public function server_command(command:String, command_parameter:*, onCompleteFunction:Function=null, elevatedPrivileges:Boolean = false):void {
 			if (this.uri.length < 1) {
 				trace("No connection uri set. Use   ... = new serverConnect('http://site.com/imree/api/'); ... ");

@@ -1,4 +1,4 @@
-package imree.display_helpers 
+package imree.forms 
 {
 	/**
 	 * ...
@@ -13,7 +13,8 @@ package imree.display_helpers
 	import flash.text.TextFieldType;
 	import flash.text.TextFieldAutoSize;
 	import imree.data_helpers.data_value_pair;
-	import imree.display_helpers.f_element;
+	
+	import imree.forms.*;
 	import imree.shortcuts.box;
 	import imree.text;
 	import imree.textFont;
@@ -23,15 +24,16 @@ package imree.display_helpers
 		private var special_height:Number;
 		private var prompt:String;
 		private var unselected_value:*;
-		public function f_element_select(_label:String, _data_column_name:String, _options:Vector.<data_value_pair>, _prompt:String = null, _unselected_value:*=null) {
+		public function f_element_select(_label:String, _data_column_name:String, _options:Vector.<data_value_pair>, _prompt:String = null, _value:*=null) {
 			this.label = _label;
 			data_column_name = _data_column_name;
 			prompt = _prompt;
-			this.unselected_value = _unselected_value;
+			this.unselected_value = _value;
+			this.initial_val = _value;
 			if (prompt === null) {
 				this.value = _options[0].value;
 			} else {
-				this.value = _unselected_value;
+				this.value = _value;
 			}
 			this.options = _options;
 			super();
@@ -74,6 +76,15 @@ package imree.display_helpers
 		}
 		override public function get_height():Number {
 			return special_height;
+		}
+		
+		override public function set_value(e:*):void {
+			for (var i:int = 0; i < ComboBox(component).dataProvider.length; i++ ) {
+				if (e == ComboBox(component).dataProvider.getItemAt(i).data) {
+					ComboBox(component).selectedIndex = i;
+				}
+			}
+			super.set_value(e);
 		}
 		
 	}

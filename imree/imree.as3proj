@@ -5,7 +5,7 @@
     <movie outputType="Application" />
     <movie input="" />
     <movie path="bin\imree.swf" />
-    <movie fps="30" />
+    <movie fps="60" />
     <movie width="480" />
     <movie height="762" />
     <movie version="3" />
@@ -52,7 +52,7 @@
   </includeLibraries>
   <!-- SWC Libraries -->
   <libraryPaths>
-    <element path="src\Combobox.swc" />
+    <element path="src\userinterface_components.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>

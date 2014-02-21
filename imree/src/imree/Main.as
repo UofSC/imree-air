@@ -19,11 +19,14 @@ package imree
 	import flash.ui.MultitouchInputMode;
 	import imree.data_helpers.data_value_pair;
 	import imree.data_helpers.position_data;
-	import imree.display_helpers.authentication;
-	import imree.display_helpers.list_exhibits;
+	import imree.display_helpers.*;
+	import imree.forms.*;
+	import imree.images.loading_flower_sprite;
 	import imree.shortcuts.box;
 	import imree.exhibit;
 	import imree.signage.signage_stack;
+	
+	
 	
 	/**
 	 * ...
@@ -67,18 +70,32 @@ package imree
 		
 		private function load_imree():void {
 			
-			this.addChild(new list_exhibits(connection,exhibit_selected));
-			function exhibit_selected(e:Event):void {
-				trace(e);
-			}
 			
-			var auth:authentication = new authentication(connection, loggedIn);
-			this.addChild(auth);
 			
+			//var auth:authentication = new authentication(connection, loggedIn);
+			//this.addChild(auth);
+			
+			/**
 			function loggedIn(e:*= null):void {
 				animator.off_stage(auth);
+				var options:Vector.<data_value_pair> = new Vector.<data_value_pair>();
+					options.push(new data_value_pair("Systems", 2));
+					options.push(new data_value_pair("RBSC", 1));
+					options.push(new data_value_pair("SCPC", 3));
+				var exh:Vector.<f_element> = new Vector.<f_element>();
+				exh.push(new f_element_text("Name", "exhibit_name"));
+				exh.push(new f_element_text("Start Date", "exhibit_date_start"));
+				exh.push(new f_element_select("Deptartment", "exhibit_department_id",options, "Please Select"));
+				var form:f_data = new f_data(exh);
+				form.connect(connection, 1, 'exhibits', 'exhibit_id');
+				form.draw();
+				addChild(form);
 			}
+			
+			*/
+			
 			/**
+			
 			var sample:Vector.<position_data> = new Vector.<position_data>();
 			for (var i:int = 0; i < 500; i++) {
 				var w:int = Math.round((Math.random() * 3));
@@ -103,7 +120,8 @@ package imree
 			function d1(e:MouseEvent):void {
 				stack_container.stopDrag();
 			}
-			*/
+			
+			
 			
 			/*
 			 * var sample_string:String = "<?xml version='1.0' encoding='utf-8' ?><flow:TextFlow whiteSpaceCollapse='preserve' xmlns:flow='http://ns.adobe.com/textLayout/2008'><flow:p><flow:span>Hoodie vero enim, XOXO Bushwick non </flow:span><flow:span textDecoration=\"underline\">8-bit</flow:span><flow:span> meh kitsch direct trade. Brooklyn authentic aesthetic, cillum paleo 8-bit PBR&B biodiesel nisi skateboard cornhole pork belly freegan ad. Pork belly distillery authentic irony aliquip cornhole. Odd Future art party ethnic, sustainable flannel fixie pork belly placeat gentrify yr flexitarian letterpress. Pop-up laboris synth stumptown Marfa messenger bag. Sunt dolore selfies eiusmod tofu assumenda. Chillwave small batch cornhole veniam duis.</flow:span></flow:p></flow:TextFlow>";

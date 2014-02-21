@@ -1,4 +1,4 @@
-package imree.display_helpers 
+package imree.forms 
 {
 	/**
 	 * ...
@@ -10,20 +10,19 @@ package imree.display_helpers
 	import flash.text.TextFormat;
 	import flash.text.TextFieldType;
 	import flash.text.TextFieldAutoSize;
-	import imree.display_helpers.f_element;
+	import imree.forms.*;
 	import imree.shortcuts.box;
 	import imree.text;
 	import imree.textFont;
 	
-	public class f_element_text extends f_element
+	public class f_element_password extends f_element
 	{
 		private var txt:TextField;
-		private var initial_val:String;
-		public function f_element_text(_label:String, _data_column_name:String, _value:String = "") {
-			label = _label;
-			value = _value;
+		public function f_element_password(_label:String, _data_column_name:String, _value:String = "") {
+			this.label = _label;
+			this.data_column_name = _data_column_name;
+			this.value = _value;
 			initial_val = _value;
-			data_column_name = _data_column_name;
 			super();
 		}
 		
@@ -39,10 +38,10 @@ package imree.display_helpers
 			var textbox:TextField = new TextField();
 				textbox.setTextFormat(inputFormat);
 				textbox.type = TextFieldType.INPUT;
-				textbox.text =  initial_val;
 				textbox.background = true;
 				textbox.defaultTextFormat = inputFormat;
 				textbox.multiline = false;
+				textbox.text = initial_val;
 				textbox.wordWrap = false;
 				textbox.autoSize = TextFieldAutoSize.NONE;
 				textbox.height = input_element_fontSize * 2 - 10;
@@ -53,6 +52,8 @@ package imree.display_helpers
 				textbox.y = 0;
 				textbox.type = TextFieldType.INPUT;
 				txt = textbox;
+				textbox.displayAsPassword = true;
+				
 				ui.addChild(textbox);
 				
 			super.draw();

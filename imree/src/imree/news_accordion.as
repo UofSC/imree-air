@@ -2,6 +2,7 @@ package imree
 {
 	import com.greensock.TweenMax;
 	import flash.display.Sprite;
+	import flash.display.Stage;
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.text.TextField;
@@ -12,16 +13,18 @@ package imree
 	 * ...
 	 * @author Tonya Holladay
 	 */
-	public class accordion extends Sprite 
+	public class news_accordion extends Sprite 
 	{
 		
-		public function accordion(items:Vector.<accordion_item>, w:int = 300, h:int = 500) 
+		public function news_accordion(items:Vector.<news_accordion_item>, w:int = 500, h:int = 100) 
 		{
-			var mask:box = new box(w, h);
+			/*var mask:box = new box(w, h);
 			this.addChild(mask);
 			this.mask = mask;
+			*/
 			w--;
 			h--;
+			
 			var number_of_boxes:int = items.length;
 			var boxes:Vector.<box> = new Vector.<box>();
 			for (var i:int; i < number_of_boxes; i++) {
@@ -34,15 +37,15 @@ package imree
 				
 				
 				boxes.push(bk);
-				var headline_wrapper:box = new box(w, h / number_of_boxes, 0xFF0000, 1,true);
+				var headline_wrapper:box = new box(w / number_of_boxes, 100, 0xFF0000, 1,true);
 				bk.addChild(headline_wrapper);
 				headline_wrapper.addChild(headline);
-				bk.y = h * (i / number_of_boxes);
+				bk.x = w * (i / number_of_boxes);
 				bk.addEventListener(MouseEvent.CLICK, show);
 				
 				var desc_format:textFont = new textFont();
 				var desc:text = new text(items[i].description, 300, desc_format);
-				desc.y = headline_wrapper.height;
+				desc.x = headline_wrapper.width;
 				bk.addChild(desc);
 			}
 			
@@ -51,18 +54,18 @@ package imree
 			{
 				timer.reset();
 				var focus: box = box(evt.currentTarget);
-				var new_Height:Number = (h - boxes[i].height) / (number_of_boxes +1);
+				var new_Width:Number = (w - boxes[i].width) / (number_of_boxes +1);
 				
 				for (var i:int = 0; i < number_of_boxes; i++) {
 					
-					var target_y:Number = new_Height * i;
-					if (boxes[i].y <= focus.y) {
+					var target_x:Number = new_Width * i;
+					if (boxes[i].x <= focus.x) {
 						//trace("this box is 'above' the clicked box");
 					} else {
 						//trace("this box is 'below' the clicked box");
-						target_y += boxes[0].height - new_Height;
+						target_x += boxes[0].width - new_Width;
 					}
-					TweenMax.to(boxes[i], .5, { y:target_y } );
+					TweenMax.to(boxes[i], .5, { x:target_x } );
 								
 				}
 				
@@ -74,7 +77,7 @@ package imree
 				function hide(evt:TimerEvent):void
 				{
 					for (var i:int = 0; i < number_of_boxes; i++) {
-						TweenMax.to(boxes[i], .5, { y : h * (i / number_of_boxes) } );
+						TweenMax.to(boxes[i], .5, { x : w * (i / number_of_boxes) } );
 					}
 					timer.stop();
 					timer.removeEventListener(TimerEvent.TIMER, hide);

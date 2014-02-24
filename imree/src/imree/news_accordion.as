@@ -21,9 +21,10 @@ package imree
 			/*var mask:box = new box(w, h);
 			this.addChild(mask);
 			this.mask = mask;
-			*/
+			
 			w--;
 			h--;
+			*/
 			
 			var number_of_boxes:int = items.length;
 			var boxes:Vector.<box> = new Vector.<box>();
@@ -33,11 +34,11 @@ package imree
 				
 				var f:textFont = new textFont('AbrahamLincoln', 18);
 				f.padding = 15;
-				var headline:text = new text(items[i].headline, 300, f);
+				var headline:text = new text(items[i].headline, 100, f);
 				
 				
 				boxes.push(bk);
-				var headline_wrapper:box = new box(w / number_of_boxes, 100, 0xFF0000, 1,true);
+				var headline_wrapper:box = new box(w * i/ number_of_boxes, 50, 0xFF0000, 1,true);
 				bk.addChild(headline_wrapper);
 				headline_wrapper.addChild(headline);
 				bk.x = w * (i / number_of_boxes);
@@ -45,7 +46,8 @@ package imree
 				
 				var desc_format:textFont = new textFont();
 				var desc:text = new text(items[i].description, 300, desc_format);
-				desc.x = headline_wrapper.width;
+				//desc.x = headline_wrapper.width;
+				desc.y = headline_wrapper.height;
 				bk.addChild(desc);
 			}
 			

@@ -4,6 +4,11 @@ package imree
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import imree.data_helpers.KeyCode;
+	import flash.display.*;
+	import flash.display.StageScaleMode;
+	
+	
+	
 	/**
 	 * ...
 	 * @author Jason Steelman - uscart@gmail.com
@@ -23,12 +28,18 @@ package imree
 			t.stage.addEventListener(KeyboardEvent.KEY_DOWN, testkey);
 		}
 		private function testkey(e:KeyboardEvent):void {
-				if (e.keyCode === KeyCode.S) {
-					//the "S" key was pressed, etc...
+				if (e.keyCode === KeyCode.T) {
+					trace("T");
+					stage.scaleMode = StageScaleMode.SHOW_ALL;
+					stage.displayState =  StageDisplayState.FULL_SCREEN;
+					
+					
+						
+
+					}
 				}
-		}
-		
 		
 	}
-
+		
 }
+

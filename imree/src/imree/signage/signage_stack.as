@@ -116,7 +116,7 @@ package imree.signage
 		public function feed_loaded():void {
 			this.feeds_ready++;
 			if (this.feeds_ready === this.feeds_count) {
-				//draw();
+				draw();
 			}
 			
 			
@@ -192,7 +192,7 @@ package imree.signage
 				classWrap_title.addChild(new text ("Classes and Workshops", classWrap_title.width, classWrap_title_format));
 			
 			
-			var cons_wrapper:box = new box (stage.stageWidth * .4, class_wrapper.height, 0xFFFF00, 1);
+			var cons_wrapper:box = new box (stage.stageWidth * .3, class_wrapper.height, 0xFFFF00, 1);
 			class_wrapper.addChild(cons_wrapper);
 			cons_wrapper.x = stage.stageWidth * .7;
 			

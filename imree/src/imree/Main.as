@@ -30,7 +30,7 @@ package imree
 	
 	/**
 	 * ...
-	 * @author Jason Steelman <uscart@gmail.com>, add yur name here as you work on this project/file
+	 * @author Jason Steelman <uscart@gmail.com>, Tonya Holladay, add yur name here as you work on this project/file
 	 */
 	public class Main extends Sprite 
 	{
@@ -49,6 +49,9 @@ package imree
 			animator = new animate();
 			animator.off_direction = "up";
 			
+			var keyCommander:keycommander = new keycommander(this);
+			addChild(keyCommander);
+			
 			//here
 			/*var accord:Vector.<accordion_item> = new Vector.<accordion_item>();
 				accord.push(new accordion_item("Some headline", "Some Descrip"));
@@ -61,7 +64,7 @@ package imree
 			*/
 			
 			
-			var news_accord:Vector.<news_accordion_item> = new Vector.<news_accordion_item>();
+			/*var news_accord:Vector.<news_accordion_item> = new Vector.<news_accordion_item>();
 				news_accord.push(new news_accordion_item("Headline", "Description"));
 				news_accord.push(new news_accordion_item("Headline", "Description"));
 				news_accord.push(new news_accordion_item("Headline", "Description"));
@@ -69,6 +72,8 @@ package imree
 				news_accord.push(new news_accordion_item("Headline", "Description"));
 			var news_acc: news_accordion = new news_accordion(news_accord, 300, 500);
 			stage.addChild(news_acc);
+			*/
+			
 			
 			connection = new serverConnect("http://imree.tcl.sc.edu/imree-php/api/");
 			connection.server_command("signage_mode", '', sign_mode_loader);

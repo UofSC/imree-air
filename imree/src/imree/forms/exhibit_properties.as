@@ -26,7 +26,9 @@ package imree.forms
 			exh.push(new f_element_text("Name", "exhibit_name"));
 			exh.push(new f_element_text("Start Date", "exhibit_date_start"));
 			exh.push(new f_element_text("Start End", "exhibit_date_end"));
-			exh.push(new f_element_select("Deptartment", "exhibit_department_id",options, "Please Select"));
+			var departments:f_element_select = new f_element_select("Deptartment", "exhibit_department_id", null, "Please Select");
+			departments.dynamic_options = new f_element_DynamicOptions(conn, 'exhibits', 'exhibit_id', 'exhibit_name');
+			exh.push(departments);
 			var form:f_data = new f_data(exh);
 			form.connect(conn, 1, 'exhibits', 'exhibit_id');
 			form.draw();

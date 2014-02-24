@@ -38,7 +38,6 @@ package imree.forms
 			conn.server_command("query", query, fetched, true);
 		}
 		public function fetched(xml:XML):void {
-			
 			dump();
 			for each(var i:XML in xml.results.children()) {
 				data.push(new data_value_pair(i[label_column], i[key_column]));

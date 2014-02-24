@@ -25,8 +25,8 @@ package imree.forms
 		private var special_height:Number;
 		private var prompt:String;
 		private var unselected_value:*;
-		private var dynamic_options:f_element_DynamicOptions;
-		public function f_element_select(_label:String, _data_column_name:String, _options:Object, _prompt:String = null, _value:*=null) {
+		
+		public function f_element_select(_label:String, _data_column_name:String, _options:Vector.<data_value_pair> = null, _prompt:String = null, _value:*=null) {
 			this.label = _label;
 			data_column_name = _data_column_name;
 			prompt = _prompt;
@@ -37,10 +37,7 @@ package imree.forms
 			} else {
 				this.value = _value;
 			}
-			trace(getQualifiedClassName(_options));
-			if (getQualifiedClassName(_options) == "imree.forms::f_element_select_DynamicOptions") {
-				this.dynamic_options = f_element_DynamicOptions(_options);
-			} else {
+			if (_options) {
 				this.options = Vector.<data_value_pair>(_options);
 			}
 			super();
@@ -59,19 +56,20 @@ package imree.forms
 			combo.x = label_width + padding;
 			special_height = combo.height; //height before items added
 			
-			
-			var dat:Array = [];
-			for each(var i:data_value_pair in options) {
-				dat.push( {label:i.label.toString(), data:i.value } );
-			}
-			if (prompt === null) {
-				combo.selectedIndex = 0;
+			if(options !== null) {
+				var dat:Array = [];
+				for each(var i:data_value_pair in options) {
+					dat.push( {label:i.label.toString(), data:i.value } );
+				}
+				if (prompt === null) {
+					combo.selectedIndex = 0;
+				} else {
+					combo.prompt = prompt;
+				}
+				combo.dataProvider = new DataProvider(dat);
 			} else {
-				combo.prompt = prompt;
+				combo.prompt = "Loading...";
 			}
-			
-			
-			combo.dataProvider = new DataProvider(dat);
 			loader_x = combo.x + combo.width + 2;
 			ui.addChild(combo);
 			super.draw();

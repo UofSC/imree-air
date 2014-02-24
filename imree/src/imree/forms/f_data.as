@@ -80,7 +80,6 @@ package imree.forms
 			trace("method: " + f_method, "row:" + f_row_id, "f_table" + f_table);
 			if (f_method === "update" && f_row_id > 0 && f_table.length > 0) {
 				data_get_row();
-				
 			}
 			var j:int = 0;
 			for each(var i:f_element in t.elements) {
@@ -97,6 +96,31 @@ package imree.forms
 				btn.y = j;
 				btn.addEventListener(ComponentEvent.BUTTON_DOWN, submit);
 				t.addChild(btn);
+			}
+			get_dynamic_data_for_all();
+		}
+		
+		private var dynamic_data_current_i:int = 0;
+		public function get_dynamic_data_for_all(e:*=null):void {
+			var dynamic_elements:Vector.<String> = new Vector.<String>();
+			for (var i:String in t.elements) {
+				if (elements[i].dynamic_options !== null) {
+					dynamic_elements.push(i);
+				}
+			}
+			if (dynamic_data_current_i > dynamic_elements.length) {
+				get_dynamic_data_for_row(dynamic_elements[dynamic_data_current_i]);
+			} else {
+				dynamic_data_current_i = 0;
+			}
+		}
+		public function get_dynamic_data_for_row(i:String):void {
+			t.elements[i].dynamic_options.onUpdate = fetched;
+			t.elements[i].dynamic_options.fetch();
+			function fetched(e:* = null):void {
+				t.elements[i].options = t.elements[i].dynamic_options.data;
+				t.elements[i].draw();
+				get_dynamic_data_for_all();
 			}
 		}
 		

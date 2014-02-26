@@ -1,8 +1,6 @@
 package imree.signage 
 {
-	
-	
-	
+
 	import flash.display.Sprite;
 	import imree.data_helpers.position_data;
 	import imree.layout;
@@ -116,7 +114,7 @@ package imree.signage
 		public function feed_loaded():void {
 			this.feeds_ready++;
 			if (this.feeds_ready === this.feeds_count) {
-				draw();
+				//draw();
 			}
 			
 			
@@ -125,74 +123,92 @@ package imree.signage
 		}
 		
 		public function draw():void {
-			var tonyasUnit:Number = stage.stageHeight / 24;
+			var tonyasUnit:Number = stage.stageHeight / 18;
 			
 			var format:textFont = new textFont();
 			
 			trace(tonyasUnit);
 			
-			var alerts_wrapper:box = new box(stage.stageWidth, 1 * tonyasUnit, 0xFFFF80, 1);
+			var alerts_wrapper:box = new box(stage.stageWidth, 1 * tonyasUnit, 0xFFFF80, 1, 1, 0x000000);
 			this.addChild(alerts_wrapper);
 			alerts_wrapper.x = 0;
 			alerts_wrapper.y = 0;
 			
-			var news_wrapper:box = new box(stage.stageWidth, 3 * tonyasUnit, 0x0000FF, 1);
+			var alerts_format:textFont = new textFont('AbrahamLincoln', 25);
+				alerts_format.color = 0x000000;
+				alerts_format.padding = 15;
+				alerts_wrapper.addChild(new text ("Stop, Drop and Roll! DUH!", alerts_wrapper.width, alerts_format));
+				
+			var timeDate:box = new box (stage.stageWidth * .3, alerts_wrapper.height, 0x800000, 1, 1);
+			timeDate.x = stage.stageWidth * .8;
+			alerts_wrapper.addChild(timeDate);
+			
+			var timeDate_format:textFont = new textFont('AbrahamLincoln', 20);
+				timeDate_format.color = 0xFFFFFF;
+				timeDate_format.padding = 15;
+				timeDate.addChild(new text ("Time/Date/Logo", timeDate.width, timeDate_format));
+			
+			var news_wrapper:box = new box(stage.stageWidth, 3 * tonyasUnit, 0x0000FF, 1,1);
 			this.addChild(news_wrapper);
 			news_wrapper.x = 0;
 			news_wrapper.y = 1 * tonyasUnit;
 			
-			var events_wrapper:box = new box(stage.stageWidth, 13 * tonyasUnit, 0x008040, 1);
+			var events_wrapper:box = new box(stage.stageWidth, 2 * tonyasUnit, 0x008040, 1, 1);
 			this.addChild(events_wrapper);
 			events_wrapper.x = 0;
-			events_wrapper.y = 4 * tonyasUnit;
+			events_wrapper.y = 3 * tonyasUnit;
 			
-			var eventsList_wrapper:box = new box(stage.stageWidth * .4, 9 * tonyasUnit, 0xFF8000, 1);
+			var eventsList_wrapper:box = new box(stage.stageWidth * .8, 7 * tonyasUnit, 0xFF8000, 1,1);
 			events_wrapper.addChild(eventsList_wrapper);
 			eventsList_wrapper.x = 0;
-			eventsList_wrapper.y = 4 * tonyasUnit;
+			eventsList_wrapper.y = 3 * tonyasUnit;
 			
-			var featured_evt_wrapper: box = new box (stage.stageWidth * .4, 4 * tonyasUnit, 0xFF0000, 1);
+			var featured_evt_wrapper: box = new box (stage.stageWidth * .4, 3 * tonyasUnit, 0xFF0000, 1,1);
 			events_wrapper.addChild(featured_evt_wrapper);
 			
-			var evt_title:box = new box (stage.stageWidth, .5 * tonyasUnit, 0x800000, 1);
+			var evt_title:box = new box(stage.stageWidth, .5 * tonyasUnit, 0x800000, 1, 1,0x000000);
+			
 			eventsList_wrapper.addChild(evt_title);
 			
-			var evt_title_format:textFont = new textFont('_sans', 18);
+			var evt_title_format:textFont = new textFont('AbrahamLincoln', 25);
 				evt_title_format.color = 0xFFFFFF;
+				evt_title_format.padding = 15;
 				evt_title.addChild(new text ("Events", evt_title.width, evt_title_format));
 						
 			
-			var spotlight_wrapper:box = new box(stage.stageWidth * .6, events_wrapper.height, 0x00FFFF, 1);
+			var spotlight_wrapper:box = new box(stage.stageWidth * .6, events_wrapper.height, 0x00FFFF, 1,1);
 			events_wrapper.addChild(spotlight_wrapper);
 			spotlight_wrapper.x = stage.stageWidth * .4;
 			spotlight_wrapper.y = 0;
 			
-			var openSession_wrapper: box = new box (spotlight_wrapper.width, 3 * tonyasUnit, 0xFF8080, 1);
+			var openSession_wrapper: box = new box (spotlight_wrapper.width, 4 * tonyasUnit, 0xFF8080, 1,1);
 			spotlight_wrapper.addChild(openSession_wrapper);
-			openSession_wrapper.y = 10 * tonyasUnit;
+			openSession_wrapper.y = 5 * tonyasUnit;
 			
 			
-			var openSession_title: box = new box (openSession_wrapper.width, .5 * tonyasUnit, 0x800000, 1);
+			var openSession_title: box = new box (openSession_wrapper.width, .6 * tonyasUnit, 0x800000, 1, 1,0x000000);
 			openSession_wrapper.addChild(openSession_title);
-			var openSessions_title_format:textFont = new textFont('_sans', 20);
+			var openSessions_title_format:textFont = new textFont('AbrahamLincoln', 25);
 				openSessions_title_format.color = 0xFFFFFF;
+				openSessions_title_format.padding = 15;
 			openSession_title.addChild(new text ("Open Study Sessions", openSession_title.width, openSessions_title_format));
 			
 			
-			var class_wrapper:box = new box(stage.stageWidth, 7 * tonyasUnit, 0x800080, 1);
+			var class_wrapper:box = new box(stage.stageWidth, 6.5 * tonyasUnit, 0x800080, 1,1);
 			this.addChild(class_wrapper);
 			class_wrapper.x = 0;
-			class_wrapper.y = 17 * tonyasUnit;
+			class_wrapper.y = 12 * tonyasUnit;
 			
-			var classWrap_title:box = new box (class_wrapper.width, .5 * tonyasUnit, 0x800000, 1);
+			var classWrap_title:box = new box (class_wrapper.width, .5 * tonyasUnit, 0x800000, 1, 1,0x000000);
 			class_wrapper.addChild(classWrap_title);
 			
-			var classWrap_title_format:textFont = new textFont('_sans', 18);
+			var classWrap_title_format:textFont = new textFont('AbrahamLincoln', 25);
 				classWrap_title_format.color = 0xFFFFFF;
+				classWrap_title_format.padding = 15;
 				classWrap_title.addChild(new text ("Classes and Workshops", classWrap_title.width, classWrap_title_format));
 			
 			
-			var cons_wrapper:box = new box (stage.stageWidth * .3, class_wrapper.height, 0xFFFF00, 1);
+			var cons_wrapper:box = new box (stage.stageWidth * .3, class_wrapper.height, 0xFFFF00, 1,1);
 			class_wrapper.addChild(cons_wrapper);
 			cons_wrapper.x = stage.stageWidth * .7;
 			
@@ -216,7 +232,7 @@ package imree.signage
 				trace('added news display');
 			}
 			
-			if (this.data_events) {
+			/*if (this.data_events) {
 				var eventsdisplay: signage_feed_display = new signage_feed_display(this.data_events,eventsList_wrapper.width, eventsList_wrapper.height);
 				eventsList_wrapper.addChild(eventsdisplay);
 				eventsdisplay.feed_background_alpha = 1;
@@ -226,7 +242,7 @@ package imree.signage
 				eventsdisplay.draw();
 				trace('added events display');
 			
-			}
+			}/*
 		}
 			 
 	
@@ -320,8 +336,8 @@ package imree.signage
 				alertdisplay.feed_border_color = 0x800000;
 				alertdisplay.feed_border_width = 5;
 				alertdisplay.draw();
-				trace('added alert display');
-			}*/
+				trace('added alert display');*/
+			}
 			
 			
 	

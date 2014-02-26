@@ -64,14 +64,18 @@ package imree
 			*/
 			
 			
-			/*var news_accord:Vector.<news_accordion_item> = new Vector.<news_accordion_item>();
-				news_accord.push(new news_accordion_item("Headline", "Description"));
-				news_accord.push(new news_accordion_item("Headline", "Description"));
-				news_accord.push(new news_accordion_item("Headline", "Description"));
-				news_accord.push(new news_accordion_item("Headline", "Description"));
-				news_accord.push(new news_accordion_item("Headline", "Description"));
+			//var newsItemz:news_accordion_item = new news_accordion_item("Some headline", "Description Description Description Description Description Description Description Description Description Description Description Description ");
+			//addChild(newsItemz);
+			
+			/**
+			var news_accord:Vector.<news_accordion_item> = new Vector.<news_accordion_item>();
+				news_accord.push(new news_accordion_item("HeadlineHeadlineHeadlineHeadlineHeadlineHeadline", "Description"));
+				news_accord.push(new news_accordion_item("HeaHeadlineHeadlineHeadlineHeadlineHeadlineHeadlinedline", "Description"));
+				news_accord.push(new news_accordion_item("HeaHeadlineHeadlineHeadlineHeadlinedline", "Description"));
+				news_accord.push(new news_accordion_item("HeHeadlineHeadlineHeadlineHeadlineadline", "Description"));
+				news_accord.push(new news_accordion_item("HeHeadlineHeadlineHeadlineadline", "Description"));
 			var news_acc: news_accordion = new news_accordion(news_accord, 300, 500);
-			stage.addChild(news_acc);
+			//stage.addChild(news_acc);
 			*/
 			
 			
@@ -84,7 +88,7 @@ package imree
 					
 				} else {
 					trace("Based on our IP, this device has been instructed to be IMREE");
-					load_imree();
+					load_signage();
 				}
 			}
 		}

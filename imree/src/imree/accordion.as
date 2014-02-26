@@ -25,10 +25,10 @@ package imree
 			var number_of_boxes:int = items.length;
 			var boxes:Vector.<box> = new Vector.<box>();
 			for (var i:int; i < number_of_boxes; i++) {
-				var bk:box = new box(w, 150, 0xE0DFC2, 1, true);
+				var bk:box = new box(w, 300, 0xE0DFC2, 1, true);
 				this.addChild(bk);
 				
-				var f:textFont = new textFont('AbrahamLincoln', 12);
+				var f:textFont = new textFont('AbrahamLincoln', 25);
 				f.color = 0xFFFFFF;
 				f.padding = 15;
 				var headline:text = new text(items[i].headline, 250, f);

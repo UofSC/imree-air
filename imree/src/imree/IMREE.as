@@ -23,6 +23,7 @@ package imree
 			main = _main;
 			Device = new device();
 			menu_items = new Vector.<DisplayObject>();
+			menu_items.push(new smart_button(new button_home(), show_home));
 			if (!main.connection.password_is_set()) {
 				menu_items.push(new smart_button(new button_login(), show_authentication));
 			}
@@ -59,6 +60,9 @@ package imree
 			function loggedIn():void {
 				main.animator.off_stage(auth);
 			}
+		}
+		public function show_home(e:*= null):void {
+			trace("Instead of tracing this message, the show_home function should draw a pretty picture in the background and show a list of available exhibits :-)");
 		}
 		
 	}

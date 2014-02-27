@@ -74,20 +74,22 @@ package imree
 					body.addChild(j);
 					j.y = placeKeeper + 5;
 					j.x = 5;
-					placeKeeper += j.height;
+					placeKeeper += j.height +5;
 				}
 			} else {
 				animator.on_direction = "up";
 				animator.off_direction = "up";
 				body.addChild(new box(main.stage.stageWidth, main.stage.stageHeight * size_percentage, 0xFFFF99, 1));
 				body.addChild(back_btn);
-				back_btn.rotation = -90;
-				placeKeeper = back_btn.width;
+				back_btn.rotation = 90;
+				back_btn.x = back_btn.width +5;
+				back_btn.y = 5;
+				placeKeeper = back_btn.width +5;
 				for each(var i:DisplayObject in contents) {
 					body.addChild(i);
 					i.x = placeKeeper + 5;
 					i.y = 5;
-					placeKeeper += i.width;
+					placeKeeper += i.width +5;
 				}
 			}
 			hide();

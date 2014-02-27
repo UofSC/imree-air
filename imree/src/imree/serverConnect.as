@@ -2,6 +2,7 @@ package imree
 {
 	import com.adobe.serialization.json.*;
 	import com.greensock.events.LoaderEvent;
+	import com.greensock.loading.DataLoader;
 	import com.greensock.loading.XMLLoader;
 	import com.greensock.loading.data.XMLLoaderVars;
 	import flash.events.Event;
@@ -19,6 +20,7 @@ package imree
 		public var uri:String;
 		public var session_key:String;
 		public var username:String;
+
 		private var password:String;
 		public function serverConnect(URI:String="") {
 			this.uri = URI;
@@ -32,6 +34,7 @@ package imree
 			return n;
 		}
 		public function server_command(command:String, command_parameter:*, onCompleteFunction:Function=null, elevatedPrivileges:Boolean = false):void {
+			
 			if (this.uri.length < 1) {
 				trace("No connection uri set. Use   ... = new serverConnect('http://site.com/imree/api/'); ... ");
 			}
@@ -56,30 +59,31 @@ package imree
 			
 			var xmlloadervars:XMLLoaderVars = new XMLLoaderVars();
 				xmlloadervars.noCache(true);
-				xmlloadervars.onComplete(getxmldata);
+				xmlloadervars.onComplete(onCompleteFunction);
 				xmlloadervars.onFail(failed);
 				xmlloadervars.onError(errored);
 				xmlloadervars.autoDispose(true);
 			var xmlloader:XMLLoader = new XMLLoader(request, xmlloadervars );
 			xmlloader.load(true);
+			trace("Requested on " + xmlloader.name + " = " + request.data.command);
 			
 			function getxmldata(e:LoaderEvent):void {
+				trace("Received on " + DataLoader(e.currentTarget).name + " = " + DataLoader(e.currentTarget).request.data.command);
 				if (onCompleteFunction !== null) {
 					onCompleteFunction(e.currentTarget.content);
 				}
-				XMLLoader(e.currentTarget).unload();
-				
+				DataLoader(e.currentTarget).unload();
 			}
 			function failed(e:LoaderEvent):void {
-				trace("XMLLoader faild! " + XMLLoader(e.currentTarget).url + " Command:" + command + " Parameter:" + command_parameter);
-				if (String(XMLLoader(e.currentTarget).content).length > 0) {
-					trace("XML::\n" + XMLLoader(e.currentTarget).content);
+				trace("DataLoader faild! " + e.text + ". " + DataLoader(e.target).url + " Command:" + command + " Parameter:" + command_parameter);
+				if (String(DataLoader(e.target.content)).length > 0) {
+					trace("XML::\n" + DataLoader(e.target).content);
 				}
 			}
 			function errored(e:LoaderEvent):void {
-				trace("XMLLoader faild! " + XMLLoader(e.currentTarget).url + " Command:" + command + " Parameter:" + command_parameter);
-				if (String(XMLLoader(e.currentTarget).content).length > 0) {
-					trace("XML::\n" + XMLLoader(e.currentTarget).content);
+				trace("DataLoader faild! " + e.text + ". " +  DataLoader(e.currentTarget).url + " Command:" + command + " Parameter:" + command_parameter);
+				if (String(DataLoader(e.currentTarget).content).length > 0) {
+					trace("XML::\n" + DataLoader(e.currentTarget).content);
 				}
 			}
 		}

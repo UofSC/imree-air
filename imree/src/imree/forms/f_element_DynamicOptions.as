@@ -2,6 +2,7 @@ package imree.forms
 {
 	import imree.data_helpers.data_value_pair;
 	import imree.serverConnect;
+	import com.greensock.events.LoaderEvent;
 	
 	/**
 	 * ...
@@ -22,7 +23,7 @@ package imree.forms
 			t = this;
 			data = new Vector.<data_value_pair>();
 			is_ready = false;
-			conn = _conn.clone();
+			conn = _conn;
 			table = _table;
 			key_column = _key_column;
 			label_column = _label_column;
@@ -37,9 +38,11 @@ package imree.forms
 				query.where = " 1";
 			conn.server_command("query", query, fetched, true);
 		}
-		public function fetched(xml:XML):void {
+		public function fetched(evt:LoaderEvent):void {
+			var xml:XML = XML(evt.currentTarget.content);
+			trace("HI HO " + xml);
 			dump();
-			for each(var i:XML in xml.results.children()) {
+			for each(var i:XML in xml.result.children()) {
 				data.push(new data_value_pair(i[label_column], i[key_column]));
 			}
 			is_ready = true;

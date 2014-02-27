@@ -14,6 +14,7 @@ package imree.forms
 	import imree.images.loading_spinner_sprite;
 	import imree.serverConnect;
 	import imree.shortcuts.box;
+	import com.greensock.events.LoaderEvent;
 	
 	public class f_data extends Sprite
 	{
@@ -80,6 +81,8 @@ package imree.forms
 			trace("method: " + f_method, "row:" + f_row_id, "f_table" + f_table);
 			if (f_method === "update" && f_row_id > 0 && f_table.length > 0) {
 				data_get_row();
+			} else {
+				get_dynamic_data_for_all();
 			}
 			var j:int = 0;
 			for each(var i:f_element in t.elements) {
@@ -97,7 +100,7 @@ package imree.forms
 				btn.addEventListener(ComponentEvent.BUTTON_DOWN, submit);
 				t.addChild(btn);
 			}
-			get_dynamic_data_for_all();
+			
 		}
 		
 		private var dynamic_data_current_i:int = 0;
@@ -108,7 +111,8 @@ package imree.forms
 					dynamic_elements.push(i);
 				}
 			}
-			if (dynamic_data_current_i > dynamic_elements.length) {
+			
+			if (dynamic_data_current_i < dynamic_elements.length) {
 				get_dynamic_data_for_row(dynamic_elements[dynamic_data_current_i]);
 			} else {
 				dynamic_data_current_i = 0;
@@ -121,6 +125,7 @@ package imree.forms
 				t.elements[i].options = t.elements[i].dynamic_options.data;
 				t.elements[i].draw();
 				get_dynamic_data_for_all();
+				dynamic_data_current_i++;
 			}
 		}
 		
@@ -135,11 +140,13 @@ package imree.forms
 				elements[i].indicate_waiting();
 			}
 			conn.server_command("query", obj, data_ready, true);
-			function data_ready(xml:XML):void {
+			function data_ready(evt:LoaderEvent):void {
+				var xml:XML = XML(evt.currentTarget.content);
 				for each (var row:f_element in elements) {
 					row.indicate_ready();
 					row.set_value(xml['result']['item'][row.data_column_name]);
 				}
+				get_dynamic_data_for_all();
 			}
 		}
 		public function data_put(e:*=null):void {

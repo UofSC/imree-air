@@ -16,11 +16,11 @@ package imree
 	public class keycommander extends Sprite
 	{
 		private var t:keycommander;
-		private var m:Main;
-		public function keycommander(main:Main) 
+		private var main:Main;
+		public function keycommander(_main:Main ) 
 		{
 			this.t = this;
-			this.m = main;
+			main = _main;
 			t.addEventListener(Event.ADDED_TO_STAGE, addedtostage);
 		}
 		private function addedtostage(e:Event):void {
@@ -28,18 +28,15 @@ package imree
 			t.stage.addEventListener(KeyboardEvent.KEY_DOWN, testkey);
 		}
 		private function testkey(e:KeyboardEvent):void {
-				if (e.keyCode === KeyCode.T) {
-					trace("T");
-					stage.scaleMode = StageScaleMode.SHOW_ALL;
-					stage.displayState =  StageDisplayState.FULL_SCREEN;
-					
-					
-						
-
-					}
-				}
-		
-	}
-		
+			if (e.keyCode === KeyCode.T) {
+				trace("T");
+				stage.scaleMode = StageScaleMode.SHOW_ALL;
+				stage.displayState =  StageDisplayState.FULL_SCREEN;
+			}
+			if (e.keyCode === KeyCode.TAB) {
+				main.Imree.Menu.toggle();
+			}
+		}
+	}		
 }
 

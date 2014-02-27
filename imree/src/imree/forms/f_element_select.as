@@ -44,8 +44,12 @@ package imree.forms
 		}
 		
 		override public function draw(label_width:int = 100, input_w:int = 200, padding:int = 10 ):void {
+			if (getChildByName("ui")) {
+				removeChild(getChildByName("ui"));
+			}
 			ui = new Sprite();
-			
+			ui.name = "ui";
+
 			var label_display:text = new text(this.label, label_width, this.label_textFont);
 			label_display.y += 5;
 			ui.addChild(label_display);

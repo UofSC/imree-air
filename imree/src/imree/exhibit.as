@@ -8,6 +8,7 @@ package imree
 	import flash.net.URLVariables;
 	import imree.data_helpers.data_asset;
 	import imree.data_helpers.data_group;
+	import com.greensock.events.LoaderEvent;
 	
 	/**
 	 * ...
@@ -26,7 +27,8 @@ package imree
 			//this is an example query that can run against index.php inside imree-php/air/
 			main.connection.server_command("group", '1', test_complete);
 			
-			function test_complete(xml:XML):void {
+			function test_complete(evt:LoaderEvent):void {
+				var xml:XML = XML(evt.currentTarget.content);
 				var dat:data_group = new data_group(xml);
 				var asset:data_asset = new data_asset(xml);
 			}

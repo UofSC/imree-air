@@ -12,6 +12,7 @@ package imree.forms
 	import imree.shortcuts.box;
 	import imree.text;
 	import imree.textFont;
+	import com.greensock.events.LoaderEvent;
 	/**
 	 * ...
 	 * @author Jason Steelman
@@ -64,7 +65,8 @@ package imree.forms
 		private function auth(elements:Object):void {
 			
 			conn.server_command('login', { username:elements.username, password:elements.password}, response );
-			function response(xml:XML):void {
+			function response(evt:LoaderEvent):void {
+				var xml:XML = XML(evt.currentTarget.content);
 				if (xml.result == "false") {
 					//do fail message
 				} else {

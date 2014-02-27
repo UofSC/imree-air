@@ -32,20 +32,20 @@
     </define>
     <verbose-stacktraces>true</verbose-stacktraces>
     <source-path append="true">
-      <path-element>C:\Users\color corrector\Documents\GitHub\imree-air\imree\src</path-element>
+      <path-element>C:\wamp\www\imree-air\imree\src</path-element>
       <path-element>C:\Program Files (x86)\FlashDevelop\Library\AS3\classes</path-element>
     </source-path>
     <library-path append="true">
-      <path-element>C:\Users\color corrector\Documents\GitHub\imree-air\imree\src\userinterface_components.swc</path-element>
+      <path-element>C:\wamp\www\imree-air\imree\src\userinterface_components.swc</path-element>
     </library-path>
   </compiler>
   <file-specs>
-    <path-element>C:\Users\color corrector\Documents\GitHub\imree-air\imree\src\imree\Main.as</path-element>
+    <path-element>C:\wamp\www\imree-air\imree\src\imree\Main.as</path-element>
   </file-specs>
   <default-background-color>#F3EFD1</default-background-color>
   <default-frame-rate>60</default-frame-rate>
   <default-size>
-    <width>1080</width>
-    <height>1920</height>
+    <width>480</width>
+    <height>786</height>
   </default-size>
 </flex-config>

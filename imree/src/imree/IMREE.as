@@ -7,6 +7,7 @@ package imree
 	import imree.display_helpers.device;
 	import imree.display_helpers.smart_button;
 	import imree.forms.authentication;
+	import imree.pages.home;
 	/**
 	 * ...
 	 * @author Jason Steelman
@@ -17,6 +18,7 @@ package imree
 		private var main:Main;
 		private var Device:device;
 		public var Menu:menu
+		public var Home:home;
 		public var menu_items:Vector.<DisplayObject>;
 		public function IMREE(_main:Main) 
 		{
@@ -62,7 +64,8 @@ package imree
 			}
 		}
 		public function show_home(e:*= null):void {
-			trace("Instead of tracing this message, the show_home function should draw a pretty picture in the background and show a list of available exhibits :-)");
+			Home = new home(main.stage.stageWidth, main.stage.stageHeight, main.connection);
+			addChild(Home);
 		}
 		
 	}

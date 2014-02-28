@@ -39,6 +39,9 @@ package imree
 			this.addChild(menu_toggle_button);
 			menu_toggle_button.addEventListener(MouseEvent.CLICK, toggle);
 			update();
+			for each(var Obj:DisplayObject in contents) {
+				Obj.addEventListener(MouseEvent.CLICK, hide);
+			}
 		}
 		
 		//not called at the moment

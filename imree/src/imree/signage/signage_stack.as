@@ -1,6 +1,7 @@
 package imree.signage 
 {
 
+	import com.greensock.events.LoaderEvent;
 	import flash.display.Sprite;
 	import imree.data_helpers.position_data;
 	import imree.layout;
@@ -54,8 +55,8 @@ package imree.signage
 			server.server_command("signage_items", '', signage_items_xml_loaded);
 		}
 		
-		private function signage_items_xml_loaded(xml_data:XML):void {
-			this.data = xml_data;
+		private function signage_items_xml_loaded(e:LoaderEvent):void {
+			this.data = XML(e.target.content);
 			this.feeds_count = this.data.result.children().length();
 			this.feeds_ready = 0;
 			for each (var feed:XML in this.data.result.children()) {

@@ -60,6 +60,8 @@ package imree
 			Logger = new logger();
 			addChild(Logger);
 			
+			
+			
 			connection = new serverConnect("http://imree.tcl.sc.edu/imree-php/api/");
 			connection.server_command("signage_mode", '', sign_mode_loader);
 			function sign_mode_loader(evt:LoaderEvent):void {
@@ -72,6 +74,7 @@ package imree
 					load_imree();
 				}
 			}
+			
 		}
 		
 		private function load_signage():void {

@@ -76,7 +76,34 @@ package imree
 		
 		private function load_signage():void {
 			var stack:signage_stack = new signage_stack(connection, this.stage.stageWidth, this.stage.stageHeight);
-			stage.addChild(stack);
+			//stage.addChild(stack);
+			//var newsItemz:news_accordion_item = new news_accordion_item("Some headline", "Description Description Description Description Description Description Description Description Description Description Description Description ");
+			//addChild(newsItemz);
+			
+			/**
+			var news_accord:Vector.<news_accordion_item> = new Vector.<news_accordion_item>();
+				news_accord.push(new news_accordion_item("HeadlineHeadlineHeadlineHeadlineHeadlineHeadline", "Description"));
+				news_accord.push(new news_accordion_item("HeaHeadlineHeadlineHeadlineHeadlineHeadlineHeadlinedline", "Description"));
+				news_accord.push(new news_accordion_item("HeaHeadlineHeadlineHeadlineHeadlinedline", "Description"));
+				news_accord.push(new news_accordion_item("HeHeadlineHeadlineHeadlineHeadlineadline", "Description"));
+				news_accord.push(new news_accordion_item("HeHeadlineHeadlineHeadlineadline", "Description"));
+			var news_acc: news_accordion = new news_accordion(news_accord, 300, 500);
+			//stage.addChild(news_acc);
+			
+			*/
+			
+			
+			/*var accord:Vector.<accordion_item> = new Vector.<accordion_item>();
+				accord.push(new accordion_item("Some headline", "Some Descrip"));
+				accord.push(new accordion_item("Some headline", "Some Descrip"));
+				accord.push(new accordion_item("Some headline", "Some Descrip"));
+				accord.push(new accordion_item("Some headline", "Some Descrip"));
+				accord.push(new accordion_item("Some headline", "Some Descrip"));
+			var accordian:accordion = new accordion(accord, 300, 500);
+			stage.addChild(accordian);
+			*/
+
+
 		}
 		
 		private function load_imree():void {

@@ -10,6 +10,8 @@ package imree.signage
 	import imree.shortcuts.box;
 	import imree.signage.signage_feed_data;
 	import com.greensock.loading.XMLLoader;
+	import com.greensock.loading.data.ImageLoaderVars;
+	import com.greensock.loading.ImageLoader;
 	import imree.text;
 	import imree.textFont;
 	import imree.*;

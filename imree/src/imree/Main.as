@@ -68,7 +68,7 @@ package imree
 				var xml:XML = XML(evt.currentTarget.content);
 				if (xml.result.signage_mode == 'signage') {
 					trace("Based on our IP, this device has been instructed to be digital signage");
-					load_signage();
+					load_imree();
 				} else {
 					trace("Based on our IP, this device has been instructed to be IMREE");
 					load_imree();

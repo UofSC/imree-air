@@ -34,7 +34,7 @@ package imree
 			on_direction = "right";
 			on_ease = Cubic.easeOut;
 		}
-		public function off_stage(obj:DisplayObject, destroy:Boolean = true):void {
+		public function off_stage(obj:DisplayObject, destroy:Boolean = true, hide:Boolean = false):void {
 			var vars:TweenLiteVars = new TweenLiteVars();
 			if (off_direction === "left") {
 				vars.x(0 - obj.width - 1);
@@ -49,7 +49,12 @@ package imree
 			if (destroy) {
 				vars.onComplete(function(e:*=null):void { obj.parent.removeChild(obj); obj = null; } );
 			}
-			TweenLite.to(obj, off_duration, vars); 
+			if (hide) {
+				vars.onComplete(function(e:*=null):void { obj.visible=false; } );
+			}
+			if(obj.visible) {
+				TweenLite.to(obj, off_duration, vars); 
+			}
 		}
 		public function on_stage(obj:DisplayObject):void {
 			var vars:TweenLiteVars = new TweenLiteVars();
@@ -62,6 +67,7 @@ package imree
 			} else if (on_direction === "up") {
 				vars.y(0 - obj.height - 1);
 			}
+			obj.visible = true;
 			TweenLite.from(obj, on_duration, vars); 
 		}
 		

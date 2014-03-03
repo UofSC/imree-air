@@ -1,5 +1,6 @@
 package imree 
 {
+	import fl.controls.NumericStepper;
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -8,6 +9,7 @@ package imree
 	import imree.display_helpers.device;
 	import imree.display_helpers.smart_button;
 	import imree.forms.authentication;
+	import imree.forms.exhibit_properties;
 	import imree.pages.home;
 	/**
 	 * ...
@@ -46,10 +48,6 @@ package imree
 			pages = new Vector.<DisplayObject>();
 			pages.push(Home);
 			
-			//testing mysqlconverter:
-			var asdf:date_from_mysql = new date_from_mysql();
-			trace(asdf.make_date("2014-02-03 14:30:00"));
-			
 		}
 		
 		public var UI_min_size:Number = 32;
@@ -79,6 +77,8 @@ package imree
 			addChild(auth);
 			main.animator.on_stage(auth);
 			function loggedIn():void {
+				addChild(new exhibit_properties(main.connection));
+		
 				main.animator.off_stage(auth);
 			}
 		}

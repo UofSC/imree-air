@@ -29,7 +29,9 @@ package imree
 			contents = _contents;
 			main = _main;
 			Imree = _imree;
-			size_percentage = .3; //some percentage, 30% at the moment
+			
+			var sample_btn:button_home = new button_home();
+			size_percentage = .3;
 			menu_toggle_button = new button_menu();
 			animator = new animate(main);
 			back_btn = new smart_button(new button_back(), toggle);
@@ -54,8 +56,8 @@ package imree
 				if (xml.results.item[0].right == "system_admin") {
 					
 				}
+				update();
 			}
-			update();
 		}
 		
 		public function update():void {
@@ -65,14 +67,19 @@ package imree
 			for each(var P:DisplayObject in contents) {
 				Imree.UI_size(P);
 			}
+			
+			
 			var placeKeeper:Number = 0;
 			if (main.stage.stageWidth > main.stage.stageHeight) {
+				size_percentage = (menu_toggle_button.width + 10) / main.stage.stageWidth;
 				animator.on_direction = "left";
 				animator.off_direction = "left";
 				body.addChild(new box(main.stage.stageWidth * size_percentage, main.stage.stageHeight, 0xFFFF99, 1));
 				body.addChild(back_btn);
+				back_btn.x = 5;
+				back_btn.y = 5;
 				back_btn.rotation = 0;
-				placeKeeper = back_btn.height;
+				placeKeeper = back_btn.height + back_btn.y;
 				for each(var j:DisplayObject in contents) {
 					body.addChild(j);
 					j.y = placeKeeper + 5;
@@ -80,12 +87,13 @@ package imree
 					placeKeeper += j.height +5;
 				}
 			} else {
+				size_percentage = (menu_toggle_button.height + 10)/ main.stage.stageHeight;
 				animator.on_direction = "up";
 				animator.off_direction = "up";
 				body.addChild(new box(main.stage.stageWidth, main.stage.stageHeight * size_percentage, 0xFFFF99, 1));
 				body.addChild(back_btn);
 				back_btn.rotation = 90;
-				back_btn.x = back_btn.width +5;
+				back_btn.x = back_btn.width + 5;
 				back_btn.y = 5;
 				placeKeeper = back_btn.width +5;
 				for each(var i:DisplayObject in contents) {

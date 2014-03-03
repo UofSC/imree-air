@@ -46,6 +46,10 @@ package imree.data_helpers
 			if (include_time) {
 				result += "time"; //3:28pm
 			}
+			return result;
+		}
+		public function as_mysql(date:Date):String {
+			return "YYYY-MM-DD HH:ii:ss";
 		}
 		
 	}

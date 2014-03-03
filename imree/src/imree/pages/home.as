@@ -2,14 +2,17 @@ package imree.pages
 {
 	import com.greensock.events.LoaderEvent;
 	import com.greensock.layout.ScaleMode;
+	import com.greensock.plugins.DropShadowFilterPlugin;
 	import fl.containers.ScrollPane;
 	import flash.display.Sprite;
 	import imree.serverConnect;
 	import flash.display.*;
+	import flash.filters.DropShadowFilter;
 	import imree.shortcuts.box;
 	
+	import flash.text.*;
 	import imree.text;
-	import imree.textFont;
+	import imree.textFont;	
 	import imree.*;
 	
 	import com.greensock.loading.data.ImageLoaderVars;
@@ -26,41 +29,88 @@ package imree.pages
 		{
 			conn = _conn;
 			conn.server_command("exhibits", "", exhibits_data_receieved);
+			
+			
 		}
+		
 		
 		
 		public function exhibits_data_receieved(e:LoaderEvent):void {
 			xml = XML(e.target.content);
 			
+			
+				var midstrip:Sprite = new Sprite;
+				midstrip.graphics.lineStyle(2, 0x000000);
+				midstrip.graphics.beginFill(0xFFFFFF, 1);
+				midstrip.graphics.drawRect (0,stage.stageHeight * .15, stage.stageWidth, stage.stageHeight * .70);
+				midstrip.graphics.endFill();
+				
+				addChild(midstrip);
+				
+						
+				/*var UniBox:Sprite = new Sprite;
+				UniBox.graphics.lineStyle(0, 0x000000);
+				UniBox.graphics.beginFill(0x000000, 0);
+				UniBox.graphics.drawRect(stage.stageWidth * .4,0, stage.stageWidth * .5, stage.stageHeight * .1);
+				UniBox.graphics.endFill();				
+				addChild(UniBox);*/
+				
+				var Uni_format:textFont = new textFont();
+				Uni_format.color = 0xFFFFFF;
+				Uni_format.padding = 10;
+				Uni_format.size = 50;
+				Uni_format.align = "center";
+				Uni_format.AbrahamLincolnFont;
+				addChild(new text ("University of South Carolina Libraries", stage.stageWidth * 1, Uni_format));
+				
+				//Need a Symbol instead of TextFont/Field, etc. 
+				
+									
+				
+				
+			
 			var scroller:ScrollPane = new ScrollPane();
 				
-				scroller.x = stage.stageWidth * .15;
+				scroller.x = stage.stageWidth * .06;
 				scroller.y = stage.stageHeight * .2;
-				scroller.setSize(stage.stageWidth * .75, stage.stageHeight * .5);
-				scroller.scrollDrag = true;
-				scroller.alpha = 1;
+				scroller.setSize(stage.stageWidth * .9, stage.stageHeight * .6);
+				scroller.scrollDrag = true;	
+				scroller.opaqueBackground = 0xFFFFFF;
+				scroller.useHandCursor = true;
+				
+				
 				addChild(scroller);
 				
-				//wtf:
-				//scroller.horizontalScrollBar;
+			
+			
 				
 			var wrapper:Sprite = new Sprite();
 			scroller.source = wrapper;
+			
 			
 			var current_x:int = 0;
 			for each(var item:XML in xml.result.children()) {
 				trace(item);
 				
 				var exhibit_cover_wrapper:Sprite = new Sprite;
-				exhibit_cover_wrapper.graphics.lineStyle(20, 0xFFFFFF);
+				exhibit_cover_wrapper.graphics.lineStyle(1, 0x000000);
 				exhibit_cover_wrapper.graphics.beginFill(0x000000, 1);
-				exhibit_cover_wrapper.graphics.drawRect(0,0, stage.stageWidth * .45, stage.stageHeight * .45); 
+				exhibit_cover_wrapper.graphics.drawRect (0, 0, stage.stageWidth * .45, stage.stageHeight * .45);	
 				exhibit_cover_wrapper.graphics.endFill();
 				
-				exhibit_cover_wrapper.x = current_x;
-				current_x += exhibit_cover_wrapper.width + 10;
-				exhibit_cover_wrapper.y = 10;
-				wrapper.addChild(exhibit_cover_wrapper);				
+				var shadow:DropShadowFilter = new DropShadowFilter();
+				shadow.distance = 10;
+				shadow.angle = 45;
+				shadow.strength = .5;
+				
+				exhibit_cover_wrapper.filters = [shadow];
+				
+				exhibit_cover_wrapper.x = current_x + 15;
+				current_x += exhibit_cover_wrapper.width +15;
+				exhibit_cover_wrapper.y = 50;
+				wrapper.addChild(exhibit_cover_wrapper);	
+				
+				
 				
 				
 				
@@ -76,16 +126,26 @@ package imree.pages
 							
 				img_loader.load();	
 				
+				var txtBox:Sprite = new Sprite;
+				//txtBox.graphics.lineStyle(0, 0x000000);
+				txtBox.graphics.beginFill(0x000000, 0);
+				txtBox.graphics.drawRect(0, 0, stage.stageWidth * .3, stage.stageHeight * .2);
+				txtBox.graphics.endFill();
+				exhibit_cover_wrapper.addChild(txtBox);
+				
+				var exhibit_txt_format:textFont = new textFont();
+				exhibit_txt_format.color = 0x000000;
+				exhibit_txt_format.padding = 10;
+				exhibit_txt_format.size = 30;
+				exhibit_txt_format.AbrahamLincolnFont;
+				txtBox.addChild(new text ("Saying Important Stuff about this Exhibit", exhibit_cover_wrapper.width * .6,exhibit_txt_format));
+				
+				
 			}			
 			scroller.update();
 			
 			
-			var txt_wrapper:box = new box(100,100,0xFFFFFF,1);
-								
-				var exhibit_txt_format:textFont = new textFont('AbrahamLincoln', 25);
-				exhibit_txt_format.color = 0xFFFFFF;
-				exhibit_txt_format.padding = 15;
-				txt_wrapper.addChild(new text ("Saying Important Stuff about this Exhibit"));
+			
 			
 			
 			

@@ -4,6 +4,7 @@ package imree
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.geom.Rectangle;
+	import imree.data_helpers.date_from_mysql;
 	import imree.display_helpers.device;
 	import imree.display_helpers.smart_button;
 	import imree.forms.authentication;
@@ -16,14 +17,24 @@ package imree
 	{
 		private var auth:authentication;
 		private var main:Main;
-		private var Device:device;
+		public var Device:device;
 		public var Menu:menu
 		public var Home:home;
+		public var pages:Vector.<DisplayObject>;
 		public var menu_items:Vector.<DisplayObject>;
+		public var current_page:DisplayObject;
 		public function IMREE(_main:Main) 
 		{
 			main = _main;
-			Device = new device();
+			Device = new device(main);
+			
+			
+			Home = new home(main.stage.stageWidth, main.stage.stageHeight, main.connection);
+			addChild(Home);
+			
+			current_page = Home;
+			
+			//menu is added last so it is on top of display list
 			menu_items = new Vector.<DisplayObject>();
 			menu_items.push(new smart_button(new button_home(), show_home));
 			if (!main.connection.password_is_set()) {
@@ -31,6 +42,14 @@ package imree
 			}
 			Menu = new menu(menu_items,main,this);
 			addChild(Menu);
+			
+			pages = new Vector.<DisplayObject>();
+			pages.push(Home);
+			
+			//testing mysqlconverter:
+			var asdf:date_from_mysql = new date_from_mysql();
+			trace(asdf.make_date("2014-02-03 14:30:00"));
+			
 		}
 		
 		public var UI_min_size:Number = 32;
@@ -63,10 +82,26 @@ package imree
 				main.animator.off_stage(auth);
 			}
 		}
+		
 		public function show_home(e:*= null):void {
-			Home = new home(main.stage.stageWidth, main.stage.stageHeight, main.connection);
-			addChild(Home);
+			show(Home);
 		}
+		
+		public function show(page:DisplayObject):void {
+			if(page !== current_page) {
+				hide_all_except(page);
+				main.animator.on_stage(page);
+			}
+		}
+		
+		public function hide_all_except(except:DisplayObject = null):void {
+			for each(var i:DisplayObject in pages) {
+				if (i !== except) {
+					main.animator.off_stage(i, false, true);
+				}
+			}
+		}
+		
 		
 	}
 

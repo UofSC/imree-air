@@ -40,7 +40,6 @@ package imree.forms
 		}
 		public function fetched(evt:LoaderEvent):void {
 			var xml:XML = XML(evt.currentTarget.content);
-			trace("HI HO " + xml);
 			dump();
 			for each(var i:XML in xml.result.children()) {
 				data.push(new data_value_pair(i[label_column], i[key_column]));

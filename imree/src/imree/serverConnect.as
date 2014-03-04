@@ -65,7 +65,6 @@ package imree
 				xmlloadervars.autoDispose(true);
 			var xmlloader:XMLLoader = new XMLLoader(request, xmlloadervars );
 			xmlloader.load(true);
-			trace("Requested on " + xmlloader.name + " = " + request.data.command);
 			
 			function getxmldata(e:LoaderEvent):void {
 				trace("Received on " + DataLoader(e.currentTarget).name + " = " + DataLoader(e.currentTarget).request.data.command);

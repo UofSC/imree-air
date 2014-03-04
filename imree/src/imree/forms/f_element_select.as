@@ -71,6 +71,9 @@ package imree.forms
 					combo.prompt = prompt;
 				}
 				combo.dataProvider = new DataProvider(dat);
+				if (value) {
+					set_value(value);
+				}
 			} else {
 				combo.prompt = "Loading...";
 			}
@@ -83,7 +86,7 @@ package imree.forms
 			if (ComboBox(component).selectedItem === null) {
 				return unselected_value;
 			} else {
-				return ComboBox(component).selectedItem.data;
+				return String(ComboBox(component).selectedItem.data);
 			}
 		}
 		override public function get_height():Number {
@@ -92,7 +95,7 @@ package imree.forms
 		
 		override public function set_value(e:*):void {
 			for (var i:int = 0; i < ComboBox(component).dataProvider.length; i++ ) {
-				if (e == ComboBox(component).dataProvider.getItemAt(i).data) {
+				if (String(e) == String(ComboBox(component).dataProvider.getItemAt(i).data)) {
 					ComboBox(component).selectedIndex = i;
 				}
 			}

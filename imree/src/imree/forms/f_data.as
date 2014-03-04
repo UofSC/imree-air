@@ -78,7 +78,6 @@ package imree.forms
 					f_table_key_column_name.length > 0;
 		}
 		public function draw():void {
-			trace("method: " + f_method, "row:" + f_row_id, "f_table" + f_table);
 			if (f_method === "update" && f_row_id > 0 && f_table.length > 0) {
 				data_get_row();
 			} else {
@@ -124,8 +123,8 @@ package imree.forms
 			function fetched(e:* = null):void {
 				t.elements[i].options = t.elements[i].dynamic_options.data;
 				t.elements[i].draw();
-				get_dynamic_data_for_all();
 				dynamic_data_current_i++;
+				get_dynamic_data_for_all();
 			}
 		}
 		
@@ -149,15 +148,40 @@ package imree.forms
 				get_dynamic_data_for_all();
 			}
 		}
-		public function data_put(e:*=null):void {
+		public function data_put_row(e:*=null):void {
+			var obj:Object = new Object();
+			obj.table = f_table;
+			obj.table_key_column_name = f_table_key_column_name;
+			obj.columns = new Object();
+			for each(var i:f_element in elements) {
+				obj.columns[i.data_column_name] = i.get_value();
+			}
+			if (f_method === "update") {
+				if (f_row_id === 0) {
+					trace("cannot update a row without a row_id");
+				} else {
+					obj.row_id = f_row_id;
+					obj.where = f_table_key_column_name + " = '" + f_row_id + "'";
+					conn.server_command("update", obj, update_response, true);
+				}
+			} else if (f_method === "insert") {
+				//@todo
+			}
 			
+		}
+		
+		private function update_response(e:LoaderEvent):void {
+			trace("SAVED ::::: " + e.target.content);
+			if (onSave !== null) {
+				onSave();
+			}
 		}
 		
 		public function submit(e:*=null):void {
 			if (onSubmit === null ) {
 				if (t.prepared_for_mysql()) {
 					trace("Sending " + f_method + " request for table " + f_table + " where row_id = " + f_row_id + "...");
-					
+					data_put_row();
 				} else {
 					trace("Form Submitted without onSubmit listener nor MySQL connection information");
 					for each(var i:f_element in elements) {

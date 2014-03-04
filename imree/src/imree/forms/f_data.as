@@ -6,6 +6,7 @@ package imree.forms
 	 */
 	import fl.controls.Button;
 	import fl.controls.BaseButton;
+	import fl.controls.ComboBox;
 	import fl.events.ComponentEvent;
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
@@ -28,8 +29,12 @@ package imree.forms
 		public var onSave:Function;
 		public var f_table:String;
 		public var f_table_key_column_name:String;
+		public var f_table_label_column_name:String;
 		public var f_row_id:int;
 		public var f_method:String;
+		public var edit_siblings_allowed:Boolean;
+		public var edit_siblings_limit_where:String;
+		private var edit_siblings_select:f_element_select;
 		public var conn:serverConnect;
 		private var t:f_data;
 		public function f_data(_elements:Vector.<f_element>) 
@@ -44,6 +49,7 @@ package imree.forms
 			f_method = "insert";
 			f_row_id = 0;
 			f_table = "";
+			edit_siblings_allowed = false;
 			
 		}
 		public function layout(_base_font_size:int = 16, _width:int = 300, _height:int = 300):void {
@@ -79,12 +85,24 @@ package imree.forms
 					f_table_key_column_name.length > 0;
 		}
 		public function draw():void {
+			var j:int = 0; //tracks next element's y position
+			
+			if (edit_siblings_allowed && conn !== null) {
+				edit_siblings_select = new f_element_select('Change', 'exhibit_name', null, 'Select');
+				edit_siblings_select.dynamic_options = new f_element_DynamicOptions(conn, 'exhibits', 'exhibit_id', 'exhibit_name',null, edit_siblings_select);
+				edit_siblings_select.onChange = edit_siblings_changed;
+				edit_siblings_select.draw();
+				t.addChild(edit_siblings_select);
+				edit_siblings_select.x = 10;
+				j += edit_siblings_select.get_height() + 10;
+			}
+			
 			if (f_method === "update" && f_row_id > 0 && f_table.length > 0) {
 				data_get_row();
 			} else {
 				get_dynamic_data_for_all();
 			}
-			var j:int = 0;
+			
 			for each(var i:f_element in t.elements) {
 				i.draw();
 				i.x = 10;
@@ -100,7 +118,13 @@ package imree.forms
 				btn.addEventListener(ComponentEvent.BUTTON_DOWN, submit);
 				t.addChild(btn);
 			}
-			
+		}
+		private function edit_siblings_changed(e:*= null):void {
+			if (prepared_for_mysql()) {
+				f_method = "update";
+				f_row_id = edit_siblings_select.get_value();
+				data_get_row();
+			}
 		}
 		
 		private var dynamic_data_current_i:int = 0;
@@ -115,6 +139,9 @@ package imree.forms
 			if (dynamic_data_current_i < dynamic_elements.length) {
 				get_dynamic_data_for_row(dynamic_elements[dynamic_data_current_i]);
 			} else {
+				if (edit_siblings_allowed) {
+					edit_siblings_select.dynamic_options.fetch();
+				}
 				dynamic_data_current_i = 0;
 			}
 		}
@@ -166,7 +193,7 @@ package imree.forms
 					conn.server_command("update", obj, update_response, true);
 				}
 			} else if (f_method === "insert") {
-				//@todo
+				conn.server_command("insert", obj, update_response, true);
 			}
 			
 		}

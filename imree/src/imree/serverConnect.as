@@ -20,8 +20,7 @@ package imree
 		public var uri:String;
 		public var session_key:String;
 		public var username:String;
-
-		private var password:String;
+		public var password:String;
 		public function serverConnect(URI:String="") {
 			this.uri = URI;
 		}

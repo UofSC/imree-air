@@ -18,7 +18,8 @@ package imree.forms
 		public var data:Vector.<data_value_pair>;
 		private var conn:serverConnect;
 		private var t:f_element_DynamicOptions;
-		public function f_element_DynamicOptions(_conn:serverConnect, _table:String, _key_column:String, _label_column:String, _onUpdate:Function = null) 
+		public var parent:f_element;
+		public function f_element_DynamicOptions(_conn:serverConnect, _table:String, _key_column:String, _label_column:String, _onUpdate:Function = null, parent_element:f_element = null) 
 		{
 			t = this;
 			data = new Vector.<data_value_pair>();
@@ -28,6 +29,7 @@ package imree.forms
 			key_column = _key_column;
 			label_column = _label_column;
 			onUpdate = _onUpdate;
+			parent = parent_element;
 			//fetch();
 		}
 		public function fetch():void {
@@ -47,6 +49,9 @@ package imree.forms
 			is_ready = true;
 			if (onUpdate != null) {
 				onUpdate();
+			} else if (t.parent !== null) {
+				t.parent.options = data;
+				t.parent.draw();
 			}
 		}
 		public function dump():void {

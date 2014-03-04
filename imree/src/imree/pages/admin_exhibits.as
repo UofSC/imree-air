@@ -20,23 +20,12 @@ package imree.pages
 		public var h:Number;
 		public var main:Main;
 		public var form:f_data;
-		public var exhibit_select:f_data;
+		
 		public function admin_exhibits(_w:int, _h:int, _main:Main)  {
 			w = _w;
 			h = _h;
 			main = _main;
-			var exhibit_select_elements:Vector.<f_element> = new Vector.<f_element>();
-			var exhibit_select_options:f_element_DynamicOptions = new f_element_DynamicOptions(main.connection, 'exhibits', 'exhibit_id', 'exhibit_name');
-			var exhibit_select_elements_item:f_element_select = new f_element_select('Exhibit', 'exhibit_name',null,"Please Select");
-				exhibit_select_elements_item.dynamic_options = exhibit_select_options;
-				exhibit_select_elements_item.onChange = request_changed_exhibit;
-			exhibit_select = new f_data(exhibit_select_elements);
-			function request_changed_exhibit(e:Event):void {
-				draw(ComboBox(exhibit_select_elements_item.component).selectedItem.data);
-			}
-			addChild(exhibit_select);
-			exhibit_select.draw();
-			exhibit_select.visible = false;
+			
 			var options:f_element_DynamicOptions = new f_element_DynamicOptions(main.connection, 'exhibits', 'exhibit_id', 'exhibit_name');
 			
 			var exh:Vector.<f_element> = new Vector.<f_element>();
@@ -49,11 +38,15 @@ package imree.pages
 			exh.push(departments);
 			
 			form = new f_data(exh);
+			form.edit_siblings_allowed = true;
+			form.conn = main.connection;
+			form.f_table = "exhibits";
+			form.f_table_key_column_name = "exhibit_id";
+			form.f_table_label_column_name = "exhibit_name";
 			addChild(form);
 			
 		}
 		public function draw(i:int = 0):void {
-			exhibit_select.visible = true;
 			form.connect(main.connection, i, 'exhibits', 'exhibit_id');
 			form.draw();
 		}

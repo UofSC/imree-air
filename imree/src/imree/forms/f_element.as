@@ -1,6 +1,7 @@
 package imree.forms 
 {
 	import fl.core.UIComponent;
+	import fl.events.ComponentEvent;
 	import flash.display.Sprite;
 	import imree.data_helpers.data_value_pair;
 	import imree.images.loading_spinner_sprite;
@@ -27,6 +28,7 @@ package imree.forms
 		public var loader:loading_spinner_sprite;
 		public var loader_x:int;
 		public var enabled:Boolean;
+		public var onChange:Function;
 		private var t:f_element;
 		
 		public function f_element() {
@@ -54,6 +56,7 @@ package imree.forms
 			} else {
 				set_disable();
 			}
+			
 		}
 		public function get_value():* {
 			return value;

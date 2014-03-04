@@ -8,6 +8,7 @@ package imree.forms
 	import fl.controls.ComboBox;
 	import fl.data.DataProvider;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
 	import flash.text.TextFieldType;
@@ -79,6 +80,11 @@ package imree.forms
 			}
 			loader_x = combo.x + combo.width + 2;
 			ui.addChild(combo);
+			
+			if (onChange !== null) {
+				combo.addEventListener(Event.CHANGE, onChange);
+			}
+			
 			super.draw();
 		}
 		

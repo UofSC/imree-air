@@ -10,7 +10,9 @@ package imree
 	import imree.display_helpers.smart_button;
 	import imree.forms.authentication;
 	import imree.forms.exhibit_properties;
+	import imree.pages.admin_exhibits;
 	import imree.pages.home;
+	import imree.shortcuts.box;
 	/**
 	 * ...
 	 * @author Jason Steelman
@@ -22,17 +24,36 @@ package imree
 		public var Device:device;
 		public var Menu:menu
 		public var Home:home;
+		public var page_admin_exhibits:admin_exhibits;
 		public var pages:Vector.<DisplayObject>;
 		public var menu_items:Vector.<DisplayObject>;
 		public var current_page:DisplayObject;
+		public var staging_area:box;
+		public var padding:int;
+		public var sample_button:button_home;
 		public function IMREE(_main:Main) 
 		{
 			main = _main;
 			Device = new device(main);
+			padding = 10;
 			
+			sample_button = new button_home();
+			UI_size(sample_button);
+			if (main.stage.stageWidth > main.stage.stageHeight) {
+				staging_area = new box(main.stage.stageWidth - sample_button.width - padding,main.stage.stageHeight);
+				staging_area.x = sample_button.width + padding;
+			} else {
+				staging_area = new box(main.stage.stageWidth, main.stage.stageHeight - sample_button.height - padding);
+				staging_area.y = sample_button.height + padding;
+			}
 			
 			Home = new home(main.stage.stageWidth, main.stage.stageHeight, main.connection);
 			addChild(Home);
+			
+			page_admin_exhibits = new admin_exhibits(staging_area.width, staging_area.height, main);
+			page_admin_exhibits.x = staging_area.x;
+			page_admin_exhibits.y = staging_area.y;
+			addChild(page_admin_exhibits);
 			
 			current_page = Home;
 			
@@ -47,6 +68,7 @@ package imree
 			
 			pages = new Vector.<DisplayObject>();
 			pages.push(Home);
+			pages.push(page_admin_exhibits);
 			
 		}
 		
@@ -77,14 +99,18 @@ package imree
 			addChild(auth);
 			main.animator.on_stage(auth);
 			function loggedIn():void {
-				addChild(new exhibit_properties(main.connection));
-		
 				main.animator.off_stage(auth);
+				show_exhibit_admin();
 			}
 		}
 		
 		public function show_home(e:*= null):void {
 			show(Home);
+		}
+		
+		public function show_exhibit_admin(e:*= null):void {
+			page_admin_exhibits.draw();
+			show(page_admin_exhibits);
 		}
 		
 		public function show(page:DisplayObject):void {

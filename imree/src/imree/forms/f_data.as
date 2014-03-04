@@ -67,7 +67,8 @@ package imree.forms
 			}
 		}
 		public function prepared_for_mysql():Boolean {
-			return 	conn.password_is_set() && 
+			return 	conn !== null && 
+					conn.password_is_set() && 
 					conn.username != null && 
 					conn != null && 
 					f_method != null &&

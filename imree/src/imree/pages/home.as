@@ -5,6 +5,7 @@ package imree.pages
 	import com.greensock.plugins.DropShadowFilterPlugin;
 	import fl.containers.ScrollPane;
 	import flash.display.Sprite;
+	import flash.events.MouseEvent;
 	import imree.serverConnect;
 	import flash.display.*;
 	import flash.filters.DropShadowFilter;
@@ -25,6 +26,7 @@ package imree.pages
 	{
 		private var conn:serverConnect;
 		public var xml:XML;
+		public var onSelect:Function;
 		public function home(_w:int, _h:int, _conn:serverConnect) 
 		{
 			conn = _conn;
@@ -92,11 +94,10 @@ package imree.pages
 			for each(var item:XML in xml.result.children()) {
 				trace(item);
 				
-				var exhibit_cover_wrapper:Sprite = new Sprite;
-				exhibit_cover_wrapper.graphics.lineStyle(1, 0x000000);
-				exhibit_cover_wrapper.graphics.beginFill(0x000000, 1);
-				exhibit_cover_wrapper.graphics.drawRect (0, 0, stage.stageWidth * .45, stage.stageHeight * .45);	
-				exhibit_cover_wrapper.graphics.endFill();
+				var exhibit_cover_wrapper:box = new box(stage.stageWidth * .45, stage.stageHeight * .45, 0x000000,.5, 1, 0x000000);
+				exhibit_cover_wrapper.data = item.exhibit_id;
+				exhibit_cover_wrapper.mouseChildren = false;
+				exhibit_cover_wrapper.addEventListener(MouseEvent.CLICK, exhibit_selected);
 				
 				var shadow:DropShadowFilter = new DropShadowFilter();
 				shadow.distance = 10;
@@ -151,6 +152,12 @@ package imree.pages
 			
 			}
 		
-		
+			private function exhibit_selected(e:MouseEvent):void {
+				if (onSelect !== null) {
+					onSelect(box(e.target).data);
+				} else {
+					trace("an exhibit has been selected, but no onselect function has been defined.");
+				}
+			}
 	}
 }

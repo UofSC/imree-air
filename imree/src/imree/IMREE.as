@@ -12,6 +12,7 @@ package imree
 	import imree.forms.exhibit_properties;
 	import imree.pages.admin_exhibits;
 	import imree.pages.home;
+	import imree.pages.exhibit_display;
 	import imree.shortcuts.box;
 	/**
 	 * ...
@@ -24,6 +25,7 @@ package imree
 		public var Device:device;
 		public var Menu:menu
 		public var Home:home;
+		public var Exhibit:exhibit_display;
 		public var page_admin_exhibits:admin_exhibits;
 		public var pages:Vector.<DisplayObject>;
 		public var menu_items:Vector.<DisplayObject>;
@@ -48,6 +50,7 @@ package imree
 			}
 			
 			Home = new home(main.stage.stageWidth, main.stage.stageHeight, main.connection);
+			Home.onSelect = load_exhibit;
 			addChild(Home);
 			
 			page_admin_exhibits = new admin_exhibits(staging_area.width, staging_area.height, main);
@@ -126,6 +129,20 @@ package imree
 					main.animator.off_stage(i, false, true);
 				}
 			}
+		}
+		public function load_exhibit(exhibit_id:*= null):void {
+			if (Exhibit !== null) {
+				if (Exhibit.parent !== null) {
+					Exhibit.parent.removeChild(Exhibit);
+				}
+				Exhibit = null;
+			}
+			Exhibit = new exhibit_display(int(exhibit_id), main.stage.stageWidth, main.stage.stageHeight, main);
+			Exhibit.load();
+			pages.push(Exhibit);
+			addChild(Exhibit);
+			addChildAt(Menu, numChildren);
+			current_page = Exhibit;
 		}
 		
 		

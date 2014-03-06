@@ -62,7 +62,6 @@ package imree.pages
 				Uni_format.padding = 10;
 				Uni_format.size = 50;
 				Uni_format.align = "center";
-				Uni_format.AbrahamLincolnFont;
 				addChild(new text ("University of South Carolina Libraries", stage.stageWidth * 1, Uni_format));
 				
 				//Need a Symbol instead of TextFont/Field, etc. 
@@ -138,7 +137,7 @@ package imree.pages
 				exhibit_txt_format.color = 0x000000;
 				exhibit_txt_format.padding = 10;
 				exhibit_txt_format.size = 30;
-				exhibit_txt_format.AbrahamLincolnFont;
+				
 				txtBox.addChild(new text ("Saying Important Stuff about this Exhibit", exhibit_cover_wrapper.width * .6,exhibit_txt_format));
 				
 				

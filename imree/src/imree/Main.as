@@ -25,7 +25,6 @@ package imree
 	import imree.forms.*;
 	import imree.images.loading_flower_sprite;
 	import imree.shortcuts.box;
-	import imree.exhibit;
 	import imree.keycommander;
 	import imree.signage.signage_stack;
 	
@@ -38,7 +37,7 @@ package imree
 	public class Main extends Sprite 
 	{
 		public var connection:serverConnect;
-		public var stack:exhibit;
+		
 		public var animator:animate;
 		public var keyCommando:keycommander;
 		public var Imree:IMREE;

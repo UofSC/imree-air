@@ -13,20 +13,24 @@ package imree.modules
 		public var module_id:String;
 		public var module_name:String;
 		public var module_type:String;
-		private var main:Main;
+		public var main:Main;
 		private var parent_module:module;
 		private var Exhibit:exhibit_display;
+		public var thumb_display_columns:int;
+		public var thumb_display_rows:int;
 		public function module(_main:Main, _Exhibit:exhibit_display, _items:Vector.<module>=null)
 		{
 			items = _items;
 			main = _main;
 			Exhibit = _Exhibit;
 		}
-		public function draw_thumb():void {
+		public function draw_thumb(_w:int = 200, _h:int = 200):void {
 			
 		}
 		public function draw_feature():void {
-			
+			for each (var i:module in items) {
+				i.draw_thumb();
+			}
 		}
 		public function trace_heirarchy(mod:module, tab:int=0):String{
 			
@@ -34,9 +38,9 @@ package imree.modules
 			var str:String = "";
 			for each(var i:module in mod.items) {
 				if (i.items !== null && i.items.length > 0) {
-					str += "\n" + tabs[tab] + i.module_name + " { " + trace_heirarchy(i, tab + 1) + " \n" + tabs[tab] + "}";
+					str += "\n" + tabs[tab] + i.module_name + " [" + i.module_type + "]" + " { " + trace_heirarchy(i, tab + 1) + " \n" + tabs[tab] + "}";
 				} else {
-					str += i.module_name;
+					str += "\n" + tabs[tab] + i.module_name + " [" + i.module_type + "]";
 				}
 			}
 			return str;

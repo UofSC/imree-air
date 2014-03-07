@@ -14,8 +14,8 @@ package imree.modules
 		public var module_name:String;
 		public var module_type:String;
 		public var main:Main;
-		private var parent_module:module;
-		private var Exhibit:exhibit_display;
+		public var parent_module:module;
+		public var Exhibit:exhibit_display;
 		public var thumb_display_columns:int;
 		public var thumb_display_rows:int;
 		public function module(_main:Main, _Exhibit:exhibit_display, _items:Vector.<module>=null)
@@ -27,7 +27,7 @@ package imree.modules
 		public function draw_thumb(_w:int = 200, _h:int = 200):void {
 			
 		}
-		public function draw_feature():void {
+		public function draw_feature(_w:int, _h:int):void {
 			for each (var i:module in items) {
 				i.draw_thumb();
 			}
@@ -44,6 +44,9 @@ package imree.modules
 				}
 			}
 			return str;
+		}
+		public function dump():void {
+			//@todo
 		}
 	}
 

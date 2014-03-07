@@ -2,6 +2,9 @@ package imree.modules
 {
 	import com.greensock.loading.ImageLoader;
 	import flash.display.Sprite;
+	import flash.net.URLRequest;
+	import flash.net.URLRequestMethod;
+	import flash.net.URLVariables;
 	import imree.Main;
 	import imree.pages.exhibit_display;
 	import imree.shortcuts.box;
@@ -19,13 +22,15 @@ package imree.modules
 		override public function draw_thumb(_w:int = 200, _h:int = 200):void {
 			var result:box = new box(_w, _h);
 			addChild(result);
-			var thumb_url:String = asset_url;
+			var url_request:URLRequest = new URLRequest(asset_url);
+			var url_data:URLVariables = new URLVariables();
 			if (can_resize) {
-				thumb_url = asset_url + "?size=" + String(_h);
+				url_data.size = String(_h);
 			}
-			new ImageLoader(thumb_url, main.img_loader_vars(result)).load();
 			
-			
+			url_request.data = url_data;
+			url_request.method = URLRequestMethod.GET;
+			new ImageLoader(url_request, main.img_loader_vars(result)).load(true);
 		}
 		
 	}

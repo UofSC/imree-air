@@ -24,13 +24,13 @@ package imree.display_helpers
 			main.log("Device: square_inches = " + screen_inches_wide + " x " + screen_inches_tall + " = " + screen_square_inches);
 			
 			//y = mx + b
-			//block_size = screenwidth/5 + 100;
+			//block_size = screenwidth/8 + 100;
 			if (screen_inches_tall > screen_inches_wide) {
 				orientation = "portrait";
-				box_size = Math.round(main.stage.stageHeight / 5 + 100);
+				box_size = Math.round(main.stage.stageHeight / 8 + 100);
 			} else {
 				orientation = "landscape";
-				box_size = Math.round(main.stage.stageWidth / 5 + 100);
+				box_size = Math.round(main.stage.stageWidth / 8 + 100);
 			}
 			
 			

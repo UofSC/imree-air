@@ -91,7 +91,6 @@ package imree.pages
 			
 			var current_x:int = 0;
 			for each(var item:XML in xml.result.children()) {
-				trace(item);
 				
 				var exhibit_cover_wrapper:box = new box(stage.stageWidth * .45, stage.stageHeight * .45, 0x000000,.5, 1, 0x000000);
 				exhibit_cover_wrapper.data = item.exhibit_id;

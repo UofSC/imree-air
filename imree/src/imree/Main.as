@@ -4,6 +4,8 @@ package imree
 	import com.greensock.data.TweenLiteVars;
 	import com.greensock.easing.Cubic;
 	import com.greensock.events.LoaderEvent;
+	import com.greensock.layout.ScaleMode;
+	import com.greensock.loading.data.ImageLoaderVars;
 	import com.greensock.TimelineLite;
 	import com.greensock.TweenLite;
 	import flash.desktop.NativeApplication;
@@ -130,6 +132,15 @@ package imree
 				obj.removeChildAt(0);
 			}
 			return;
+		}
+		public function img_loader_vars(container:DisplayObjectContainer):ImageLoaderVars {
+			var vars:ImageLoaderVars = new ImageLoaderVars();
+				vars.scaleMode(ScaleMode.PROPORTIONAL_OUTSIDE); 
+				vars.container(container);
+				vars.width(container.width);
+				vars.height(container.height);
+				vars.crop(true);
+			return vars;
 		}
 		
 	}

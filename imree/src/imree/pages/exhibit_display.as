@@ -1,13 +1,22 @@
 package imree.pages 
 {
+	import com.greensock.easing.Cubic;
 	import com.greensock.events.LoaderEvent;
 	import com.greensock.layout.ScaleMode;
 	import com.greensock.loading.data.ImageLoaderVars;
 	import com.greensock.loading.ImageLoader;
+	import com.greensock.*; 
+	import com.greensock.easing.*;
 	import flash.display.Sprite;
+	import flash.events.TimerEvent;
+	import flash.utils.Timer;
 	import imree.images.loading_spinner_sprite;
 	import imree.Main;
 	import imree.modules.module;
+	import imree.modules.module_asset;
+	import imree.modules.module_asset_image;
+	import imree.modules.module_grid;
+	import imree.modules.module_narrative;
 	import imree.shortcuts.box;
 	import imree.text;
 	import imree.textFont;
@@ -41,7 +50,10 @@ package imree.pages
 			main = _main;
 			t = this;
 			wrapper = new Sprite();
-			wrapper.addChild(new box(w, h, 0x333333, 1));
+			var bk:box = new box(w * 1.3, h * 1.3, 0x333333, 1);
+			wrapper.addChild(bk);
+			wrapper.x -= w * .15;
+			wrapper.y -= h * .15;
 			addChild(wrapper);
 			main.animator.on_stage(this);
 			spinner = new loading_spinner_sprite();
@@ -49,6 +61,7 @@ package imree.pages
 			spinner.x = w / 2 - spinner.width / 2;
 			spinner.y = h / 2 - spinner.height / 2;
 		}
+		
 		public function load():void {
 			main.connection.server_command("exhibit_data", id, data_loaded);
 			function data_loaded(e:LoaderEvent):void {
@@ -63,8 +76,10 @@ package imree.pages
 				} else {
 					//@todo: prompt curator to add some modules
 				}
+				
+				trace("\n\nEXHIBIT DATA XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 				for each(var j:module in modules) {
-					trace(j.module_name + "[\n" + j.trace_heirarchy(j, 1) + "\n]");
+					trace(j.module_name +  " [" + j.module_type + "] " + "{" + j.trace_heirarchy(j, 1) + "\n}");
 				}
 				
 				exhibit_cover_image_url = xml.result.exhibit_properties.exhibit_cover_image_url;
@@ -89,30 +104,66 @@ package imree.pages
 						result.push(build_module(j));
 					}
 				}
-				var mod:module = new module(main, t, result);
-				mod.module_name = (String(xml.module_name).length > 0 ? xml.module_name : "n/a - " + xml.module_type);
-				mod.module_id = xml.module_id;
-				mod.module_type = xml.module_type;
-				return mod;
+				
+				if (xml.asset == '1') {
+					var asset:module_asset;
+					var mime_parts:Array = String(xml.module_type).toLowerCase().split('/');
+					if (mime_parts[0] == "image") {
+						asset = new module_asset_image(main, t, result);
+					} else {
+						asset = new module_asset(main, t, result);
+					}
+					asset.module_name = xml.module_asset_title;
+					asset.caption = xml.caption;
+					asset.description = xml.description;
+					asset.filename = xml.asset_data_name;
+					asset.module_type = xml.module_type;
+					asset.module_id = null; //redundant, but a reminder
+					asset.asset_url = xml.asset_url;
+					if (xml.asset_resizeable == '1') {
+						asset.can_resize = true;
+					}
+					asset.thumb_display_columns = xml.thumb_display_columns;
+					asset.thumb_display_rows = xml.thumb_display_rows;
+					return asset;
+					
+				} else {
+					var type:String = String(xml.module_type).toLowerCase();
+					var mod:module;
+					if(type == 'narrative') {
+						mod = new module_narrative(main, t, result);
+					} else if (type == 'grid') {
+						mod = new module_grid(main, t, result);
+					} else {
+						mod = new module(main, t, result);
+					}
+					
+					mod.module_name = (String(xml.module_name).length > 0 ? xml.module_name : "n/a - " + xml.module_type);
+					mod.module_id = xml.module_id;
+					mod.module_type = xml.module_type;
+					mod.thumb_display_columns = xml.thumb_display_columns;
+					mod.thumb_display_rows = xml.thumb_display_rows;
+					return mod;
+				}
+				
 			}
 		}
+		
 		public function draw_background(url:String):void {
-			var vars:ImageLoaderVars = new ImageLoaderVars();
-				vars.scaleMode(ScaleMode.PROPORTIONAL_OUTSIDE);
-				vars.container(wrapper);
-				vars.width(w);
-				vars.height(h);
-				vars.crop(true);
-			new ImageLoader(url, vars).load();
+			new ImageLoader(url, main.img_loader_vars(wrapper)).load();
 		}
-		public function draw():void {
-			var coverfont:textFont = new textFont('_sans', 28);
-			coverfont.align = TextAlign.CENTER;
-			var covertext:text = new text(exhibit_name, w * .8, coverfont, height * .5);
-			covertext.x = w * .1;
-			covertext.y = h / 2 - covertext.height / 2;
-			addChild(covertext);
+		
+		public function background_defocus(e:*=null):void {
+			TweenMax.to(wrapper, 2, { blurFilter: { blurX:10, blurY:10, quality:1 }, scaleX:.9, scaleY:.9, x:wrapper.x + wrapper.width * .05, y:wrapper.y + wrapper.height * .05, ease:Cubic.easeInOut } );
 		}
+		
+		public function draw(e:*=null):void {
+			dump();			
+			modules[0].draw_feature(stage.stageWidth, stage.stageHeight);
+			addChild(modules[0]);
+			
+		}
+		
 		public function dump():void {
 			//@todo: this function should dump all the exhibit's content. likely called when loading a new exhibit
 		}

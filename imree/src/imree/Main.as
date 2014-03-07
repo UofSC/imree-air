@@ -5,7 +5,12 @@ package imree
 	import com.greensock.easing.Cubic;
 	import com.greensock.events.LoaderEvent;
 	import com.greensock.layout.ScaleMode;
+	import com.greensock.loading.core.LoaderCore;
+	import com.greensock.loading.core.LoaderItem;
 	import com.greensock.loading.data.ImageLoaderVars;
+	import com.greensock.loading.data.LoaderMaxVars;
+	import com.greensock.loading.LoaderMax;
+	import com.greensock.loading.ImageLoader;
 	import com.greensock.TimelineLite;
 	import com.greensock.TweenLite;
 	import flash.desktop.NativeApplication;
@@ -44,6 +49,7 @@ package imree
 		public var keyCommando:keycommander;
 		public var Imree:IMREE;
 		private var Logger:logger;
+		public var image_loader_que:LoaderMax;
 		public function Main():void 
 		{
 			stage.scaleMode = StageScaleMode.NO_SCALE;
@@ -61,6 +67,13 @@ package imree
 			Logger = new logger();
 			addChild(Logger);
 			
+			var vars:LoaderMaxVars = new LoaderMaxVars();
+				vars.maxConnections(2);
+				vars.autoLoad(true);
+				vars.auditSize(false);
+			image_loader_que = new LoaderMax();
+			LoaderMax.activate([ImageLoader]);
+			image_loader_que.load();
 			
 			
 			connection = new serverConnect("http://imree.tcl.sc.edu/imree-php/api/");
@@ -118,7 +131,13 @@ package imree
 		public function log(str:*):void {
 			Logger.add(str);
 		}
-		
+		public function general_io_error(e:LoaderEvent):void {
+			LoaderCore(e.target).load(true);
+			log("IO ERROR: " + e.text);
+		}
+		public function general_loader_fail(str:*):void {
+			log("IO general_loader_fail: " + str);
+		}
 		private function deactivate(e:Event):void 
 		{
 			// make sure the app behaves well (or exits) when in background
@@ -140,9 +159,19 @@ package imree
 				vars.width(container.width);
 				vars.height(container.height);
 				vars.crop(true);
+				//vars.noCache(true);
+				vars.onIOError(general_io_error);
+				vars.onFail(general_loader_fail);
+				vars.estimatedBytes(10000);
+				vars.allowMalformedURL(true);
 			return vars;
 		}
 		
+		
+		public function que_image(e:LoaderCore):void {
+			image_loader_que.append(e);
+			image_loader_que.load();
+		}
 	}
 	
 }

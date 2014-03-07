@@ -20,7 +20,7 @@ package imree.modules
 			super(_main, _Exhibit, _items);
 		}
 		override public function draw_thumb(_w:int = 200, _h:int = 200):void {
-			var result:box = new box(_w, _h);
+			var result:box = new box(_w, _h, 0xFFFFFF, .2);
 			addChild(result);
 			var url_request:URLRequest = new URLRequest(asset_url);
 			var url_data:URLVariables = new URLVariables();
@@ -30,7 +30,10 @@ package imree.modules
 			
 			url_request.data = url_data;
 			url_request.method = URLRequestMethod.GET;
-			new ImageLoader(url_request, main.img_loader_vars(result)).load(true);
+			main.que_image(new ImageLoader(url_request, main.img_loader_vars(result)));
+		}
+		override public function draw_feature(_w:int, _h:int):void {
+			
 		}
 		
 	}

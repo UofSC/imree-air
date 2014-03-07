@@ -3,8 +3,12 @@ package imree.modules
 	import com.greensock.easing.Cubic;
 	import com.greensock.TweenLite;
 	import fl.containers.ScrollPane;
+	import fl.events.ScrollEvent;
+	import flash.display.DisplayObject;
+	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import flash.events.NativeDragEvent;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	import imree.Main;
@@ -26,14 +30,16 @@ package imree.modules
 		}
 		
 		override public function draw_feature(_w:int, _h:int):void {
-			var position:int = 0;
+			var position:int = main.Imree.Device.box_size /2 ;
 			var wrapper:Sprite = new Sprite();
 			var slidder:Sprite = new Sprite();
 			var wrapper_handle:Sprite = new Sprite();
 			slidder.addChild(wrapper_handle);
 			for each(var i:module in items) {
 				i.draw_feature(_w, _h);
+				i.alpha = .8;
 				slidder.addChild(i);
+				
 				if (main.Imree.Device.orientation == 'portrait') {
 					i.y = position;
 					position += i.height  + main.Imree.Device.box_size / 2;
@@ -43,6 +49,9 @@ package imree.modules
 					position += i.width + main.Imree.Device.box_size / 2;
 					i.y = _h / 2 - i.height / 2;
 				}
+				i.slide_out();
+				
+				
 			}
 			
 			var scroller:ScrollPane = new ScrollPane();
@@ -65,6 +74,7 @@ package imree.modules
 			
 			TweenLite.to(slidder, 2, { y:0, x:0, ease:Cubic.easeInOut, onComplete:Exhibit.background_defocus} );
 			scroller.update();
+			update_items_visible_in_scroller();
 			
 			scroller.addEventListener(MouseEvent.MOUSE_WHEEL, scrollwheel);
 			function scrollwheel(e:MouseEvent):void {
@@ -74,8 +84,20 @@ package imree.modules
 					scroller.horizontalScrollPosition -= e.delta * 15;
 				}
 			}
+			scroller.addEventListener(ScrollEvent.SCROLL, dragging);
+			function dragging(e:ScrollEvent):void {
+				update_items_visible_in_scroller(e.position);
+			}
+			function update_items_visible_in_scroller(ex:int=0):void {
+				for each(var j:module in items) {
+					if (!j.module_is_visible) {
+						if (j.x < ex + scroller.width + main.Imree.Device.box_size *1.5) {
+							j.slide_in();
+						}
+					}
+				}
+			}
 		}
-		
 	}
 
 }

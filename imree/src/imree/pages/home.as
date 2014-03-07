@@ -6,6 +6,7 @@ package imree.pages
 	import fl.containers.ScrollPane;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import imree.data_helpers.position_data;
 	import imree.serverConnect;
 	import flash.display.*;
 	import flash.filters.DropShadowFilter;
@@ -40,7 +41,7 @@ package imree.pages
 		public function exhibits_data_receieved(e:LoaderEvent):void {
 			xml = XML(e.target.content);
 			
-			
+				
 				var midstrip:Sprite = new Sprite;
 				midstrip.graphics.lineStyle(2, 0x000000);
 				midstrip.graphics.beginFill(0xFFFFFF, 1);
@@ -144,12 +145,7 @@ package imree.pages
 			scroller.update();
 			
 			
-			
-			
-			
-			
-			}
-		
+		}
 			private function exhibit_selected(e:MouseEvent):void {
 				if (onSelect !== null) {
 					onSelect(box(e.target).data);

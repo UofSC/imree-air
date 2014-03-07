@@ -1,5 +1,6 @@
 package imree 
 {
+	import com.greensock.loading.LoaderMax;
 	import fl.controls.NumericStepper;
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;

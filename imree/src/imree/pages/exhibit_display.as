@@ -17,6 +17,7 @@ package imree.pages
 	import imree.modules.module_asset_image;
 	import imree.modules.module_grid;
 	import imree.modules.module_narrative;
+	import imree.modules.module_title;
 	import imree.shortcuts.box;
 	import imree.text;
 	import imree.textFont;
@@ -105,6 +106,9 @@ package imree.pages
 					}
 				}
 				
+				/**
+				 * module, asset type switcher
+				 */
 				if (xml.asset == '1') {
 					var asset:module_asset;
 					var mime_parts:Array = String(xml.module_type).toLowerCase().split('/');
@@ -134,11 +138,15 @@ package imree.pages
 						mod = new module_narrative(main, t, result);
 					} else if (type == 'grid') {
 						mod = new module_grid(main, t, result);
+					} else if ( type == 'title') {
+						mod = new module_title(main, t, result);
 					} else {
 						mod = new module(main, t, result);
 					}
 					
+					
 					mod.module_name = (String(xml.module_name).length > 0 ? xml.module_name : "n/a - " + xml.module_type);
+					mod.module_sub_name = xml.module_sub_name;
 					mod.module_id = xml.module_id;
 					mod.module_type = xml.module_type;
 					mod.thumb_display_columns = xml.thumb_display_columns;

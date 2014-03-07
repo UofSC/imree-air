@@ -31,8 +31,8 @@ package imree.modules
 				raw_positions.push(new position_data(main.Imree.Device.box_size * i.thumb_display_columns, main.Imree.Device.box_size * i.thumb_display_rows));
 			}
 			
-			var positions:Vector.<position_data> = new layout().abstract_box_solver(raw_positions, _w, _h, 5, overflow_from_direction, true);
-			
+			var positions:Vector.<position_data> = new layout().abstract_box_solver(raw_positions, _w+50, _h, 5, overflow_from_direction, true);
+			trace(positions);
 			var wrapper:Sprite = new Sprite();
 			for (var j:int = 0; j < items.length; j++) {
 				items[j].draw_thumb(positions[j].width, positions[j].height);

@@ -8,6 +8,7 @@ package imree.pages
 	import com.greensock.*; 
 	import com.greensock.easing.*;
 	import flash.display.Sprite;
+	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	import imree.images.loading_spinner_sprite;
@@ -41,6 +42,7 @@ package imree.pages
 		public var exhibit_cover_image_url:String;
 		private var main:Main;
 		private var wrapper:Sprite;
+		public var asset_wrapper:Sprite;
 		private var spinner:loading_spinner_sprite;
 		private var t:exhibit_display;
 		public function exhibit_display(_id:int, _w:int, _h:int, _main:Main) 
@@ -129,6 +131,7 @@ package imree.pages
 					}
 					asset.thumb_display_columns = xml.thumb_display_columns;
 					asset.thumb_display_rows = xml.thumb_display_rows;
+					asset.onSelect = bring_asset_to_front;
 					return asset;
 					
 				} else {
@@ -156,7 +159,35 @@ package imree.pages
 				
 			}
 		}
-		
+		public function bring_asset_to_front(e:module_asset):void {
+			asset_wrapper = new Sprite();
+			
+			var asset_underlay:box = new box(w, h, 0xDEDEDE, .5);
+			asset_wrapper.addChild(asset_underlay);
+			TweenLite.from(asset_underlay, 1, { alpha:0 } );
+			asset_underlay.addEventListener(MouseEvent.CLICK, remove_asset_wrapper);
+			
+			addChild(asset_wrapper);
+			var asset_background:box;
+			if (main.Imree.Device.orientation == 'portrait') {
+				asset_background = new box(w, h * .9, 0x959595, 1);
+				asset_wrapper.addChild(asset_background);
+				asset_background.y = h * .1;
+			} else {
+				asset_background = new box(w * .9, h, 0x959595, 1);
+				asset_wrapper.addChild(asset_background);
+				asset_background.x = w * .1;
+			}
+			main.animator.on_stage(asset_background);
+			
+			e.draw_feature_on_object = asset_background;
+			e.draw_feature(w, h);
+		}
+		public function remove_asset_wrapper(e:*= null):void {
+			if (asset_wrapper !== null) {
+				main.animator.off_stage(asset_wrapper);
+			}
+		}
 		public function draw_background(url:String):void {
 			new ImageLoader(url, main.img_loader_vars(wrapper)).load();
 		}

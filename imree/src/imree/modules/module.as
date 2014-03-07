@@ -3,6 +3,7 @@ package imree.modules
 	import com.greensock.easing.Cubic;
 	import com.greensock.TimelineLite;
 	import com.greensock.TweenLite;
+	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
 	import imree.Main;
 	import imree.pages.exhibit_display;
@@ -23,6 +24,9 @@ package imree.modules
 		public var thumb_display_columns:int;
 		public var thumb_display_rows:int;
 		public var module_is_visible:Boolean;
+		public var onSelect:Function;
+		public var draw_feature_on_object:DisplayObjectContainer;
+		public var t:module;
 		public function module(_main:Main, _Exhibit:exhibit_display, _items:Vector.<module>=null)
 		{
 			items = _items;

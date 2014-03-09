@@ -1,8 +1,14 @@
 package imree.modules 
 {
+	import com.greensock.easing.Cubic;
+	import com.greensock.easing.Elastic;
+	import com.greensock.events.LoaderEvent;
 	import com.greensock.layout.ScaleMode;
 	import com.greensock.loading.data.ImageLoaderVars;
+	import com.greensock.loading.display.ContentDisplay;
 	import com.greensock.loading.ImageLoader;
+	import com.greensock.TweenLite;
+	import flash.display.Bitmap;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
@@ -49,10 +55,52 @@ package imree.modules
 				var vars:ImageLoaderVars = main.img_loader_vars(draw_feature_on_object);
 					vars.noCache(true);
 					vars.scaleMode(ScaleMode.PROPORTIONAL_INSIDE);
+					vars.onComplete(image_downloaded);
+					vars.crop(false);
+					vars.container(null);
+					
 				new ImageLoader(asset_url, vars).load();
+			}
+			
+			function image_downloaded(e:LoaderEvent):void {
+				var actual_image:ContentDisplay = ImageLoader(e.target).content;
+				var bitmap:Bitmap = actual_image.rawContent;
+				
+				var original_width:int = draw_feature_on_object.width;
+				var original_height:int = draw_feature_on_object.height;
+				
+				var wrapper:box = new box(draw_feature_on_object.width, draw_feature_on_object.height);
+				draw_feature_on_object.addChild(wrapper);
+				wrapper.addEventListener(MouseEvent.MOUSE_WHEEL, scroll_wheel_on_image);
+				wrapper.addChild(bitmap);
+				bitmap.scaleX = Math.min(1, bitmap.scaleX);
+				bitmap.scaleY = Math.min(1, bitmap.scaleY);
+				bitmap.x = 0 - bitmap.width /2;
+				bitmap.y = 0 - bitmap.height / 2;
+				wrapper.x = (original_width/2) ;
+				wrapper.y = (original_height/ 2);
+				
+				var max_scale:Number = Math.min(1 / bitmap.scaleX, 1 / bitmap.scaleY);
+				
+				function scroll_wheel_on_image(m:MouseEvent):void {
+					TweenLite.to(wrapper, .2, { 
+						scaleX:Math.max(wrapper.scaleX + m.delta * .1, .5),
+						scaleY:Math.max(wrapper.scaleY + m.delta * .1, .5),
+						ease:Cubic.easeInOut,
+						onComplete:check_resize
+					} ); 
+				}
+				function check_resize(m:*= null):void {
+					TweenLite.to(wrapper, .3, { 
+						scaleX:Math.max(Math.min(max_scale, wrapper.scaleX), .5),
+						scaleY:Math.max(Math.min(max_scale, wrapper.scaleY), .5),
+						ease:Elastic.easeOut
+					} ); 
+				}
 				
 			}
 		}
+		
 		
 	}
 

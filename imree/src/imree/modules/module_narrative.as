@@ -79,7 +79,7 @@ package imree.modules
 			scroller.addEventListener(MouseEvent.MOUSE_WHEEL, scrollwheel);
 			function scrollwheel(e:MouseEvent):void {
 				if (main.Imree.Device.orientation == 'portrait') {
-					scroller.verticalScrollPosition += e.delta * 15;
+					scroller.verticalScrollPosition -= e.delta * 30;
 				} else {
 					scroller.horizontalScrollPosition -= e.delta * 15;
 				}

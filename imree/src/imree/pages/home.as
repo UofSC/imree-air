@@ -128,14 +128,9 @@ package imree.pages
 				if (main.image_is_resizeable(item.exhibit_cover_image_url)) {
 					item.exhibit_cover_image_url += "?size=" + String(exhibit_cover_wrapper.height);
 				}
-				var img_loader:ImageLoader = new ImageLoader(item.exhibit_cover_image_url, img_loader_vars);
-				
-				
-				
-				img_loader.load();	
+				new ImageLoader(item.exhibit_cover_image_url, img_loader_vars).load();
 				
 				var txtBox:Sprite = new Sprite;
-				//txtBox.graphics.lineStyle(0, 0x000000);
 				txtBox.graphics.beginFill(0x000000, 0);
 				txtBox.graphics.drawRect(0, 0, stage.stageWidth * .3, stage.stageHeight * .2);
 				txtBox.graphics.endFill();
@@ -146,7 +141,7 @@ package imree.pages
 				exhibit_txt_format.padding = 10;
 				exhibit_txt_format.size = 30;
 				
-				txtBox.addChild(new text ("Saying Important Stuff about this Exhibit", exhibit_cover_wrapper.width * .6,exhibit_txt_format));
+				txtBox.addChild(new text (item.exhibit_name, exhibit_cover_wrapper.width * .6,exhibit_txt_format));
 				
 				
 			}			

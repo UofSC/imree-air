@@ -10,12 +10,14 @@ package imree.modules
 	import com.greensock.loading.ImageLoader;
 	import com.greensock.TweenLite;
 	import flash.display.Bitmap;
+	import flash.display.BlendMode;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.net.URLRequest;
 	import flash.net.URLRequestMethod;
 	import flash.net.URLVariables;
+	import imree.images.loading_spinner_sprite;
 	import imree.Main;
 	import imree.pages.exhibit_display;
 	import imree.shortcuts.box;
@@ -26,6 +28,7 @@ package imree.modules
 	public class module_asset_image extends module_asset
 	{
 		
+		public var loading_indicator:loading_spinner_sprite;
 		public function module_asset_image(_main:Main, _Exhibit:exhibit_display,_items:Vector.<module>=null)
 		{
 			t = this;
@@ -52,18 +55,26 @@ package imree.modules
 		}
 		override public function draw_feature(_w:int, _h:int):void {
 			if (draw_feature_on_object !== null) {
-				trace('loading ' + asset_url);
+				main.log('Loading module.module_asset_image [id:' + module_id + '] [name: ' + module_name + '] ' + asset_url);
 				var vars:ImageLoaderVars = main.img_loader_vars(draw_feature_on_object);
 					vars.noCache(true);
 					vars.scaleMode(ScaleMode.PROPORTIONAL_INSIDE);
 					vars.onComplete(image_downloaded);
 					vars.crop(false);
 					vars.container(null);
-					
 				new ImageLoader(asset_url, vars).load();
+				loading_indicator = new loading_spinner_sprite();
+				loading_indicator.blendMode = BlendMode.SCREEN;
+				draw_feature_on_object.addChild(loading_indicator);
+				loading_indicator.x = _w/ 2 - 128/2;
+				loading_indicator.y = _h/ 2 - 128/2;
+			} else {
+				main.log('you need to have set the draw_feature_on_object from outside the module before calling draw_feature()');
 			}
 			
 			function image_downloaded(e:LoaderEvent):void {
+				draw_feature_on_object.removeChild(loading_indicator);
+				loading_indicator = null;
 				var actual_image:ContentDisplay = ImageLoader(e.target).content;
 				var bitmap:Bitmap = actual_image.rawContent;
 				
@@ -81,14 +92,18 @@ package imree.modules
 				wrapper.x = (original_width/2) ;
 				wrapper.y = (original_height/ 2);
 				
-				var blitmask:BlitMask = new BlitMask(wrapper, 0, 0, wrapper.width, wrapper.height);
+				var blitmask:BlitMask = new BlitMask(wrapper, 0, 0,original_width, original_height);
 				blitmask.bitmapMode = false;
 				var max_scale:Number = Math.min(1 / bitmap.scaleX, 1 / bitmap.scaleY);
 				
 				function scroll_wheel_on_image(m:MouseEvent):void {
+					var factor:Number = m.delta *.1;
+					if (main.Imree.Device.orientation === 'portrait') {
+						factor *= 5;
+					}
 					TweenLite.to(wrapper, .2, { 
-						scaleX:Math.max(wrapper.scaleX + m.delta * .1, .5),
-						scaleY:Math.max(wrapper.scaleY + m.delta * .1, .5),
+						scaleX:Math.max(wrapper.scaleX + factor, .5),
+						scaleY:Math.max(wrapper.scaleY + factor, .5),
 						ease:Cubic.easeInOut,
 						onComplete:check_resize
 					} ); 
@@ -101,6 +116,17 @@ package imree.modules
 					} ); 
 				}
 				
+				wrapper.addEventListener(MouseEvent.MOUSE_DOWN, start_feature_drag);
+				function start_feature_drag(m:MouseEvent):void {
+					wrapper.startDrag();
+					wrapper.addEventListener(MouseEvent.MOUSE_OUT, stop_feature_drag);
+					wrapper.addEventListener(MouseEvent.MOUSE_UP, stop_feature_drag);
+				}
+				function stop_feature_drag(m:MouseEvent):void {
+					wrapper.stopDrag();
+					wrapper.removeEventListener(MouseEvent.MOUSE_OUT, stop_feature_drag);
+					wrapper.removeEventListener(MouseEvent.MOUSE_UP, stop_feature_drag);
+				}
 			}
 		}
 		

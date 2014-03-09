@@ -169,19 +169,41 @@ package imree.pages
 			
 			addChild(asset_wrapper);
 			var asset_background:box;
+			var asset_description:text;
+			var asset_feature_wrapper:box;
 			if (main.Imree.Device.orientation == 'portrait') {
 				asset_background = new box(w, h * .9, 0x959595, 1);
 				asset_wrapper.addChild(asset_background);
 				asset_background.y = h * .1;
+				if (e.description !== null && e.description.length > 0) {
+					asset_description = new text(e.description, asset_background.width - 20, new textFont(), asset_background.height * .3);
+					asset_feature_wrapper = new box(asset_background.width, asset_background.height * .65);
+					asset_description.x = 10;
+					asset_description.y = asset_background.height * .68;
+				} else {
+					asset_feature_wrapper = new box(asset_background.width, asset_background.height);
+				}
 			} else {
 				asset_background = new box(w * .9, h, 0x959595, 1);
 				asset_wrapper.addChild(asset_background);
 				asset_background.x = w * .1;
+				if (e.description !== null && e.description.length > 0) {
+					asset_description = new text(e.description, asset_background.width *.3, new textFont(), asset_background.height-20);
+					asset_feature_wrapper = new box(asset_background.width * .65, asset_background.height, 0x00FF00,.5 );
+					asset_description.x = asset_background.width * .68;
+					asset_description.y = 10;
+				} else {
+					asset_feature_wrapper = new box(asset_background.width, asset_background.height);
+				}
+			}
+			if (asset_description !== null) {
+				asset_background.addChild(asset_description);
 			}
 			main.animator.on_stage(asset_background);
 			
-			e.draw_feature_on_object = asset_background;
-			e.draw_feature(w, h);
+			asset_background.addChild(asset_feature_wrapper);
+			e.draw_feature_on_object = asset_feature_wrapper;
+			e.draw_feature(asset_feature_wrapper.width, asset_feature_wrapper.height);
 		}
 		public function remove_asset_wrapper(e:*= null):void {
 			if (asset_wrapper !== null) {

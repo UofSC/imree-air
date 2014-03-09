@@ -1,5 +1,6 @@
 package imree.modules 
 {
+	import com.greensock.BlitMask;
 	import com.greensock.easing.Cubic;
 	import com.greensock.easing.Elastic;
 	import com.greensock.events.LoaderEvent;
@@ -80,6 +81,8 @@ package imree.modules
 				wrapper.x = (original_width/2) ;
 				wrapper.y = (original_height/ 2);
 				
+				var blitmask:BlitMask = new BlitMask(wrapper, 0, 0, wrapper.width, wrapper.height);
+				blitmask.bitmapMode = false;
 				var max_scale:Number = Math.min(1 / bitmap.scaleX, 1 / bitmap.scaleY);
 				
 				function scroll_wheel_on_image(m:MouseEvent):void {

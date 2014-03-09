@@ -50,7 +50,7 @@ package imree
 				staging_area.y = sample_button.height + padding;
 			}
 			
-			Home = new home(main.stage.stageWidth, main.stage.stageHeight, main.connection);
+			Home = new home(main.stage.stageWidth, main.stage.stageHeight, main.connection, main);
 			Home.onSelect = load_exhibit;
 			addChild(Home);
 			

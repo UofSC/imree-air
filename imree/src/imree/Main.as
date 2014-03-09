@@ -172,6 +172,10 @@ package imree
 			image_loader_que.append(e);
 			image_loader_que.load();
 		}
+		
+		public function image_is_resizeable(url:String):Boolean {
+			return url.search(/\/file\/[0-9^\.]*$/gm) > -1;
+		}
 	}
 	
 }

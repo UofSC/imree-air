@@ -28,11 +28,12 @@ package imree.pages
 		private var conn:serverConnect;
 		public var xml:XML;
 		public var onSelect:Function;
-		public function home(_w:int, _h:int, _conn:serverConnect) 
+		public var main:Main;
+		public function home(_w:int, _h:int, _conn:serverConnect, _main:Main) 
 		{
 			conn = _conn;
 			conn.server_command("exhibits", "", exhibits_data_receieved);
-			
+			main = _main;
 			
 		}
 		
@@ -114,16 +115,23 @@ package imree.pages
 				
 				
 				
-				var img_loader_vars:ImageLoaderVars = new ImageLoaderVars();
+				var img_loader_vars:ImageLoaderVars = main.img_loader_vars(exhibit_cover_wrapper);
+				/**
+				 * the single line above does the same thing as the following 5; 
 				img_loader_vars.container(exhibit_cover_wrapper);
 				img_loader_vars.scaleMode(ScaleMode.PROPORTIONAL_OUTSIDE);
 				img_loader_vars.crop(true);
-				img_loader_vars.width(stage.stageWidth * .45);
-				img_loader_vars.height(stage.stageHeight * .45);
+				img_loader_vars.width(exhibit_cover_wrapper.width);
+				img_loader_vars.height(exhibit_cover_wrapper.height);
+				*/
+				
+				if (main.image_is_resizeable(item.exhibit_cover_image_url)) {
+					item.exhibit_cover_image_url += "?size=" + String(exhibit_cover_wrapper.height);
+				}
 				var img_loader:ImageLoader = new ImageLoader(item.exhibit_cover_image_url, img_loader_vars);
 				
 				
-							
+				
 				img_loader.load();	
 				
 				var txtBox:Sprite = new Sprite;

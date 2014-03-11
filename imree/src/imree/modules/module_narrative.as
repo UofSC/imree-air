@@ -11,6 +11,7 @@ package imree.modules
 	import flash.events.NativeDragEvent;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
+	import imree.display_helpers.scrollPaneFancy;
 	import imree.Main;
 	import imree.pages.exhibit_display;
 	import imree.shortcuts.box;
@@ -24,6 +25,7 @@ package imree.modules
 		public var caption:String;
 		public var description:String;
 		public var filename:String;
+		public var scroller:scrollPaneFancy;
 		public function module_narrative( _main:Main, _Exhibit:exhibit_display, _items:Vector.<module>=null)
 		{
 			super(_main, _Exhibit, _items);
@@ -54,14 +56,14 @@ package imree.modules
 				
 			}
 			
-			var scroller:ScrollPane = new ScrollPane();
+			scroller = new scrollPaneFancy();
 			scroller.setSize(_w, _h);
 			scroller.source = wrapper;
 			
 			slidder.mouseChildren = true;
 			wrapper.addChild(slidder);
 			scroller.update();
-			scroller.scrollDrag = true;
+			scroller.drag_enable();
 			addChild(scroller);
 			
 			if (main.Imree.Device.orientation == "portrait") {
@@ -77,13 +79,7 @@ package imree.modules
 			update_items_visible_in_scroller();
 			
 			scroller.addEventListener(MouseEvent.MOUSE_WHEEL, scrollwheel);
-			function scrollwheel(e:MouseEvent):void {
-				if (main.Imree.Device.orientation == 'portrait') {
-					scroller.verticalScrollPosition -= e.delta * 30;
-				} else {
-					scroller.horizontalScrollPosition -= e.delta * 15;
-				}
-			}
+			
 			scroller.addEventListener(ScrollEvent.SCROLL, dragging);
 			function dragging(e:ScrollEvent):void {
 				update_items_visible_in_scroller(e.position);
@@ -97,6 +93,20 @@ package imree.modules
 					}
 				}
 			}
+		}
+		
+		private function scrollwheel(e:MouseEvent):void {
+			if (main.Imree.Device.orientation == 'portrait') {
+				scroller.verticalScrollPosition -= e.delta * 30;
+			} else {
+				scroller.horizontalScrollPosition -= e.delta * 15;
+			}
+		}
+		override public function dump():void 
+		{
+			scroller.removeEventListener(MouseEvent.MOUSE_WHEEL, scrollwheel);
+			scroller.drag_disable();
+			super.dump();
 		}
 	}
 

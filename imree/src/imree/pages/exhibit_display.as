@@ -7,6 +7,8 @@ package imree.pages
 	import com.greensock.loading.ImageLoader;
 	import com.greensock.*; 
 	import com.greensock.easing.*;
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
@@ -18,6 +20,7 @@ package imree.pages
 	import imree.modules.module_asset_image;
 	import imree.modules.module_grid;
 	import imree.modules.module_narrative;
+	import imree.modules.module_next;
 	import imree.modules.module_title;
 	import imree.shortcuts.box;
 	import imree.text;
@@ -73,8 +76,8 @@ package imree.pages
 				var xml:XML = XML(e.target.content);
 				modules = new Vector.<module>();
 				if (xml.result.modules !== undefined) {
-					for each(var i:XML in xml.result.modules.children()) {
-						modules.push(build_module(i));
+					for (var i:int = 0; i < xml.result.modules.children().length(); i++ ) {
+						modules.push(build_module(xml.result.modules.children()[i],  i+1 !==  xml.result.modules.children().length()));
 					}
 				} else {
 					//@todo: prompt curator to add some modules
@@ -92,21 +95,27 @@ package imree.pages
 				exhibit_name = xml.result.exhibit_properties.exhibit_name;
 				exhibit_sub_name = xml.result.exhibit_properties.exhibit_sub_name;
 				draw_background(exhibit_cover_image_url);
-				draw();
+				draw(0);
 			}
 			
-			function build_module(xml:XML):module {
+			function build_module(xml:XML, has_next:Boolean):module {
 				var result:Vector.<module> = new Vector.<module>();
 				if (xml.child_modules !== undefined) {
 					for each(var i:XML in xml.child_modules.children()) {
-						result.push(build_module(i));
+						result.push(build_module(i, false));
 					}
 				}
 				if (xml.child_assets !== undefined) {
 					for each(var j:XML in xml.child_assets.children()) {
-						result.push(build_module(j));
+						result.push(build_module(j, false));
 					}
 				}
+				if (has_next) {
+					var next_button_module:module_next = new module_next(main, t, null);
+					result.push(next_button_module);
+					next_button_module.onSelect = draw_next;
+				}
+				
 				
 				/**
 				 * module, asset type switcher
@@ -214,19 +223,39 @@ package imree.pages
 			new ImageLoader(url, main.img_loader_vars(wrapper)).load();
 		}
 		
-		public function background_defocus(e:*=null):void {
-			TweenMax.to(wrapper, 2, { blurFilter: { blurX:10, blurY:10, quality:1 }, scaleX:.9, scaleY:.9, x:wrapper.x + wrapper.width * .05, y:wrapper.y + wrapper.height * .05, ease:Cubic.easeInOut } );
+		private var background_infocus:Boolean = true;
+		public function background_defocus(e:*= null):void {
+			if(background_infocus) {
+				TweenMax.to(wrapper, 2, { blurFilter: { blurX:10, blurY:10, quality:1 }, scaleX:.9, scaleY:.9, x:wrapper.x + wrapper.width * .05, y:wrapper.y + wrapper.height * .05, ease:Cubic.easeInOut } );
+				background_infocus = false;
+			}
 		}
 		
-		public function draw(e:*=null):void {
-			dump();			
-			modules[0].draw_feature(stage.stageWidth, stage.stageHeight);
-			addChild(modules[0]);
-			
+		public var current_module_i:int = 0;
+		public function draw_next(e:*=null):void {
+			dump_module(current_module_i);
+			if (current_module_i + 1 > modules.length) {
+				current_module_i = 0;
+			} else {
+				current_module_i++;
+			}
+			draw(current_module_i);
+		}
+		public function draw(id:int):void {
+			modules[id].draw_feature(stage.stageWidth, stage.stageHeight);
+			addChild(modules[int(id)]);
 		}
 		
-		public function dump():void {
-			//@todo: this function should dump all the exhibit's content. likely called when loading a new exhibit
+		public function dump_module(i:int):void {
+			var freeze:BitmapData = new BitmapData(modules[i].width, modules[i].height);
+			freeze.draw(modules[i]);
+			var freeze_obj:Bitmap = new Bitmap(freeze, 'auto', true);
+			freeze_obj.x = modules[i].x;
+			freeze_obj.y = modules[i].y;
+			addChild(freeze_obj);
+			modules[i].dump();
+			removeChild(modules[i]);
+			main.animator.off_stage(freeze_obj);
 		}
 	}
 

@@ -76,7 +76,12 @@ package imree.modules
 			return str;
 		}
 		public function dump():void {
-			//@todo
+			for each(var i:module in items) {
+				i.dump();
+			}
+			while (numChildren) {
+				removeChildAt(0);
+			}
 		}
 	}
 

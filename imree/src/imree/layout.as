@@ -60,7 +60,9 @@ package imree
 			}
 		}
 		public function gcd_list(list:Vector.<int>):int {
-			if (list.length < 2) {
+			if (list.length < 1) {
+				return 0;
+			}else if (list.length < 2) {
 				return list[0];
 			} else if (list.length === 2) {
 				return gcd(list[0], list[1]);

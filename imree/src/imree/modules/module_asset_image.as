@@ -109,11 +109,13 @@ package imree.modules
 					} ); 
 				}
 				function check_resize(m:*= null):void {
-					TweenLite.to(wrapper, .3, { 
-						scaleX:Math.max(Math.min(max_scale, wrapper.scaleX), .5),
-						scaleY:Math.max(Math.min(max_scale, wrapper.scaleY), .5),
-						ease:Elastic.easeOut
-					} ); 
+					if(wrapper.scaleX > max_scale || wrapper.scaleY > max_scale) {
+						TweenLite.to(wrapper, .6, { 
+							scaleX:Math.max(Math.min(max_scale, wrapper.scaleX), .5),
+							scaleY:Math.max(Math.min(max_scale, wrapper.scaleY), .5),
+							ease:Elastic.easeOut
+						} ); 
+					}
 				}
 				
 				wrapper.addEventListener(MouseEvent.MOUSE_DOWN, start_feature_drag);

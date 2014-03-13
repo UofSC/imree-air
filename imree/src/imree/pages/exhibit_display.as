@@ -48,7 +48,8 @@ package imree.pages
 		private var wrapper:Sprite;
 		public var asset_wrapper:Sprite;
 		private var spinner:loading_spinner_sprite;
-		private var t:exhibit_display;
+		public var t:exhibit_display;
+		public var sort_background:box;
 		public function exhibit_display(_id:int, _w:int, _h:int, _main:Main) 
 		{
 			id = _id;
@@ -97,6 +98,7 @@ package imree.pages
 				exhibit_sub_name = xml.result.exhibit_properties.exhibit_sub_name;
 				draw_background(exhibit_cover_image_url);
 				draw(0);
+				update_user_privileges();
 			}
 			
 			function build_module(xml:XML, has_next:Boolean):module {
@@ -141,7 +143,6 @@ package imree.pages
 					}
 					asset.thumb_display_columns = xml.thumb_display_columns;
 					asset.thumb_display_rows = xml.thumb_display_rows;
-					asset.onSelect = bring_asset_to_front;
 					return asset;
 					
 				} else {
@@ -261,8 +262,12 @@ package imree.pages
 		
 		public function update_user_privileges():void {
 			var Permission:permission = new permission();
-			if (main.User.can(Permission.EDIT, "exhibit", String(id))) {
-				trace("USER logged in with Permission.EDIT for current exhibit.");
+			for each(var i:module in modules) {
+				i.update_user_privileges(
+					main.User.can(Permission.USE, "exhibit", String(id)),
+					main.User.can(Permission.EDIT, "exhibit", String(id)),
+					main.User.can(Permission.ADMIN, "exhibit", String(id))
+				);
 			}
 		}
 	}

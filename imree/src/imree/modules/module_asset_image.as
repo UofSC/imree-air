@@ -50,7 +50,9 @@ package imree.modules
 				addEventListener(MouseEvent.CLICK, selected);
 			}
 			function selected(e:MouseEvent):void {
-				onSelect(t);
+				if (onSelect !== null) {
+					onSelect(t);
+				}
 			}
 		}
 		override public function draw_feature(_w:int, _h:int):void {
@@ -130,6 +132,7 @@ package imree.modules
 					wrapper.removeEventListener(MouseEvent.MOUSE_UP, stop_feature_drag);
 				}
 			}
+			
 		}
 		
 		

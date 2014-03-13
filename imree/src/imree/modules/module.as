@@ -18,6 +18,7 @@ package imree.modules
 		public var module_name:String;
 		public var module_sub_name:String;
 		public var module_type:String;
+		public var module_order:int;
 		public var main:Main;
 		public var parent_module:module;
 		public var Exhibit:exhibit_display;
@@ -27,6 +28,10 @@ package imree.modules
 		public var onSelect:Function;
 		public var draw_feature_on_object:DisplayObjectContainer;
 		public var t:module;
+		public var user_can_use:Boolean;
+		public var user_can_edit:Boolean;
+		public var user_can_admin:Boolean;
+		public var onUserPermissionsUpdated:Function;
 		public function module(_main:Main, _Exhibit:exhibit_display, _items:Vector.<module>=null)
 		{
 			items = _items;
@@ -82,6 +87,25 @@ package imree.modules
 			while (numChildren) {
 				removeChildAt(0);
 			}
+		}
+		
+		public function update_user_privileges(user:Boolean=true, edit:Boolean=false, admin:Boolean=false):void {
+			if (String(user) + String(edit) + String(admin) !== String(user_can_use) + String(user_can_edit) + String(user_can_admin)) {
+				user_can_use = user;
+				user_can_edit = edit;
+				user_can_admin = admin;
+				for each(var i:module in items) {
+					i.update_user_privileges(user, edit, admin);
+				}
+				if (onUserPermissionsUpdated !== null) {
+					onUserPermissionsUpdated();
+				}
+			}
+			
+		}
+		
+		public function change_mod_order(mod:module, new_index:int):void {
+			items.splice(items.indexOf(mod), 1).splice(new_index, 0, mod);
 		}
 	}
 

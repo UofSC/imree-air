@@ -1,12 +1,16 @@
 package imree 
 {
 	import com.greensock.loading.LoaderMax;
+	import com.sbhave.nativeExtensions.zbar.Scanner;
 	import fl.controls.NumericStepper;
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.geom.Rectangle;
+	import flash.system.ApplicationDomain;
+	import flash.utils.getDefinitionByName;
 	import imree.data_helpers.date_from_mysql;
+	import imree.data_helpers.user_privilege;
 	import imree.display_helpers.device;
 	import imree.display_helpers.smart_button;
 	import imree.forms.authentication;
@@ -74,6 +78,30 @@ package imree
 			pages.push(Home);
 			pages.push(page_admin_exhibits);
 			
+			
+			/**
+			 * SECTION: test for QR code support. 
+			 * Scanner.isSupported reports false negative. This is not coming from the src, but the compiled ane.
+			 */
+			var scanner_exists:Boolean;
+			try {
+				getDefinitionByName("com.sbhave.nativeExtensions.zbar.Scanner");
+				scanner_exists = true;
+			} catch (e:*) {
+				scanner_exists = false;
+			}
+			if (scanner_exists) {
+				try {
+					new Scanner();
+					Device.supports_qr = true;
+				} catch (e:*) {
+					Device.supports_qr = false;
+				}	
+			} else {
+				Device.supports_qr = false;
+			}
+
+		
 		}
 		
 		public var UI_min_size:Number = 32;
@@ -98,13 +126,36 @@ package imree
 		
 		public function show_authentication(e:*=null):void {
 			if (auth === null) {
-				auth = new authentication(main.connection, loggedIn);
+				auth = new authentication(main.connection, loggedIn, main);
 			}
 			addChild(auth);
 			main.animator.on_stage(auth);
-			function loggedIn():void {
+			function loggedIn(xml:XML):void {
+				main.User.user_is_logged_in = 		true;
+				main.User.person_id = 				xml.result.user.person_id;
+				main.User.person_name_last = 		xml.result.user.person_name_last;
+				main.User.person_name_first = 		xml.result.user.person_name_first;
+				main.User.person_title = 			xml.result.user.person_title;
+				main.User.person_department_id = 	xml.result.user.person_department_id;
+				main.User.ul_user_id = 				xml.result.user.ul_user_id;
+				
+				for each(var xml:XML in xml.result.permissions.children()) {
+					if (xml.people_privilege_name == "super_admin" && xml.people_privilege_value == "ADMIN" && xml.people_privilege_scope == "system") {
+						main.User.user_is_superAdmin = true;
+					}
+					main.User.user_privileges.push(new user_privilege(xml.people_privilege_name, xml.people_privilege_value, xml.people_privilege_scope));
+				}
+				trace(main.User);
 				main.animator.off_stage(auth);
-				show_exhibit_admin();
+				Menu.update();
+				for (var i:String in pages) {
+					if (pages[i] is exhibit_display) {
+						exhibit_display(pages[i]).update_user_privileges();
+					}
+					if (pages[i] is home) {
+						home(pages[i]).update_user_privileges();
+					}
+				}
 			}
 		}
 		

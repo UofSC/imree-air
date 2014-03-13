@@ -28,6 +28,7 @@ package imree
 	import flash.ui.MultitouchInputMode;
 	import imree.data_helpers.data_value_pair;
 	import imree.data_helpers.position_data;
+	import imree.data_helpers.user;
 	import imree.display_helpers.*;
 	import imree.forms.*;
 	import imree.images.loading_flower_sprite;
@@ -49,6 +50,7 @@ package imree
 		public var keyCommando:keycommander;
 		public var Imree:IMREE;
 		private var Logger:logger;
+		public var User:user;
 		public var image_loader_que:LoaderMax;
 		public function Main():void 
 		{
@@ -66,6 +68,8 @@ package imree
 			
 			Logger = new logger();
 			addChild(Logger);
+			
+			User = new user(this);
 			
 			var vars:LoaderMaxVars = new LoaderMaxVars();
 				vars.maxConnections(2);

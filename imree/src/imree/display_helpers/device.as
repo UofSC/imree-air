@@ -16,6 +16,7 @@ package imree.display_helpers
 		public var screen_inches_tall:Number;
 		public var orientation:String;
 		public var box_size:int;
+		public var supports_qr:Boolean;
 		public function device(main:Main) 
 		{
 			screen_inches_wide = main.stage.fullScreenWidth / Capabilities.screenDPI;

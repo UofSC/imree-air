@@ -13,6 +13,7 @@ package imree.pages
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
+	import imree.data_helpers.permission;
 	import imree.images.loading_spinner_sprite;
 	import imree.Main;
 	import imree.modules.module;
@@ -256,6 +257,13 @@ package imree.pages
 			modules[i].dump();
 			removeChild(modules[i]);
 			main.animator.off_stage(freeze_obj);
+		}
+		
+		public function update_user_privileges():void {
+			var Permission:permission = new permission();
+			if (main.User.can(Permission.EDIT, "exhibit", String(id))) {
+				trace("USER logged in with Permission.EDIT for current exhibit.");
+			}
 		}
 	}
 

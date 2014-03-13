@@ -149,12 +149,18 @@ package imree.pages
 			
 			
 		}
-			private function exhibit_selected(e:MouseEvent):void {
-				if (onSelect !== null) {
-					onSelect(box(e.target).data);
-				} else {
-					trace("an exhibit has been selected, but no onselect function has been defined.");
-				}
+		private function exhibit_selected(e:MouseEvent):void {
+			if (onSelect !== null) {
+				onSelect(box(e.target).data);
+			} else {
+				trace("an exhibit has been selected, but no onselect function has been defined.");
 			}
+		}
+		public function update_user_privileges():void {
+			/**
+			 * @todo
+			 */
+			trace("HOME ADMIN MENU not set");
+		}
 	}
 }

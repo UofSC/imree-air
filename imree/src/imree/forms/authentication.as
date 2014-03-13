@@ -8,6 +8,7 @@ package imree.forms
 	import flash.text.TextFieldType;
 	import flash.text.TextFormat;
 	import imree.data_helpers.data_value_pair;
+	import imree.Main;
 	import imree.serverConnect;
 	import imree.shortcuts.box;
 	import imree.text;
@@ -22,11 +23,15 @@ package imree.forms
 		private var t:authentication;
 		private var conn:serverConnect;
 		public var onSuccess:Function;
-		public function authentication(server:serverConnect, _onSuccess:Function) 
+		private var status:text;
+		private var auth_wrapper:box;
+		private var main:Main;
+		public function authentication(server:serverConnect, _onSuccess:Function, _main:Main) 
 		{
 			t = this;
 			conn = server;
 			onSuccess = _onSuccess;
+			main = _main;
 			t.addEventListener(Event.ADDED_TO_STAGE, added_to_stage);
 		}
 		private function added_to_stage(e:Event):void {
@@ -35,7 +40,7 @@ package imree.forms
 				var background:box = new box(stage.stageWidth, stage.stageHeight, 0x000000, .6);
 				t.addChild(background);
 				
-				var auth_wrapper:box = new box(400, 400, 0xDEDEDE, 1);
+				auth_wrapper = new box(400, 400, 0xDEDEDE, 1);
 				t.addChild(auth_wrapper);
 				auth_wrapper.center();
 				
@@ -57,22 +62,32 @@ package imree.forms
 					form.y = 50;
 				auth_wrapper.addChild(form);
 				
+				status = new text("Supports QR = " + main.Imree.Device.supports_qr, auth_wrapper.width, new textFont('_sans', 18));
+				status.y = form.height + 50 + 10;
+				status.center_x(auth_wrapper);
+				auth_wrapper.addChild(status);
+				
 				
 			} else {
 				//how you say already logged in?
 			}
 		}
 		private function auth(elements:Object):void {
-			
+			var status_y:Number = status.y;
+			auth_wrapper.removeChild(status);
 			conn.server_command('login', { username:elements.username, password:elements.password}, response );
 			function response(evt:LoaderEvent):void {
 				var xml:XML = XML(evt.currentTarget.content);
-				if (xml.result == "false") {
-					//do fail message
-				} else {
+				if (xml.result.logged_in == "true") {
 					conn.username = elements.username;
 					conn.set_password(elements.password);
-					onSuccess();
+					onSuccess(xml);
+				} else {
+					status = new text("Your username or password were incorrect.");
+					auth_wrapper.addChild(status);
+					status.y = status_y;
+					status.center_x(auth_wrapper);
+					trace("Authentication failed");
 				}
 			}
 		}

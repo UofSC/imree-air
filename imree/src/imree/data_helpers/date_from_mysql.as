@@ -18,38 +18,61 @@ package imree.data_helpers
 			months = ['January', 'February', '...'];
 			
 		}
-		public function make_date(str:String):Date {
-			//assumes YYYY-MM-DD HH:ii:ss
-			//        0123 56 89 12 45 78
-			time = new Date();
-			time.setFullYear(str.substr(0, 4));
-			time.setMonth(int(str.substr(5, 2)) - 1);
-			time.setDate(str.substr(8, 2));
-			time.setHours(str.substr(11, 2));
-			time.setMinutes(str.substr(14, 2));
-			time.setSeconds(str.substr(17, 2));
-			return time;
+				
+		public function short_date(): String {
+			var newdate: Date = new Date;
+			var thisyear:String = String (newdate.getFullYear());
+			var thismonth:String = String(newdate.getMonth());
+			var thistime: String = String (newdate.getTime());
+			
+			if (thismonth.length() == 1) { thismonth = "0" + thismonth;
+			}
+			var thisdate:String = String (newdate.getDate());
+			if (thisdate.length() == 1) { thisdate = "0" + thisdate;
+			}
+			return thisyear.substring(2, 4) + thismonth + thisdate;
+	
 		}
 		
-		public function pretty_date(str:String, short:Boolean = true, include_time:Boolean = true):String {
-			var result:String = "";
-			var date:Date = make_date(str);
+		public function long_date():String {
+			var todaysdate:Date = new Date;
+			var whatyear:String = String (todaysdate.getFullYear());
+			var whatmonths:Array = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+			var whattime:String = String (todaysdate.getTime));
+			var whatday:String = String (todaysdate.getDate());
 			
-			if (short) {
-				
-				//something like 7/4/1014
-			} else {
-				//returns something like "July 4, 2014"
-				result += months[date.month];
-			}
-			
-			if (include_time) {
-				result += "time"; //3:28pm
-			}
-			return result;
+			var thedate:String = whatmonths[todaysdate.month] + "" + whatday + ",", "," + whatyear;
+			return thedate();
 		}
-		public function as_mysql(date:Date):String {
-			return "YYYY-MM-DD HH:ii:ss";
+		
+		public function timestamp(); String {
+			var timedate:Date = new Date;
+			var timeyear:String = String(timedate.getFullYear());
+			var timemonth:String  = String(timedate.getMonth());
+			var timehours:String = String(timedate.getHours());
+			var timeminutes:String = String(timedate.getmintes());
+			var timeseconds:String = String(timedate.getSeconds());
+			
+			if (timemonth.length() == 1) { timemonth = "0" + timemonth;
+				
+			}
+			var timeday:String  = String(timedate.getDate());
+			
+			if (timeday.length() == 1) { timeday = "0" + timeday;
+			
+			}
+			if (timehours.length() == 1) { timehours = "0" + timehours;
+			
+			}
+			if (timeminutes.length() == 1) { timeminutes = "0" + timemutes;
+			}
+			
+			if (timeseconds.length() == 1) { timeseonds = "0" + timeseconds;
+			
+			}
+			
+			return timeyear + "-" + timemonth + "-" + timeday + "," + timehours + ":" + timeminutes + ":" + timeseconds;
+			
 		}
 		
 	}

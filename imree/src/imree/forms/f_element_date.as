@@ -18,7 +18,12 @@ package imree.forms
 	
 	public class f_element_date extends f_element
 	{
-		
+		private var stepper_year:NumericStepper;
+		private var stepper_month:NumericStepper;
+		private var stepper_day:NumericStepper;
+		private var stepper_hours:NumericStepper;
+		private var stepper_minutes:NumericStepper;
+		private var stepper_seconds:NumericStepper;
 		public function f_element_date(_label:String, _data_column_name:String, _value:String = "") {
 			label = _label;
 			value = _value;
@@ -41,6 +46,7 @@ package imree.forms
 		}
 		override public function get_value():* {
 			//read the values of all 6 input fields; and convert that into a mysql date
+			//stepper values come from .value like this.stepper_day.value;
 		}
 		override public function set_value(e:*):void {
 			

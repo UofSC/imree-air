@@ -154,7 +154,7 @@ package imree.modules
 					while (Exhibit.sort_background.numChildren) {
 						Exhibit.sort_background.removeChildAt(0);
 					}
-					if (Exhibit.sort_background.parent === Exhbit) {
+					if (Exhibit.sort_background.parent === Exhibit) {
 						Exhibit.removeChild(Exhibit.sort_background);
 					}
 				}

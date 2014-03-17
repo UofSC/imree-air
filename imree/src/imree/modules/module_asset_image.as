@@ -13,10 +13,18 @@ package imree.modules
 	import flash.display.BlendMode;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
+	import flash.events.GestureEvent;
+	import flash.events.GesturePhase;
 	import flash.events.MouseEvent;
+	import flash.events.TouchEvent;
+	import flash.events.TransformGestureEvent;
 	import flash.net.URLRequest;
 	import flash.net.URLRequestMethod;
 	import flash.net.URLVariables;
+	import flash.sensors.Accelerometer;
+	import flash.system.Capabilities;
+	import flash.ui.Multitouch;
+	import flash.ui.MultitouchInputMode;
 	import imree.images.loading_spinner_sprite;
 	import imree.Main;
 	import imree.pages.exhibit_display;
@@ -54,6 +62,7 @@ package imree.modules
 					onSelect(t);
 				}
 			}
+			
 		}
 		override public function draw_feature(_w:int, _h:int):void {
 			if (draw_feature_on_object !== null) {
@@ -96,7 +105,7 @@ package imree.modules
 				
 				var blitmask:BlitMask = new BlitMask(wrapper, 0, 0,original_width, original_height);
 				blitmask.bitmapMode = false;
-				var max_scale:Number = Math.min(1 / bitmap.scaleX, 1 / bitmap.scaleY);
+				var max_scale:Number = Math.min(1 / bitmap.scaleX, 1 / bitmap.scaleY) + .05;
 				
 				function scroll_wheel_on_image(m:MouseEvent):void {
 					var factor:Number = m.delta *.1;
@@ -131,10 +140,47 @@ package imree.modules
 					wrapper.removeEventListener(MouseEvent.MOUSE_OUT, stop_feature_drag);
 					wrapper.removeEventListener(MouseEvent.MOUSE_UP, stop_feature_drag);
 				}
+				
+			
+					trace("Ac support is "	+ Accelerometer.isSupported);
+					var ac:Accelerometer = new Accelerometer();
+					var isSupported:Boolean = Accelerometer.isSupported;
+					checkSupport();
+					
+				function checkSupport():void {
+					if (isSupported){
+				
+				Multitouch.inputMode = MultitouchInputMode.GESTURE;
+				wrapper.addEventListener(TransformGestureEvent.GESTURE_ZOOM, onZoom);
+				
+				function onZoom(evt:TransformGestureEvent):void {
+					var scaleResult:Number = 1 / ((evt.scaleX + evt.scaleY) / 2);
+					wrapper.scaleX += 1-scaleResult;
+					wrapper.scaleY += 1 - scaleResult;
+					
+					if (evt.phase==GesturePhase.END) { 
+						check_resize();
+					}
+				}
+				function distanceofTwo(x1:Number, x2:Number, y1:Number, y2:Number):Number {
+					var dx:Number = x1 - x2;
+					var dy:Number = y1 - y2;
+					return Math.sqrt(dx^2 + dy^2);							
+				}
+			}
+						
+			else {
+				Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
+				}
 			}
 			
 		}
 		
+		}
+		override public function dump():void {
+			Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
+			super.dump();
+		}
 		
 	}
 

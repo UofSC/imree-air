@@ -49,7 +49,7 @@ package imree
 		public var animator:animate;
 		public var keyCommando:keycommander;
 		public var Imree:IMREE;
-		private var Logger:logger;
+		public var Logger:logger;
 		public var User:user;
 		public var image_loader_que:LoaderMax;
 		public function Main():void 
@@ -67,7 +67,7 @@ package imree
 			addChild(keyCommando);
 			
 			Logger = new logger();
-			addChild(Logger);
+			
 			
 			User = new user(this);
 			
@@ -92,7 +92,7 @@ package imree
 					load_imree();
 				}
 			}
-			
+			addChild(Logger);
 		}
 		
 		private function load_signage():void {
@@ -132,8 +132,8 @@ package imree
 			addChild(Imree);
 		}
 		
-		public function log(str:*):void {
-			Logger.add(str);
+		public function log(str:*, type:String = "general"):void {
+			Logger.add(str, type);
 		}
 		public function general_io_error(e:LoaderEvent):void {
 			LoaderCore(e.target).load(true);

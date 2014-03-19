@@ -21,8 +21,10 @@ package imree
 		public var session_key:String;
 		public var username:String;
 		public var password:String;
+		private var current_loader_number:int;
 		public function serverConnect(URI:String="") {
 			this.uri = URI;
+			current_loader_number = 0;
 		}
 		public function clone():serverConnect {
 			var n:serverConnect = new serverConnect();
@@ -58,31 +60,35 @@ package imree
 			
 			var xmlloadervars:XMLLoaderVars = new XMLLoaderVars();
 				xmlloadervars.noCache(true);
-				xmlloadervars.onComplete(onCompleteFunction);
+				xmlloadervars.onComplete(getxmldata);
 				xmlloadervars.onFail(failed);
 				xmlloadervars.onError(errored);
 				xmlloadervars.autoDispose(true);
+				xmlloadervars.onInit(initialized);
+				xmlloadervars.onOpen(opened);
+				xmlloadervars.onIOError(IOERROR);
+				xmlloadervars.prop("properties", {index:current_loader_number++, command:command, paramater:command_parameter, urlvars:post_data});
 			var xmlloader:XMLLoader = new XMLLoader(request, xmlloadervars );
 			xmlloader.load(true);
 			
 			function getxmldata(e:LoaderEvent):void {
-				trace("Received on " + DataLoader(e.currentTarget).name + " = " + DataLoader(e.currentTarget).request.data.command);
-				if (onCompleteFunction !== null) {
-					onCompleteFunction(e.currentTarget.content);
-				}
-				DataLoader(e.currentTarget).unload();
+				
+				onCompleteFunction(e);
 			}
 			function failed(e:LoaderEvent):void {
-				trace("DataLoader faild! " + e.text + ". " + DataLoader(e.target).url + " Command:" + command + " Parameter:" + command_parameter);
-				if (String(DataLoader(e.target.content)).length > 0) {
-					trace("XML::\n" + DataLoader(e.target).content);
-				}
+				trace(say_loader_event(e) + " FAILED");
+			}
+			function IOERROR(e:LoaderEvent):void {
+				trace(say_loader_event(e) + " IO ERRORED");
 			}
 			function errored(e:LoaderEvent):void {
-				trace("DataLoader faild! " + e.text + ". " +  DataLoader(e.currentTarget).url + " Command:" + command + " Parameter:" + command_parameter);
-				if (String(DataLoader(e.currentTarget).content).length > 0) {
-					trace("XML::\n" + DataLoader(e.currentTarget).content);
-				}
+				trace(say_loader_event(e) + " Errored");
+			}
+			function initialized(e:LoaderEvent):void {
+				trace(say_loader_event(e) + " Initialized");
+			}
+			function opened(e:LoaderEvent):void {
+				trace(say_loader_event(e) + " Opened");
 			}
 		}
 		public function set_password(str:String):void {
@@ -91,7 +97,10 @@ package imree
 		public function password_is_set():Boolean {
 			return password != null;
 		}
-		
+		public function say_loader_event(e:LoaderEvent):String {
+			var vars:Object = DataLoader(e.currentTarget).vars.properties;
+			return "[#" + vars.index + "] \t[" + vars.command + "] \t[" + vars.parameter + "]";
+		}
 	}
 	
 }

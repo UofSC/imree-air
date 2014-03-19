@@ -32,6 +32,7 @@ package imree.modules
 		public var user_can_edit:Boolean;
 		public var user_can_admin:Boolean;
 		public var onUserPermissionsUpdated:Function;
+		public var module_supports_reordering:Boolean = false;
 		public function module(_main:Main, _Exhibit:exhibit_display, _items:Vector.<module>=null)
 		{
 			items = _items;
@@ -105,7 +106,12 @@ package imree.modules
 		}
 		
 		public function change_mod_order(mod:module, new_index:int):void {
-			items.splice(items.indexOf(mod), 1).splice(new_index, 0, mod);
+			items.splice(items.indexOf(mod), 1);
+			items.splice(new_index, 0, mod);
+		}
+		
+		override public function toString():String {
+			return module_name + " " + module_type;
 		}
 	}
 

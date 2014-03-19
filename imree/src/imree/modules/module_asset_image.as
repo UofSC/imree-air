@@ -33,6 +33,7 @@ package imree.modules
 		{
 			t = this;
 			super(_main, _Exhibit, _items);
+			module_supports_reordering = true;
 		}
 		override public function draw_thumb(_w:int = 200, _h:int = 200):void {
 			var result:box = new box(_w, _h, 0xFFFFFF, .2);

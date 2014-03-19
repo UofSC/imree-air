@@ -104,8 +104,10 @@ package imree.modules
 		}
 		override public function dump():void 
 		{
-			scroller.removeEventListener(MouseEvent.MOUSE_WHEEL, scrollwheel);
-			scroller.drag_disable();
+			if (scroller !== null) {
+				scroller.removeEventListener(MouseEvent.MOUSE_WHEEL, scrollwheel);
+				scroller.drag_disable();
+			}
 			super.dump();
 		}
 	}

@@ -1,7 +1,9 @@
 package imree.modules 
 {
+	import fl.controls.Button;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.events.EventDispatcher;
@@ -21,6 +23,7 @@ package imree.modules
 	 */
 	public class module_grid extends module
 	{
+		public var grid_feature_drawn:Boolean = false;
 		public function module_grid(_main:Main, _Exhibit:exhibit_display, _items:Vector.<module>=null)
 		{
 			t = this;
@@ -30,6 +33,8 @@ package imree.modules
 			
 		}
 		override public function draw_feature(_w:int, _h:int):void {
+			phase_feature = true;
+			grid_feature_drawn = true;
 			var overflow_from_direction:String;
 			if (main.Imree.Device.orientation === 'portrait') {
 				overflow_from_direction = "top";
@@ -100,7 +105,58 @@ package imree.modules
 				}
 				
 			}
-			
+		}
+		
+		override public function draw_edit_button():void {
+			if(edit_button === null) {
+				edit_button = new Sprite();
+				var button:Button = new Button();
+				button.setSize(main.Imree.Device.box_size / 4, main.Imree.Device.box_size / 4);
+				button.label = "Edit Grid";
+				edit_button.addChild(button);
+				edit_button.y -= main.Imree.Device.box_size / 3;
+				edit_button.addEventListener(MouseEvent.CLICK, draw_edit_UI);
+			}
+			phase_feature = grid_feature_drawn;
+			super.draw_edit_button();
+		}
+		override public function draw_edit_UI(e:* = null):void {
+			if (e is MouseEvent) {
+				main.Imree.Exhibit.focus_on_module(this, draw_edit_UI);
+			} else {
+				removeChild(edit_button);
+				edit_background = new Sprite();
+				edit_background.addChild(new box(main.stage.stageWidth, main.stage.stageHeight, 0x00FF66,1));
+				main.Imree.Exhibit.addChild(edit_background);
+				edit_wrapper = new Sprite();
+				edit_background.addChild(edit_wrapper);
+				var proxies:Vector.<box> = make_proxies(edit_background);
+				for each(var p:box in proxies) {
+					edit_wrapper.addChild(p);
+				}
+				
+			}
+		}
+		
+		public function make_proxies(wrapper:DisplayObject):Vector.<box> {
+			var proxies:Vector.<box> = new Vector.<box>();
+			var i:module;
+			var originals:Vector.<position_data> = new Vector.<position_data>();
+			for each(i in items) {
+				originals.push(new position_data(i.width, i.height));
+			}
+			var lay:layout = new layout();
+			var positions:Vector.<position_data> = lay.abstract_box_solver(originals, wrapper.width * .8, wrapper.height * .8, 5, "left");
+			for (var k:int = 0; k < items.length; k++ ) {
+				var proxy:box = new box(items[k].width, items[k].height);
+				var bits:BitmapData = new BitmapData(items[k].width, items[k].height);
+				bits.draw(items[k]);
+				proxy.addChild(new Bitmap(bits));
+				proxy.x = positions[k].x;
+				proxy.y = positions[k].y;
+				proxies.push(proxy);
+			}
+			return proxies;
 		}
 		
 		private var pending_save:int = 0;

@@ -39,6 +39,7 @@ package imree.modules
 			slidder.addChild(wrapper_handle);
 			for each(var i:module in items) {
 				i.draw_feature(_w, _h);
+				i.phase_feature = true;
 				i.alpha = .8;
 				slidder.addChild(i);
 				
@@ -93,8 +94,11 @@ package imree.modules
 					}
 				}
 			}
+			phase_feature = true;
 		}
-		
+		override public function focus_on_sub_module(mod:module, focused:Function = null):void {
+			TweenLite.to(scroller, 1, {verticalScrollPosition:mod.y - main.Imree.Device.box_size*.5, horizontalScrollPosition :mod.x - main.Imree.Device.box_size*.5, onComplete:focused} );
+		}
 		private function scrollwheel(e:MouseEvent):void {
 			if (main.Imree.Device.orientation == 'portrait') {
 				scroller.verticalScrollPosition -= e.delta * 30;

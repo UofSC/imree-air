@@ -48,7 +48,7 @@ package imree.modules
 			url_request.method = URLRequestMethod.GET;
 			main.que_image(new ImageLoader(url_request, main.img_loader_vars(result)));
 			if (onSelect !== null) {
-				addEventListener(MouseEvent.CLICK, selected);
+				result.addEventListener(MouseEvent.CLICK, selected);
 			}
 			function selected(e:MouseEvent):void {
 				if (onSelect !== null) {
@@ -133,7 +133,7 @@ package imree.modules
 					wrapper.removeEventListener(MouseEvent.MOUSE_UP, stop_feature_drag);
 				}
 			}
-			
+			phase_feature = true;
 		}
 		
 		

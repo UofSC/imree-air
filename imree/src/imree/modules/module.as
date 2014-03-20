@@ -3,6 +3,7 @@ package imree.modules
 	import com.greensock.easing.Cubic;
 	import com.greensock.TimelineLite;
 	import com.greensock.TweenLite;
+	import fl.controls.Button;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
 	import imree.Main;
@@ -33,17 +34,23 @@ package imree.modules
 		public var user_can_admin:Boolean;
 		public var onUserPermissionsUpdated:Function;
 		public var module_supports_reordering:Boolean = false;
+		public var edit_button:Sprite;
+		public var edit_background:Sprite;
+		public var edit_wrapper:Sprite;
+		public var phase_feature:Boolean;
 		public function module(_main:Main, _Exhibit:exhibit_display, _items:Vector.<module>=null)
 		{
 			items = _items;
 			main = _main;
 			Exhibit = _Exhibit;
+			phase_feature = false;
 			module_is_visible = true;
 		}
 		public function draw_thumb(_w:int = 200, _h:int = 200):void {
 			
 		}
 		public function draw_feature(_w:int, _h:int):void {
+			phase_feature = true;
 			for each (var i:module in items) {
 				i.draw_thumb();
 			}
@@ -51,6 +58,7 @@ package imree.modules
 		public function slide_out():void {
 			if (module_is_visible) {
 				module_is_visible = false;
+				phase_feature = false;
 				if (main.Imree.Device.orientation == 'portrait') {
 					y += main.Imree.Device.box_size * 2;
 				} else {
@@ -90,6 +98,31 @@ package imree.modules
 			}
 		}
 		
+		public function draw_edit_button():void {
+			if (phase_feature) {
+				if (edit_button === null) {
+					edit_button = new Sprite();
+					var simple:Button = new Button();
+					simple.label = "Edit";
+					edit_button.addChild(simple);
+				}
+				if (!contains(edit_button)) {
+					addChild(edit_button);
+				}
+			}
+		}
+		
+		public function draw_edit_UI(e:*=null):void {
+			trace("This module has no edit UI");
+		}
+		
+		public function focus_on_sub_module(mod:module, focused:Function = null):void {
+			//by default, this is already centered and ready, should be overriden for grids and narratives
+			if (focused !== null) {
+				focused();
+			}
+		}
+		
 		public function update_user_privileges(user:Boolean=true, edit:Boolean=false, admin:Boolean=false):void {
 			if (String(user) + String(edit) + String(admin) !== String(user_can_use) + String(user_can_edit) + String(user_can_admin)) {
 				user_can_use = user;
@@ -100,6 +133,9 @@ package imree.modules
 				}
 				if (onUserPermissionsUpdated !== null) {
 					onUserPermissionsUpdated();
+				}
+				if (user_can_edit) {
+					draw_edit_button();
 				}
 			}
 			

@@ -15,7 +15,9 @@ package imree.pages
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	import imree.data_helpers.permission;
+	import imree.data_helpers.position_data;
 	import imree.images.loading_spinner_sprite;
+	import imree.layout;
 	import imree.Main;
 	import imree.modules.module;
 	import imree.modules.module_asset;
@@ -110,7 +112,8 @@ package imree.pages
 				update_user_privileges();
 			}
 		}
-		private function build_module(xml:XML, has_next:Boolean):module {
+		private function build_module(xml:XML, has_next:Boolean):module 
+		{
 			var result:Vector.<module> = new Vector.<module>();
 			if (xml.child_modules !== undefined)
 			{
@@ -269,7 +272,6 @@ package imree.pages
 		}
 		
 		private var background_infocus:Boolean = true;
-		
 		public function background_defocus(e:* = null):void
 		{
 			if (background_infocus)
@@ -280,7 +282,6 @@ package imree.pages
 		}
 		
 		public var current_module_i:int = 0;
-		
 		public function draw_next(e:* = null):void
 		{
 			dump_module(current_module_i);
@@ -309,6 +310,9 @@ package imree.pages
 			TweenLite.from(reorder_background, .5, {alpha: 0});
 			overlay_add(reorder_wrapper);
 			var boxes:Vector.<box> = new Vector.<box>();
+			var boxes_wrapper:box = new box(1, 1);
+			reorder_wrapper.addChild(boxes_wrapper);
+			
 			for each (var i:module in mod.items)
 			{
 				var bk_proxy:box = new box(i.width, i.height);
@@ -319,9 +323,10 @@ package imree.pages
 				var bit:Bitmap = new Bitmap(bit_data);
 				bk_proxy.addChild(bit);
 				bk_proxy.data = { index:mod.items.indexOf(i), mod:i };
-				reorder_wrapper.addChild(bk_proxy);
+				boxes_wrapper.addChild(bk_proxy);
 				boxes.push(bk_proxy);
 			}
+			boxes_wrapper.center(reorder_background);
 			var hero:box = null;
 			hero = get_box_target();
 			hero.startDrag();
@@ -358,6 +363,10 @@ package imree.pages
 				return result;
 			}
 		
+		}
+		
+		public function focus_on_module(mod:module, focused:Function=null):void {
+			modules[current_module_i].focus_on_sub_module(mod, focused);
 		}
 		
 		public function overlay_add(obj:DisplayObjectContainer):void {

@@ -112,7 +112,7 @@ package imree.modules
 			}
 		}
 		
-		public function draw_edit_UI(e:*=null):void {
+		public function draw_edit_UI(e:*=null, animate:Boolean = true):void {
 			trace("This module has no edit UI");
 		}
 		

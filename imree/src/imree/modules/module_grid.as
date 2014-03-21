@@ -1,5 +1,8 @@
 package imree.modules 
 {
+	import com.greensock.data.TweenLiteVars;
+	import com.greensock.easing.Cubic;
+	import com.greensock.TweenLite;
 	import fl.controls.Button;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -9,6 +12,7 @@ package imree.modules
 	import flash.events.EventDispatcher;
 	import flash.events.Event;
 	import flash.events.TimerEvent;
+	import flash.geom.ColorTransform;
 	import flash.system.Worker;
 	import flash.utils.Timer;
 	import imree.data_helpers.permission;
@@ -120,21 +124,74 @@ package imree.modules
 			phase_feature = grid_feature_drawn;
 			super.draw_edit_button();
 		}
-		override public function draw_edit_UI(e:* = null):void {
-			if (e is MouseEvent) {
-				main.Imree.Exhibit.focus_on_module(this, draw_edit_UI);
-			} else {
-				removeChild(edit_button);
-				edit_background = new Sprite();
-				edit_background.addChild(new box(main.stage.stageWidth, main.stage.stageHeight, 0x00FF66,1));
-				main.Imree.Exhibit.addChild(edit_background);
-				edit_wrapper = new Sprite();
-				edit_background.addChild(edit_wrapper);
-				var proxies:Vector.<box> = make_proxies(edit_background);
-				for each(var p:box in proxies) {
-					edit_wrapper.addChild(p);
+		override public function draw_edit_UI(e:* = null, animate:Boolean = true):void {			
+			edit_background = new Sprite();
+			edit_background.addChild(new box(main.stage.stageWidth, main.stage.stageHeight, 0x00FF66,1));
+			main.Imree.Exhibit.addChild(edit_background);
+			edit_wrapper = new Sprite();
+			edit_background.addChild(edit_wrapper);
+			var proxies:Vector.<box> = make_proxies(edit_background);
+			for (var i:int = 0; i < proxies.length; i++ ) {
+				edit_wrapper.addChild(proxies[i]);
+				if (animate) {
+					TweenLite.from(proxies[i], .5, { x:items[i].getBounds(main.stage).x, y:items[i].getBounds(main.stage).y, delay:.08 * i, ease:Cubic.easeInOut } );
 				}
-				
+				proxies[i].addEventListener(MouseEvent.MOUSE_DOWN, proxy_mouseDown);
+			}
+			edit_wrapper.x = main.Imree.Device.box_size / 4;
+			edit_wrapper.y = main.Imree.Device.box_size / 4;
+			
+			var current_proxy_focus:Sprite;
+			var proxy_cursor:box;
+			function proxy_mouseDown(evt:MouseEvent):void {
+				current_proxy_focus = Sprite(evt.currentTarget);
+				proxy_cursor = new box(100, 100);
+				var bits:BitmapData = new BitmapData(100, 100);
+				bits.draw(current_proxy_focus);
+				proxy_cursor.addChild(new Bitmap(bits));
+				edit_wrapper.addChild(proxy_cursor);
+				proxy_cursor.x = main.stage.mouseX - edit_wrapper.x;
+				proxy_cursor.y = main.stage.mouseY - edit_wrapper.y;
+				main.stage.addEventListener(MouseEvent.MOUSE_MOVE, proxy_mouseMove);
+				main.stage.addEventListener(MouseEvent.MOUSE_UP, proxy_mouseUp);
+				function proxy_mouseUp(stage_event:MouseEvent):void {
+					main.stage.removeEventListener(MouseEvent.MOUSE_MOVE, proxy_mouseMove);
+					main.stage.removeEventListener(MouseEvent.MOUSE_UP, proxy_mouseUp);
+					edit_wrapper.removeChild(proxy_cursor);
+					proxy_cursor = null;
+					var target:box = test_proxies_for_mouse_position();
+					if (target !== null) {
+						change_mod_order(box(current_proxy_focus).data.mod, target.data.index);
+						for each(var poo:box in proxies) {
+							poo.addEventListener(MouseEvent.MOUSE_DOWN, proxy_mouseDown);
+							poo.parent.removeChild(poo);
+							poo = null;
+						}
+						while (edit_wrapper.numChildren) {
+							edit_wrapper.removeChildAt(0);
+						}
+						draw_edit_UI(null, false );
+					}
+				}
+				function proxy_mouseMove(stage_event:MouseEvent):void {
+					var match:box = test_proxies_for_mouse_position();
+					proxy_cursor.x = main.stage.mouseX - edit_wrapper.x;
+					proxy_cursor.y = main.stage.mouseY - edit_wrapper.y;
+				}
+			}
+			function test_proxies_for_mouse_position():box {
+				var hero:box;
+				for each(var p:box in proxies) {
+					if (p != current_proxy_focus) {
+						if (p.hitTestPoint(stage.mouseX, stage.mouseY)) {
+							Sprite(p).transform.colorTransform = new ColorTransform(0, 0, 0);
+							hero = p;
+						} else {
+							Sprite(p).transform.colorTransform = new ColorTransform();
+						}
+					}
+				}
+				return hero;
 			}
 		}
 		
@@ -154,6 +211,7 @@ package imree.modules
 				proxy.addChild(new Bitmap(bits));
 				proxy.x = positions[k].x;
 				proxy.y = positions[k].y;
+				proxy.data = { index:k, mod:items[k] };
 				proxies.push(proxy);
 			}
 			return proxies;

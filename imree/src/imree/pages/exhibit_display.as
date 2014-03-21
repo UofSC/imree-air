@@ -268,7 +268,13 @@ package imree.pages
 		
 		public function draw_background(url:String):void
 		{
-			new ImageLoader(url, main.img_loader_vars(wrapper)).load();
+			var imageloadervars:ImageLoaderVars = new ImageLoaderVars();
+				imageloadervars.container(wrapper);
+				imageloadervars.crop(true);
+				imageloadervars.width(wrapper.width);
+				imageloadervars.height(wrapper.height);
+				imageloadervars.scaleMode(ScaleMode.PROPORTIONAL_OUTSIDE);
+			new ImageLoader(url+"?size="+String(wrapper.height), imageloadervars).load();
 		}
 		
 		private var background_infocus:Boolean = true;

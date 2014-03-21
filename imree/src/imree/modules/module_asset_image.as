@@ -46,7 +46,7 @@ package imree.modules
 			
 			url_request.data = url_data;
 			url_request.method = URLRequestMethod.GET;
-			main.que_image(new ImageLoader(url_request, main.img_loader_vars(result)));
+			new ImageLoader(asset_url + "?size=" + String(_h), main.img_loader_vars(result)).load();
 			if (onSelect !== null) {
 				result.addEventListener(MouseEvent.CLICK, selected);
 			}

@@ -6,16 +6,18 @@ package imree
 	import flash.text.TextField;
 	import fl.containers.ScrollPane;
 	import fl.controls.UIScrollBar;
+	import com.greensock.events.LoaderEvent;
+	import com.greensock.loading.core.LoaderCore;
 	
 	
 	/**
 	 * ...
 	 * @author Jason Steelman
 	 */
-	public class logger extends Sprite
+	public class Logger_data extends Sprite
 	{
 		public var txt:TextField;
-		public function logger() 
+		public function Logger_data() 
 		{
 			/**
 			 * We need to make a displayObject (sprite, movieclip, etc...) that includes txt
@@ -27,7 +29,7 @@ package imree
 				txt = new TextField();
 				txt.border = true;
 				txt.width = 200;
-				txt.x = 100;
+				txt.x = 115;
 				txt.y = 100;
 				txt.multiline = true;
 				txt.wordWrap = true;
@@ -35,12 +37,11 @@ package imree
 				txt.background = true;
 				txt.mouseWheelEnabled = true;
 				txt.backgroundColor = 0xFFFFFF;
-				txt.text = "GENERAL INFORMATION";
+				txt.text = "IO ERROR / IO GENERAL LOADER FAIL";
 				this.visible = false;
 				
 				
 			//ScrollBar is working with overflow of text
-			
 				var SB:UIScrollBar = new UIScrollBar();
 				SB.direction = "vertical";
 				SB.visible = true;
@@ -73,14 +74,14 @@ package imree
 			
 			this.visible = false;
 		}
-		public function add(str:*, type:String="general"):void {
-			txt.appendText("\n" + String(str));
-			trace(str); 
-			//this is here so that it also logs everything to the output log too
+		public function general_io_error(e:LoaderEvent):void {
+			LoaderCore(e.target).load(true);
+		trace("IO ERROR: " + e.text);}
 			
-	
+		public function general_loader_fail(str:*):void {
+		trace("IO general_loader_fail: " + str);
+				
 		}
 		
+		}
 	}
-
-}

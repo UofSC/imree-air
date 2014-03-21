@@ -1,6 +1,7 @@
 package imree
 {
 	
+	//import air.update.logging.Logger;
 	import com.greensock.data.TweenLiteVars;
 	import com.greensock.easing.Cubic;
 	import com.greensock.events.LoaderEvent;
@@ -50,6 +51,7 @@ package imree
 		public var keyCommando:keycommander;
 		public var Imree:IMREE;
 		public var Logger:logger;
+		public var Logger2:Logger_data;
 		public var User:user;
 		public var image_loader_que:LoaderMax;
 		public function Main():void 
@@ -67,6 +69,7 @@ package imree
 			addChild(keyCommando);
 			
 			Logger = new logger();
+			Logger2 = new Logger_data();
 			
 			
 			User = new user(this);
@@ -93,6 +96,8 @@ package imree
 				}
 			}
 			addChild(Logger);
+			addChild(Logger2);
+			
 		}
 		
 		private function load_signage():void {

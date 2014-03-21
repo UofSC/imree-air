@@ -36,11 +36,18 @@ package imree
 			if (e.keyCode === KeyCode.TAB) {
 				main.Imree.Menu.toggle();
 			}
-			if (e.keyCode === KeyCode.D) {
+			if (e.keyCode === KeyCode.I) {
 				main.removeChild(main.Logger);
 				main.addChild(main.Logger);
 				main.Logger.toggle();
 			}
+			
+			if (e.keyCode === KeyCode.D) {
+				main.removeChild(main.Logger2);
+				main.addChild(main.Logger2);
+				main.Logger2.toggle();
+				
+				}
 		}
 	}		
 }

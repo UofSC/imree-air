@@ -162,14 +162,7 @@ package imree.modules
 					var target:box = test_proxies_for_mouse_position();
 					if (target !== null) {
 						change_mod_order(box(current_proxy_focus).data.mod, target.data.index);
-						for each(var poo:box in proxies) {
-							poo.addEventListener(MouseEvent.MOUSE_DOWN, proxy_mouseDown);
-							poo.parent.removeChild(poo);
-							poo = null;
-						}
-						while (edit_wrapper.numChildren) {
-							edit_wrapper.removeChildAt(0);
-						}
+						dump_edit_UI();
 						draw_edit_UI(null, false );
 					}
 				}
@@ -177,6 +170,16 @@ package imree.modules
 					var match:box = test_proxies_for_mouse_position();
 					proxy_cursor.x = main.stage.mouseX - edit_wrapper.x;
 					proxy_cursor.y = main.stage.mouseY - edit_wrapper.y;
+				}
+			}
+			function dump_edit_UI():void {
+				for each(var poo:box in proxies) {
+					poo.addEventListener(MouseEvent.MOUSE_DOWN, proxy_mouseDown);
+					poo.parent.removeChild(poo);
+					poo = null;
+				}
+				while (edit_wrapper.numChildren) {
+					edit_wrapper.removeChildAt(0);
 				}
 			}
 			function test_proxies_for_mouse_position():box {
@@ -192,6 +195,34 @@ package imree.modules
 					}
 				}
 				return hero;
+			}
+			
+			/**
+			 * save button
+			 */
+
+			var cancel_btn:Button = new Button();
+			edit_wrapper.addChild(cancel_btn);
+			cancel_btn.addEventListener(MouseEvent.CLICK, cancel_btn_click);
+			cancel_btn.label = "Cancel";
+			cancel_btn.x = edit_background.width - cancel_btn.textField.width - 20;
+			cancel_btn.y = edit_background.height - cancel_btn.textField.height - 20;
+			function cancel_btn_click(m:MouseEvent):void {
+				dump_edit_UI();
+				main.Imree.Exhibit.removeChild(edit_background);
+				edit_background = null;
+			}
+			var save_btn:Button = new Button();
+			edit_wrapper.addChild(save_btn);
+			save_btn.addEventListener(MouseEvent.CLICK, save_btn_click);
+			save_btn.label = "Save";
+			save_btn.x = cancel_btn.x - save_btn.textField.width - 20;
+			save_btn.y = cancel_btn.y;
+			function save_btn_click(m:MouseEvent):void {
+				dump_edit_UI();
+				save_new_mod_order();
+				main.Imree.Exhibit.removeChild(edit_background);
+				edit_background = null;
 			}
 		}
 		

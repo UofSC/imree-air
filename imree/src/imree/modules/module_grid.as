@@ -17,6 +17,9 @@ package imree.modules
 	import flash.utils.Timer;
 	import imree.data_helpers.permission;
 	import imree.data_helpers.position_data;
+	import imree.forms.f_data;
+	import imree.forms.f_element;
+	import imree.forms.f_element_text;
 	import imree.layout;
 	import imree.Main;
 	import imree.pages.exhibit_display;
@@ -205,17 +208,18 @@ package imree.modules
 			edit_wrapper.addChild(cancel_btn);
 			cancel_btn.addEventListener(MouseEvent.CLICK, cancel_btn_click);
 			cancel_btn.label = "Cancel";
-			cancel_btn.x = edit_background.width - cancel_btn.textField.width - 20;
-			cancel_btn.y = edit_background.height - cancel_btn.textField.height - 20;
+			cancel_btn.x = main.stage.stageWidth - cancel_btn.textField.width - 20;
+			cancel_btn.y = main.stage.stageHeight - cancel_btn.textField.height - 20;
 			function cancel_btn_click(m:MouseEvent):void {
 				dump_edit_UI();
 				main.Imree.Exhibit.removeChild(edit_background);
 				edit_background = null;
 			}
+			
 			var save_btn:Button = new Button();
 			edit_wrapper.addChild(save_btn);
 			save_btn.addEventListener(MouseEvent.CLICK, save_btn_click);
-			save_btn.label = "Save";
+			save_btn.label = "Save New Order";
 			save_btn.x = cancel_btn.x - save_btn.textField.width - 20;
 			save_btn.y = cancel_btn.y;
 			function save_btn_click(m:MouseEvent):void {
@@ -224,6 +228,19 @@ package imree.modules
 				main.Imree.Exhibit.removeChild(edit_background);
 				edit_background = null;
 			}
+			
+			/**
+			 * f_data for form
+			 */
+			var elements:Vector.<f_element> = new Vector.<f_element>(); 
+			elements.push(new f_element_text('name', 'module_name'));
+			var form:f_data = new f_data(elements);
+			form.connect(main.connection, int(module_id), 'modules', 'module_id');
+			form.get_dynamic_data_for_all();
+			form.draw();
+			edit_wrapper.addChild(form);
+			form.x = stage.stageWidth - form.width - 20;
+			form.y = cancel_btn.y - 20;
 		}
 		
 		public function make_proxies(wrapper:DisplayObject):Vector.<box> {

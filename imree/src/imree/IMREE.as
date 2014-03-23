@@ -147,6 +147,15 @@ package imree
 				}
 				trace(main.User);
 				main.animator.off_stage(auth);
+				
+				for each(var d:Object in Menu.contents) {
+					if (d is smart_button) {
+						if (smart_button(d).button is button_login) {
+							Menu.contents.splice(Menu.contents.indexOf(d), 1);
+						}
+					}
+				}
+				
 				Menu.update();
 				for (var i:String in pages) {
 					if (pages[i] is exhibit_display) {

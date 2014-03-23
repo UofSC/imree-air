@@ -15,7 +15,7 @@ package imree
 	 */
 	public class menu extends Sprite
 	{
-		private var contents:Vector.<DisplayObject>;
+		public var contents:Vector.<DisplayObject>;
 		private var menu_toggle_button:button_menu;
 		private var main:Main;
 		private var Imree:IMREE;
@@ -29,21 +29,10 @@ package imree
 			contents = _contents;
 			main = _main;
 			Imree = _imree;
-			
-			var sample_btn:button_home = new button_home();
-			size_percentage = .3;
-			menu_toggle_button = new button_menu();
-			animator = new animate(main);
-			back_btn = new smart_button(new button_back(), toggle);
 			on = false;
-			body = new Sprite();
-			this.addChild(body);
-			this.addChild(menu_toggle_button);
-			menu_toggle_button.addEventListener(MouseEvent.CLICK, toggle);
+			size_percentage = .3;
+			animator = new animate(main);
 			update();
-			for each(var Obj:DisplayObject in contents) {
-				Obj.addEventListener(MouseEvent.CLICK, hide);
-			}
 		}
 		
 		//not called at the moment
@@ -61,13 +50,49 @@ package imree
 		}
 		
 		public function update():void {
+			if (menu_toggle_button !== null) {
+				if (contains(menu_toggle_button)) {
+					removeChild(menu_toggle_button);
+				}
+				menu_toggle_button.removeEventListener(MouseEvent.CLICK, toggle);
+				menu_toggle_button = null;
+			}
+			menu_toggle_button = new button_menu();
+			this.addChild(menu_toggle_button);
+			menu_toggle_button.addEventListener(MouseEvent.CLICK, toggle);
+			
+			if (back_btn !== null) {
+				back_btn.dump();
+				back_btn = null;
+			}
+			back_btn = new smart_button(new button_back(), toggle);
+			
+			if (body !== null) {
+				while (body.numChildren) {
+					body.getChildAt(0).removeEventListener(MouseEvent.CLICK, hide);
+					body.removeChildAt(0);
+				}
+				if (contains(body)) {
+					removeChild(body);
+				}
+				body = null;
+			}
+			
+			body = new Sprite();
+			this.addChild(body);
+			
+			for each(var Obj:DisplayObject in contents) {
+				Obj.addEventListener(MouseEvent.CLICK, hide);
+			}
+			
 			main.empty_display_object_container(body);
 			Imree.UI_size(menu_toggle_button);
 			Imree.UI_size(back_btn);
 			for each(var P:DisplayObject in contents) {
+				P.scaleX = 1;
+				P.scaleY = 1;
 				Imree.UI_size(P);
 			}
-			
 			
 			var placeKeeper:Number = 0;
 			if (main.stage.stageWidth > main.stage.stageHeight) {

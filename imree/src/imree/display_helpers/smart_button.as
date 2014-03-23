@@ -22,7 +22,15 @@ package imree.display_helpers
 		private function clicked(e:MouseEvent):void {
 			onInteract();
 		}
-		
+		public function dump():void {
+			if (button !== null) {
+				if (contains(button)) {
+					removeChild(button);
+				}
+				button.removeEventListener(MouseEvent.CLICK, clicked);
+				button = null;
+			}
+		}
 	}
 
 }

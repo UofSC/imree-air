@@ -15,10 +15,12 @@ package imree.modules
 	import flash.geom.ColorTransform;
 	import flash.system.Worker;
 	import flash.utils.Timer;
+	import imree.data_helpers.data_value_pair;
 	import imree.data_helpers.permission;
 	import imree.data_helpers.position_data;
 	import imree.forms.f_data;
 	import imree.forms.f_element;
+	import imree.forms.f_element_select;
 	import imree.forms.f_element_text;
 	import imree.layout;
 	import imree.Main;
@@ -232,8 +234,12 @@ package imree.modules
 			/**
 			 * f_data for form
 			 */
+			var truefalse:Vector.<data_value_pair> = new Vector.<data_value_pair>();
+			truefalse.push(new data_value_pair('Yes', '1'));
+			truefalse.push(new data_value_pair("No", '0'));
 			var elements:Vector.<f_element> = new Vector.<f_element>(); 
 			elements.push(new f_element_text('name', 'module_name'));
+			elements.push(new f_element_select('Show Name', 'module_display_name', truefalse));
 			var form:f_data = new f_data(elements);
 			form.connect(main.connection, int(module_id), 'modules', 'module_id');
 			form.get_dynamic_data_for_all();

@@ -3,6 +3,7 @@ package imree.modules
 	import com.greensock.data.TweenLiteVars;
 	import com.greensock.easing.Cubic;
 	import com.greensock.TweenLite;
+	import fl.containers.ScrollPane;
 	import fl.controls.Button;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -18,6 +19,8 @@ package imree.modules
 	import imree.data_helpers.data_value_pair;
 	import imree.data_helpers.permission;
 	import imree.data_helpers.position_data;
+	import imree.display_helpers.search;
+	import imree.display_helpers.smart_button;
 	import imree.forms.f_data;
 	import imree.forms.f_element;
 	import imree.forms.f_element_select;
@@ -64,11 +67,15 @@ package imree.modules
 				wrapper.addChild(items[j]);
 				items[j].x = positions[j].x;
 				items[j].y = positions[j].y;
-				items[j].addEventListener(MouseEvent.MOUSE_DOWN, start_longpress_test);
+				//items[j].addEventListener(MouseEvent.MOUSE_DOWN, start_longpress_test);
 				items[j].addEventListener(MouseEvent.CLICK, item_selected);
 			}
 			addChild(wrapper);
+			function item_selected(e:MouseEvent):void {
+				Exhibit.bring_asset_to_front(module_asset(e.currentTarget));
+			}
 			
+			/**
 			var indicator:longpress_indicator = new longpress_indicator(longpress_complete);
 			indicator.stop();
 			var longpress_inProgress:Boolean = false;
@@ -105,15 +112,7 @@ package imree.modules
 				longpress_activated_mouseDown = true;
 				Exhibit.reorder_items_in_module(t, save_new_mod_order);
 			}
-			
-			
-			
-			function item_selected(e:MouseEvent):void {
-				if(!longpress_activated_mouseDown) {
-					Exhibit.bring_asset_to_front(module_asset(e.currentTarget));
-				}
-				
-			}
+			*/
 		}
 		
 		override public function draw_edit_button():void {
@@ -129,22 +128,84 @@ package imree.modules
 			phase_feature = grid_feature_drawn;
 			super.draw_edit_button();
 		}
-		override public function draw_edit_UI(e:* = null, animate:Boolean = true):void {			
+		override public function draw_edit_UI(e:* = null, animate:Boolean = true):void {
+			main.clean_slate([edit_background, edit_wrapper]);
 			edit_background = new Sprite();
-			edit_background.addChild(new box(main.stage.stageWidth, main.stage.stageHeight, 0x00FF66,1));
+			edit_background.addChild(new box(main.stage.stageWidth, main.stage.stageHeight, 0xEDEDED, .9));
+			var scroller:ScrollPane = new ScrollPane();
+			scroller.setSize(main.stage.stageWidth, main.stage.stageHeight-95);
+			edit_background.addChild(scroller);
 			main.Imree.Exhibit.addChild(edit_background);
 			edit_wrapper = new Sprite();
-			edit_background.addChild(edit_wrapper);
+			scroller.source = edit_wrapper;
+			
+			/**
+			 * Cancel Button
+			 */
+			var cancel_btn:Button = new Button();
+			edit_background.addChild(cancel_btn);
+			cancel_btn.addEventListener(MouseEvent.CLICK, cancel_btn_click);
+			cancel_btn.setSize(75, 75);
+			cancel_btn.label = "Close";
+			cancel_btn.x = main.stage.stageWidth - 75 - 10;
+			cancel_btn.y = main.stage.stageHeight - 75 - 10;
+			function cancel_btn_click(m:MouseEvent):void {
+				dump_edit_UI();
+				main.clean_slate(edit_background);
+				main.clean_slate(edit_wrapper);
+			}
+			
+			/**
+			 * save button
+			 */
+			var save_btn:Button = new Button();
+			edit_background.addChild(save_btn);
+			save_btn.addEventListener(MouseEvent.CLICK, save_btn_click);
+			save_btn.setSize(75, 75);
+			save_btn.textField.multiline = true;
+			save_btn.label = "Save \nNew Order";
+			save_btn.x = cancel_btn.x - 75 - 10;
+			save_btn.y = cancel_btn.y;
+			function save_btn_click(m:MouseEvent):void {
+				dump_edit_UI();
+				save_new_mod_order();
+				main.Imree.Exhibit.removeChild(edit_background);
+				edit_background = null;
+			}
+			
+			/**
+			 * f_data for form
+			 */
+			var truefalse:Vector.<data_value_pair> = new Vector.<data_value_pair>();
+			truefalse.push(new data_value_pair('Yes', '1'));
+			truefalse.push(new data_value_pair("No", '0'));
+			var elements:Vector.<f_element> = new Vector.<f_element>(); 
+			elements.push(new f_element_text('name', 'module_name'));
+			elements.push(new f_element_select('Show Name', 'module_display_name', truefalse));
+			var form:f_data = new f_data(elements);
+			form.connect(main.connection, int(module_id), 'modules', 'module_id');
+			form.get_dynamic_data_for_all();
+			form.draw();
+			edit_wrapper.addChild(form);
+			form.x = main.Imree.Device.box_size /2;
+			form.y = main.Imree.Device.box_size /2
+			
+			var proxies_wrapper:Sprite = new Sprite();
 			var proxies:Vector.<box> = make_proxies(edit_background);
 			for (var i:int = 0; i < proxies.length; i++ ) {
-				edit_wrapper.addChild(proxies[i]);
+				proxies_wrapper.addChild(proxies[i]);
 				if (animate) {
 					TweenLite.from(proxies[i], .5, { x:items[i].getBounds(main.stage).x, y:items[i].getBounds(main.stage).y, delay:.08 * i, ease:Cubic.easeInOut } );
 				}
 				proxies[i].addEventListener(MouseEvent.MOUSE_DOWN, proxy_mouseDown);
 			}
-			edit_wrapper.x = main.Imree.Device.box_size / 4;
-			edit_wrapper.y = main.Imree.Device.box_size / 4;
+			edit_wrapper.addChild(proxies_wrapper);
+			if (main.Imree.Device.orientation === "portrait") {
+				proxies_wrapper.y = form.height + 10;
+			} else {
+				proxies_wrapper.x = form.width + 10;
+			}
+			scroller.update();
 			
 			var current_proxy_focus:Sprite;
 			var proxy_cursor:box;
@@ -203,50 +264,34 @@ package imree.modules
 			}
 			
 			/**
-			 * save button
+			 * SEARCH
 			 */
-
-			var cancel_btn:Button = new Button();
-			edit_wrapper.addChild(cancel_btn);
-			cancel_btn.addEventListener(MouseEvent.CLICK, cancel_btn_click);
-			cancel_btn.label = "Cancel";
-			cancel_btn.x = main.stage.stageWidth - cancel_btn.textField.width - 20;
-			cancel_btn.y = main.stage.stageHeight - cancel_btn.textField.height - 20;
-			function cancel_btn_click(m:MouseEvent):void {
-				dump_edit_UI();
-				main.Imree.Exhibit.removeChild(edit_background);
-				edit_background = null;
+			var add_butt:Button = new Button();
+			add_butt.setSize(120, 120);
+			add_butt.label = "Add Assets";
+			var add_asset_button:smart_button = new smart_button(add_butt, draw_search);
+			edit_wrapper.addChild(add_asset_button);
+			var Search:search = new search(new_asset_selected, main, stage.stageWidth, stage.stageHeight - 95);
+			if(main.Imree.Device.orientation === "portrait") {
+				add_asset_button.y = proxies_wrapper.y + proxies_wrapper.height + 20;
+				add_asset_button.x = stage.stageWidth/2- 120 / 2;
+				
+			} else {
+				add_asset_button.x = proxies_wrapper.x + proxies_wrapper.width + 20;
+				add_asset_button.y = (main.stage.stageHeight-95) / 2 - 120 / 2;
 			}
-			
-			var save_btn:Button = new Button();
-			edit_wrapper.addChild(save_btn);
-			save_btn.addEventListener(MouseEvent.CLICK, save_btn_click);
-			save_btn.label = "Save New Order";
-			save_btn.x = cancel_btn.x - save_btn.textField.width - 20;
-			save_btn.y = cancel_btn.y;
-			function save_btn_click(m:MouseEvent):void {
-				dump_edit_UI();
-				save_new_mod_order();
-				main.Imree.Exhibit.removeChild(edit_background);
-				edit_background = null;
+			var search_wrapper:Sprite = new Sprite();
+			edit_background.addChild(search_wrapper);
+			function draw_search(e:*= null):void  {
+				search_wrapper.addChild(new box(edit_background.width, edit_background.height, 0xFFFFFF, 1));
+				Search.draw_search_box();
+				search_wrapper.addChild(Search);
+				
+				
 			}
-			
-			/**
-			 * f_data for form
-			 */
-			var truefalse:Vector.<data_value_pair> = new Vector.<data_value_pair>();
-			truefalse.push(new data_value_pair('Yes', '1'));
-			truefalse.push(new data_value_pair("No", '0'));
-			var elements:Vector.<f_element> = new Vector.<f_element>(); 
-			elements.push(new f_element_text('name', 'module_name'));
-			elements.push(new f_element_select('Show Name', 'module_display_name', truefalse));
-			var form:f_data = new f_data(elements);
-			form.connect(main.connection, int(module_id), 'modules', 'module_id');
-			form.get_dynamic_data_for_all();
-			form.draw();
-			edit_wrapper.addChild(form);
-			form.x = stage.stageWidth - form.width - 20;
-			form.y = cancel_btn.y - 20;
+			function new_asset_selected(e:*= null):void {
+				trace(e);
+			}
 		}
 		
 		public function make_proxies(wrapper:DisplayObject):Vector.<box> {
@@ -256,8 +301,14 @@ package imree.modules
 			for each(i in items) {
 				originals.push(new position_data(i.width, i.height));
 			}
+			var dir:String;
+			if (main.Imree.Device.orientation === "portrait") {
+				dir = "top";
+			} else {
+				dir = "left";
+			}
 			var lay:layout = new layout();
-			var positions:Vector.<position_data> = lay.abstract_box_solver(originals, wrapper.width * .8, wrapper.height * .8, 5, "left");
+			var positions:Vector.<position_data> = lay.abstract_box_solver(originals, wrapper.width -80, wrapper.height -80, 5, dir);
 			for (var k:int = 0; k < items.length; k++ ) {
 				var proxy:box = new box(items[k].width, items[k].height);
 				var bits:BitmapData = new BitmapData(items[k].width, items[k].height);

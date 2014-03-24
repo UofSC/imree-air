@@ -37,24 +37,26 @@ package imree.forms
 			var inputFormat:TextFormat = new TextFormat('_sans', input_element_fontSize);
 			
 			var textbox:TextField = new TextField();
+				
 				textbox.setTextFormat(inputFormat);
 				textbox.type = TextFieldType.INPUT;
 				textbox.text =  initial_val;
 				textbox.background = true;
+				
 				textbox.defaultTextFormat = inputFormat;
 				textbox.multiline = false;
 				textbox.wordWrap = false;
 				textbox.autoSize = TextFieldAutoSize.NONE;
 				textbox.height = input_element_fontSize * 2 - 10;
-				textbox.border = true;
-				textbox.borderColor = 0xFFFFFF;
 				textbox.width = input_w;
+				textbox.border = true;
+				textbox.borderColor = 0x000000;
 				textbox.x = label_width + padding;
 				textbox.y = 0;
 				textbox.type = TextFieldType.INPUT;
 				txt = textbox;
 				ui.addChild(textbox);
-			
+				
 			if (is_password) {
 				txt.displayAsPassword = true;
 			}

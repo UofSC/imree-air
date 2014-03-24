@@ -51,7 +51,7 @@ package imree
 		public var keyCommando:keycommander;
 		public var Imree:IMREE;
 		public var Logger:logger;
-		public var Logger2:Logger_data;
+		public var Logger_IO:logger;
 		public var User:user;
 		public var image_loader_que:LoaderMax;
 		public function Main():void 
@@ -68,9 +68,14 @@ package imree
 			keyCommando = new keycommander(this);
 			addChild(keyCommando);
 			
-			Logger = new logger();
-			Logger2 = new Logger_data();
-			
+			Logger = new logger("General Log");
+			Logger.hide();
+			Logger.x = 100;
+			Logger.y = 100;
+			Logger_IO = new logger("IO Error/DATA Log");
+			Logger_IO.hide();
+			Logger_IO.x = 300;
+			Logger_IO.y = 100;
 			
 			User = new user(this);
 			
@@ -83,7 +88,7 @@ package imree
 			image_loader_que.load();
 			
 			
-			connection = new serverConnect("http://imree.tcl.sc.edu/imree-php/api/");
+			connection = new serverConnect("http://imree.tcl.sc.edu/imree-php/api/", this);
 			connection.server_command("signage_mode", '', sign_mode_loader);
 			function sign_mode_loader(evt:LoaderEvent):void {
 				var xml:XML = XML(evt.currentTarget.content);
@@ -95,8 +100,9 @@ package imree
 					load_imree();
 				}
 			}
+			
 			addChild(Logger);
-			addChild(Logger2);
+			addChild(Logger_IO);
 			
 		}
 		
@@ -137,8 +143,12 @@ package imree
 			addChild(Imree);
 		}
 		
-		public function log(str:*, type:String = "general"):void {
-			Logger.add(str, type);
+		public function log(str:*, IO_data:String=null):void {
+			if (IO_data !== null) {
+				Logger_IO.add(String(str) + "\n"+ IO_data + "\n");
+			}
+			Logger.add(str + " SEE IO log for more");
+			trace(str);
 		}
 		public function general_io_error(e:LoaderEvent):void {
 			LoaderCore(e.target).load(true);
@@ -161,6 +171,27 @@ package imree
 			}
 			return;
 		}
+		public function clean_slate(obj:*):* {
+			if (obj is Array) {
+				for each(var i:* in obj) {
+					clean_slate(i);
+				}
+				return;
+			} else {
+				var target:DisplayObjectContainer;
+				if (obj !== null && obj is DisplayObjectContainer) {
+					target = DisplayObjectContainer(obj);					
+					if (target.parent !== null) {
+						target.parent.removeChild(target);
+					}
+					empty_display_object_container(target);
+					target = null;
+				}
+				return;
+			}
+		}
+		
+		
 		public function img_loader_vars(container:DisplayObjectContainer):ImageLoaderVars {
 			var vars:ImageLoaderVars = new ImageLoaderVars();
 				vars.scaleMode(ScaleMode.PROPORTIONAL_OUTSIDE); 

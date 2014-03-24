@@ -15,7 +15,7 @@ package imree
 	public class logger extends Sprite
 	{
 		public var txt:TextField;
-		public function logger() 
+		public function logger(Label:String="") 
 		{
 			/**
 			 * We need to make a displayObject (sprite, movieclip, etc...) that includes txt
@@ -26,16 +26,14 @@ package imree
 			//TextField
 				txt = new TextField();
 				txt.border = true;
-				txt.width = 200;
-				txt.x = 100;
-				txt.y = 100;
+				txt.width = 600;
 				txt.multiline = true;
 				txt.wordWrap = true;
 				txt.height = 500;
 				txt.background = true;
 				txt.mouseWheelEnabled = true;
 				txt.backgroundColor = 0xFFFFFF;
-				txt.text = "GENERAL INFORMATION";
+				txt.text = Label;
 				this.visible = false;
 				
 				
@@ -73,12 +71,8 @@ package imree
 			
 			this.visible = false;
 		}
-		public function add(str:*, type:String="general"):void {
+		public function add(str:*):void {
 			txt.appendText("\n" + String(str));
-			trace(str); 
-			//this is here so that it also logs everything to the output log too
-			
-	
 		}
 		
 	}

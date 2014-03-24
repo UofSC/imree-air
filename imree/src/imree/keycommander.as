@@ -43,11 +43,10 @@ package imree
 			}
 			
 			if (e.keyCode === KeyCode.D) {
-				main.removeChild(main.Logger2);
-				main.addChild(main.Logger2);
-				main.Logger2.toggle();
-				
-				}
+				main.removeChild(main.Logger_IO);
+				main.addChild(main.Logger_IO);
+				main.Logger_IO.toggle();
+			}
 		}
 	}		
 }

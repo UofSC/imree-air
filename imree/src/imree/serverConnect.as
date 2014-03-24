@@ -22,9 +22,11 @@ package imree
 		public var username:String;
 		public var password:String;
 		private var current_loader_number:int;
-		public function serverConnect(URI:String="") {
+		private var main:Main;
+		public function serverConnect(URI:String="", _main:Main=null) {
 			this.uri = URI;
 			current_loader_number = 0;
+			main = _main;
 		}
 		public function clone():serverConnect {
 			var n:serverConnect = new serverConnect();
@@ -53,7 +55,7 @@ package imree
 				post_data.username = username;
 				post_data.password = password;
 			}
-				
+			
 			var request:URLRequest = new URLRequest(this.uri);
 				request.method = URLRequestMethod.POST;
 				request.data = post_data;				
@@ -76,19 +78,19 @@ package imree
 				onCompleteFunction(e);
 			}
 			function failed(e:LoaderEvent):void {
-				trace(say_loader_event(e) + " FAILED");
+				main.log(say_loader_event(e) + " FAAILED", e.target.content);
 			}
 			function IOERROR(e:LoaderEvent):void {
-				trace(say_loader_event(e) + " IO ERRORED");
+				main.log(say_loader_event(e) + " IOERROR", e.target.content);
 			}
 			function errored(e:LoaderEvent):void {
-				trace(say_loader_event(e) + " Errored");
+				main.log(say_loader_event(e) + " ERRORED", e.target.content);
 			}
 			function initialized(e:LoaderEvent):void {
-				trace(say_loader_event(e) + " Initialized");
+				main.log(say_loader_event(e) + " INITIAL", say_loader_event(e) + " INITIAL");
 			}
 			function opened(e:LoaderEvent):void {
-				trace(say_loader_event(e) + " Opened");
+				main.log(say_loader_event(e) + " OPENED", say_loader_event(e) + " OPENED");
 			}
 		}
 		public function set_password(str:String):void {

@@ -56,62 +56,65 @@ package imree
 		public var User:user;
 		public var image_loader_que:LoaderMax;
 		public var preloader:Preloader;
+		public var t:Main;
 		public function Main():void 
 		{
+			t = this;
+			stage.addEventListener(Event.RESIZE, resizedstage);
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
 			stage.addEventListener(Event.DEACTIVATE, deactivate);
 			Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
 			stage.addChild(this);
 			
-			preloader = new Preloader(this);
-			addChild(preloader);
-			
-			animator = new animate(this);
-			animator.off_direction = "up"; //should depend on theme + device_type
-			
-			keyCommando = new keycommander(this);
-			addChild(keyCommando);
-			
-			Logger = new logger("General Log");
-			Logger.hide();
-			Logger.x = 100;
-			Logger.y = 100;
-			Logger_IO = new logger("IO Error/DATA Log");
-			Logger_IO.hide();
-			Logger_IO.x = 300;
-			Logger_IO.y = 100;
-			
-			User = new user(this);
-			
-			var vars:LoaderMaxVars = new LoaderMaxVars();
-				vars.maxConnections(2);
-				vars.autoLoad(true);
-				vars.auditSize(false);
-			image_loader_que = new LoaderMax();
-			LoaderMax.activate([ImageLoader]);
-			image_loader_que.load();
-			
-			
-			connection = new serverConnect("http://imree.tcl.sc.edu/imree-php/api/", this);
-			connection.server_command("signage_mode", '', sign_mode_loader);
-			function sign_mode_loader(evt:LoaderEvent):void {
-				var xml:XML = XML(evt.currentTarget.content);
-				if (xml.result.signage_mode == 'signage') {
-					trace("Based on our IP, this device has been instructed to be digital signage");
-					load_imree();
-					preloader.hide();
-				} else {
-					trace("Based on our IP, this device has been instructed to be IMREE");
-					load_imree();
+			function resizedstage(e:*= null):void {
+				
+				animator = new animate(t);
+				animator.off_direction = "up"; //should depend on theme + device_type
+				
+				keyCommando = new keycommander(t);
+				t.addChild(keyCommando);
+				
+				Logger = new logger("General Log");
+				Logger.hide();
+				Logger.x = 100;
+				Logger.y = 100;
+				Logger_IO = new logger("IO Error/DATA Log");
+				Logger_IO.hide();
+				Logger_IO.x = 300;
+				Logger_IO.y = 100;
+				
+				User = new user(t);
+				
+				var vars:LoaderMaxVars = new LoaderMaxVars();
+					vars.maxConnections(2);
+					vars.autoLoad(true);
+					vars.auditSize(false);
+				image_loader_que = new LoaderMax();
+				LoaderMax.activate([ImageLoader]);
+				image_loader_que.load();
+				
+				
+				connection = new serverConnect("http://imree.tcl.sc.edu/imree-php/api/", t);
+				connection.server_command("signage_mode", '', sign_mode_loader);
+				function sign_mode_loader(evt:LoaderEvent):void {
+					var xml:XML = XML(evt.currentTarget.content);
+					if (xml.result.signage_mode == 'signage') {
+						trace("Based on our IP, this device has been instructed to be digital signage");
+						load_imree();
+						t.preloader.hide();
+					} else {
+						trace("Based on our IP, this device has been instructed to be IMREE");
+						t.load_imree();
+					}
 				}
-			}
-			
-			addChild(Logger);
-			addChild(Logger_IO);
-			
-			removeChild(preloader);
-			addChild(preloader); 
+				
+				t.addChild(Logger);
+				t.addChild(Logger_IO);
+				t.preloader = new Preloader(t);
+				t.addChild(preloader);
+				trace("The width is " + t.stage.stageWidth);
+			}				
 		}
 		
 		private function load_signage():void {
@@ -148,6 +151,7 @@ package imree
 		
 		private function load_imree():void {
 			Imree = new IMREE(this);
+			trace("The size is really really: " + stage.stageWidth);
 			addChild(Imree);
 		}
 		

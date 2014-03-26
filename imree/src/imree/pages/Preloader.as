@@ -9,6 +9,7 @@ package imree.pages
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	import Garnet;
+	import imree.Main;
 	import UniversityLibrariesLogo;
 	
 	
@@ -20,8 +21,11 @@ package imree.pages
 	{
 		
 		public var wrapper:Sprite;
-		public function Preloader() 
+		private var main:Main;
+		private var on_stage:Boolean = false;
+		public function Preloader(_main:Main) 
 		{
+			main = _main;
 			this.addEventListener(Event.ADDED_TO_STAGE, added2stage);
 			
 			function added2stage(e:*= null):void {
@@ -37,11 +41,22 @@ package imree.pages
 				
 				addChild(wrapper);
 				TweenLite.from(wrapper, 2, { alpha:0 } );
+				on_stage = true;
+				stage.addEventListener(Event.ENTER_FRAME, show_on_top);
 			}
 			
 		}
-		
+		private function show_on_top(e:Event):void {
+			if (on_stage) {
+				if(main.numChildren !== main.getChildIndex(main.preloader) +1) {
+					main.removeChild(main.preloader);
+					main.addChild(main.preloader);
+				}
+			}
+		}
 		public function hide():void {
+			stage.removeEventListener(Event.ENTER_FRAME, show_on_top);
+			on_stage = false;
 			var tim:Timer = new Timer(2000);
 			tim.addEventListener(TimerEvent.TIMER, tick);
 			tim.start();

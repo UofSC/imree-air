@@ -78,7 +78,6 @@ package imree
 			pages.push(Home);
 			pages.push(page_admin_exhibits);
 			
-			
 			/**
 			 * SECTION: test for QR code support. 
 			 * Scanner.isSupported reports false negative. This is not coming from the src, but the compiled ane.
@@ -100,7 +99,7 @@ package imree
 			} else {
 				Device.supports_qr = false;
 			}
-
+			
 		
 		}
 		

@@ -64,7 +64,7 @@ package imree
 			Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
 			stage.addChild(this);
 			
-			preloader = new Preloader();
+			preloader = new Preloader(this);
 			addChild(preloader);
 			
 			animator = new animate(this);

@@ -40,37 +40,36 @@ package imree.pages
 		
 		
 		public function exhibits_data_receieved(e:LoaderEvent):void {
-			xml = XML(e.target.content);
+			main.preloader.hide();
 			
-				
-				var midstrip:Sprite = new Sprite;
-				midstrip.graphics.lineStyle(2, 0x000000);
-				midstrip.graphics.beginFill(0xFFFFFF, 1);
-				midstrip.graphics.drawRect (0,stage.stageHeight * .15, stage.stageWidth, stage.stageHeight * .70);
-				midstrip.graphics.endFill();
-				
-				addChild(midstrip);
-				
-						
-				/*var UniBox:Sprite = new Sprite;
-				UniBox.graphics.lineStyle(0, 0x000000);
-				UniBox.graphics.beginFill(0x000000, 0);
-				UniBox.graphics.drawRect(stage.stageWidth * .4,0, stage.stageWidth * .5, stage.stageHeight * .1);
-				UniBox.graphics.endFill();				
-				addChild(UniBox);*/
-				
-				var Uni_format:textFont = new textFont();
-				Uni_format.color = 0xFFFFFF;
-				Uni_format.padding = 10;
-				Uni_format.size = 50;
-				Uni_format.align = "center";
-				addChild(new text ("University of South Carolina Libraries", stage.stageWidth * 1, Uni_format));
-				
-				//Need a Symbol instead of TextFont/Field, etc. 
-				
-									
-				
-				
+			xml = XML(e.target.content);
+		
+			
+			var midstrip:Sprite = new Sprite;
+			midstrip.graphics.lineStyle(2, 0x000000);
+			midstrip.graphics.beginFill(0xFFFFFF, 1);
+			midstrip.graphics.drawRect (0,stage.stageHeight * .15, stage.stageWidth, stage.stageHeight * .70);
+			midstrip.graphics.endFill();
+			
+			addChild(midstrip);
+			
+					
+			/*var UniBox:Sprite = new Sprite;
+			UniBox.graphics.lineStyle(0, 0x000000);
+			UniBox.graphics.beginFill(0x000000, 0);
+			UniBox.graphics.drawRect(stage.stageWidth * .4,0, stage.stageWidth * .5, stage.stageHeight * .1);
+			UniBox.graphics.endFill();				
+			addChild(UniBox);*/
+			
+			var Uni_format:textFont = new textFont();
+			Uni_format.color = 0xFFFFFF;
+			Uni_format.padding = 10;
+			Uni_format.size = 50;
+			Uni_format.align = "center";
+			addChild(new text ("University of South Carolina Libraries", stage.stageWidth * 1, Uni_format));
+			
+			//Need a Symbol instead of TextFont/Field, etc. 
+			
 			
 			var scroller:ScrollPane = new ScrollPane();
 				

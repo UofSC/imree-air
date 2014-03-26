@@ -78,7 +78,7 @@ package imree.display_helpers {
 			var scroller:ScrollPane = new ScrollPane();
 			wrapper.addChild(scroller);
 			var scroller_contents:Sprite = new Sprite();
-			scroller.setSize (stage.stageWidth, stage.stageHeight - 95 - search_box.get_height()) - 20;
+			scroller.setSize(stage.stageWidth, stage.stageHeight - 95 - search_box.get_height() -20) ;
 			scroller.source = scroller_contents;
 			if (xml.result.children.children().length() == 0) {
 				trace("no results");

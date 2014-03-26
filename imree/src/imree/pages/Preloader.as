@@ -1,14 +1,15 @@
 package imree.pages 
 {
+	import com.greensock.TweenLite;
 	import flash.display.Loader;
 	import flash.display.Sprite;
 	import flash.display.MovieClip;
 	import flash.events.Event;
 	import flash.events.ProgressEvent;
-	
-	[Embed(source = "../../userinterface_components.swc", symbol = "Garnet")] public var garnet:Class;
-	[Embed(source = "../../userinterface_components.swc", symbol = "UniversityLibrariesLogo")] public var UniLogo:Class;
-	
+	import flash.events.TimerEvent;
+	import flash.utils.Timer;
+	import Garnet;
+	import UniversityLibrariesLogo;
 	
 	
 	/**
@@ -18,18 +19,46 @@ package imree.pages
 	public class Preloader extends Sprite
 	{
 		
+		public var wrapper:Sprite;
 		public function Preloader() 
 		{
-			var garnet: Sprite = new garnet;
-			garnet.width = stage.stageWidth;
-			garnet.height = stage.stageHeight;
-			addChild(garnet);
+			this.addEventListener(Event.ADDED_TO_STAGE, added2stage);
 			
-			var UniLogo:Sprite = new UniversityLibrariesLogo;
-			addChild(UniLogo);
+			function added2stage(e:*= null):void {
+				removeEventListener(Event.ADDED_TO_STAGE, added2stage);
+				wrapper = new Sprite();
+				var garnet: Sprite = new Garnet();
+				garnet.width = stage.stageWidth;
+				garnet.height = stage.stageHeight;
+				wrapper.addChild(garnet);
+				
+				var UniLogo:Sprite = new UniversityLibrariesLogo();
+				wrapper.addChild(UniLogo);
+				
+				addChild(wrapper);
+				TweenLite.from(wrapper, 2, { alpha:0 } );
+			}
+			
 		}
 		
-		//Timer
+		public function hide():void {
+			var tim:Timer = new Timer(2000);
+			tim.addEventListener(TimerEvent.TIMER, tick);
+			tim.start();
+			function tick(e:*= null):void {
+				tim.stop();
+				tim.removeEventListener(TimerEvent.TIMER, tick);
+				tim = null;
+				TweenLite.to(wrapper, 2.5, { alpha:0, onComplete:removefromstage} );
+				function removefromstage(e:*= null):void {
+				removeChild(wrapper);
+				wrapper = null;
+			}
+			}
+			
+		}
+		
+		
 	}
 
 }

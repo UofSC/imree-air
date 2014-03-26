@@ -33,6 +33,7 @@ package imree
 	import imree.display_helpers.*;
 	import imree.forms.*;
 	import imree.images.loading_flower_sprite;
+	import imree.pages.Preloader;
 	import imree.shortcuts.box;
 	import imree.keycommander;
 	import imree.signage.signage_stack;
@@ -54,6 +55,7 @@ package imree
 		public var Logger_IO:logger;
 		public var User:user;
 		public var image_loader_que:LoaderMax;
+		public var preloader:Preloader;
 		public function Main():void 
 		{
 			stage.scaleMode = StageScaleMode.NO_SCALE;
@@ -61,6 +63,9 @@ package imree
 			stage.addEventListener(Event.DEACTIVATE, deactivate);
 			Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
 			stage.addChild(this);
+			
+			preloader = new Preloader();
+			addChild(preloader);
 			
 			animator = new animate(this);
 			animator.off_direction = "up"; //should depend on theme + device_type
@@ -95,6 +100,7 @@ package imree
 				if (xml.result.signage_mode == 'signage') {
 					trace("Based on our IP, this device has been instructed to be digital signage");
 					load_imree();
+					preloader.hide();
 				} else {
 					trace("Based on our IP, this device has been instructed to be IMREE");
 					load_imree();
@@ -104,6 +110,8 @@ package imree
 			addChild(Logger);
 			addChild(Logger_IO);
 			
+			removeChild(preloader);
+			addChild(preloader); 
 		}
 		
 		private function load_signage():void {

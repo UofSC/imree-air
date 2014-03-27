@@ -51,6 +51,24 @@ package imree.shortcuts
 				this.y = target.height / 2 - this.height / 2 ;
 			}
 		}
+		
+		public var stroke:Sprite;
+		public function highlight(color:uint = 0xFFFF00):void {
+			if (stroke === null) {
+				stroke = new Sprite();
+				addChild(stroke);
+				stroke.graphics.lineStyle(2, color);
+				stroke.graphics.drawRect(0, 0, width, height);
+				stroke.graphics.lineStyle();
+			}
+		}
+		
+		public function highlight_remove():void {
+			if (stroke !== null) {
+				removeChild(stroke);
+				stroke = null;
+			}
+		}
 	}
 	
 }

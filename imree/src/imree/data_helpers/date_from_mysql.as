@@ -29,8 +29,17 @@ package imree.data_helpers
 			return string;
 		}
 		public function string_to_date(string:String):Date {
+			var newyear:int = int(string.substr(0, 4));
+			var newmonth:int = int(string.substr(6, 2) + 1);
+			var newday:int = int(string.substr(9, 2));
+			var newhour:int = int(string.substr(12, 2));
+			var newminute:int = int(string.substr(15, 2));
+			var newsecond:int = int(string.substr(18, 2));
+			
+			
 			//expects string like 1995/03/12 15:29:45
 			//var year:int = int(string.substr(0, 4));
+			//create an array for months string an d short date to return date 
 			return new Date();
 		}
 		

@@ -1,5 +1,6 @@
 package imree.display_helpers {
 	import com.greensock.events.LoaderEvent;
+	import com.greensock.loading.ImageLoader;
 	import com.greensock.TweenLite;
 	import fl.containers.ScrollPane;
 	import fl.controls.Button;
@@ -91,7 +92,8 @@ package imree.display_helpers {
 			var positions:Vector.<position_data> = lay.abstract_box_solver(proxies, stage.stageWidth, stage.stageHeight * 999);
 			for (var i:String in proxies) {
 				var bk:box = new box(main.Imree.Device.box_size, main.Imree.Device.box_size, 0xF0F0F0, .2, 1);
-				bk.addChild(new text(String(xml.result.children.children()[i].Title), main.Imree.Device.box_size));
+				new ImageLoader(String(xml.result.children.children()[i].thumbnail_url), main.img_loader_vars(bk)).load();
+				bk.addChild(new text(String(xml.result.children.children()[i].title), main.Imree.Device.box_size));
 				bk.x = positions[i].x;
 				bk.y = positions[i].y;
 				scroller_contents.addChild(bk);
@@ -99,8 +101,6 @@ package imree.display_helpers {
 			scroller_contents.x = main.stage.stageWidth / 2 - scroller_contents.width / 2 - 20;
 			scroller.update();
 			scroller.x = search_box.get_height() + 20;
-			
-			
 		}
 		
 	}

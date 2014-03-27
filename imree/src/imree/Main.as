@@ -68,7 +68,7 @@ package imree
 			stage.addChild(this);
 			
 			function resizedstage(e:*= null):void {
-				
+				stage.removeEventListener(Event.RESIZE, resizedstage);
 				animator = new animate(t);
 				animator.off_direction = "up"; //should depend on theme + device_type
 				
@@ -113,7 +113,6 @@ package imree
 				t.addChild(Logger_IO);
 				t.preloader = new Preloader(t);
 				t.addChild(preloader);
-				trace("The width is " + t.stage.stageWidth);
 			}				
 		}
 		

@@ -2,7 +2,7 @@ package imree.forms
 {
 	/**
 	 * ...
-	 * @author Jason Steelman
+	 * @author Jason Steelman / Tonya Holladay
 	 */
 	
 	import fl.controls.Button;
@@ -30,26 +30,20 @@ package imree.forms
 			super();
 		}
 		
-			
 		override public function draw(label_width:int = 100, input_w:int = 200, padding:int = 10 ):void {
 			ui = new Sprite();
 						
-			/*var outs:Sprite = new Sprite;
-			outs.graphics.beginFill(0x800000, 1);
-			outs.graphics.lineStyle(2, 0x000000);
-			outs.graphics.drawRect(0, 0, 500, 500);
-			outs.graphics.endFill();
-			ui.addChild(outs);*/ //try to make is a bit nicer looking
+			
 			
 			var container:Sprite = new Sprite;
-			container.graphics.beginFill(0xC0C0C0, 1);
+			container.graphics.beginFill(0xFFFFFFF, 1);
 			container.graphics.lineStyle(2, 0x000000);			
-			container.graphics.drawRect(0,0, 250, 250);
+			container.graphics.drawRect(0,0, input_w, 100+30);
 			container.graphics.endFill();
 			ui.addChild(container);
 			
 			
-			var label_display:text = new text(this.label, label_width, this.label_textFont, 5000);
+			var label_display:text = new text(this.label, label_width, this.label_textFont);
 			label_display.y += 5;
 		
 			container.addChild(label_display)
@@ -67,7 +61,7 @@ package imree.forms
 			textbox.setTextFormat(inputFormat);
 			textbox.type = TextFieldType.INPUT;
 			//textbox.text =  initial_val;
-			textbox.background = true;
+			textbox.background = false;
 			textbox.htmlText = initial_val;
 			textbox.defaultTextFormat = inputFormat;
 			textbox.multiline = true;
@@ -98,14 +92,18 @@ package imree.forms
 			butt_u.addEventListener(MouseEvent.CLICK, UnderlineClick);
 			
 			
-		function UnderlineClick(e:MouseEvent):void {
-			currentText = txt.text;
-			currentSelect = currentText.substring(txt.selectionBeginIndex, txt.selectionEndIndex);
-			beforeSelect = currentText.substring(0, txt.selectionBeginIndex);
-			afterSelect = currentText.substring(txt.selectionEndIndex);
-			txt.text = beforeSelect + " <u>" + currentSelect + "</u>" + afterSelect;
-						
+			function UnderlineClick(e:MouseEvent):void {
+				replace_with("u");
 			}	
+			function replace_with(format:String):void {
+				currentText = txt.text;
+				currentSelect = currentText.substring(txt.selectionBeginIndex, txt.selectionEndIndex);
+				beforeSelect = currentText.substring(0, txt.selectionBeginIndex);
+				afterSelect = currentText.substring(txt.selectionEndIndex);
+				initial_val = beforeSelect + "<"+format+">" + currentSelect + "</"+format+">" + afterSelect;
+				ui = null;
+				draw(label_width, input_w, padding);
+			}
 						
 			var butt_i_ui:Button = new Button();
 			butt_i_ui.label = "I";

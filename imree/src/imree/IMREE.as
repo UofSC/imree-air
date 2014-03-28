@@ -61,17 +61,17 @@ package imree
 			Home = new home(main.stage.stageWidth, main.stage.stageHeight, main.connection, main);
 			Home.onSelect = load_exhibit;
 			addChild(Home);
-						
+			
+			/**
 			Home.visible = false;
 			main.preloader.hide();
-			
 			
 			var test_wysiwg:f_element_WYSIWYG = new f_element_WYSIWYG("", "nothing", "Hello my name is <b>Tonya</b>");
 			addChild(test_wysiwg);
 			test_wysiwg.draw(500, 500);
 			test_wysiwg.x = 150;
 			test_wysiwg.y = 50;
-			
+			*/
 			
 			page_admin_exhibits = new admin_exhibits(staging_area.width, staging_area.height, main);
 			page_admin_exhibits.x = staging_area.x;

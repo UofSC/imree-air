@@ -73,6 +73,8 @@ package imree.pages
 			var tim:Timer = new Timer(3000);
 			tim.addEventListener(TimerEvent.TIMER, tick);
 			tim.start();
+			mouseChildren = false;
+			mouseEnabled = false;
 			function tick(e:*= null):void {
 				tim.stop();
 				tim.removeEventListener(TimerEvent.TIMER, tick);

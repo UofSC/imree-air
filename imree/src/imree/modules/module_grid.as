@@ -271,7 +271,8 @@ package imree.modules
 			add_butt.label = "Add Assets";
 			var add_asset_button:smart_button = new smart_button(add_butt, draw_search);
 			edit_wrapper.addChild(add_asset_button);
-			var Search:search = new search(new_asset_selected, main, stage.stageWidth, stage.stageHeight - 95);
+			var Search:search = new search(new_asset_selected, main, stage.stageWidth, stage.stageHeight);
+			Search
 			if(main.Imree.Device.orientation === "portrait") {
 				add_asset_button.y = proxies_wrapper.y + proxies_wrapper.height + 20;
 				add_asset_button.x = stage.stageWidth/2- 120 / 2;

@@ -5,6 +5,7 @@ package imree.forms
 	 * @author Jason Steelman
 	 */
 	
+	import fl.controls.Button;
 	import flash.display.Sprite;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
@@ -15,11 +16,10 @@ package imree.forms
 	import imree.text;
 	import imree.textFont;
 	
-	public class f_element_text extends f_element
+	public class f_element_WYSIWYG extends f_element
 	{
 		private var txt:TextField;
-		public var is_password:Boolean;
-		public function f_element_text(_label:String, _data_column_name:String, _value:String = "") {
+		public function f_element_WYSIWYG(_label:String, _data_column_name:String, _value:String = "") {
 			label = _label;
 			value = _value;
 			initial_val = _value;
@@ -38,29 +38,40 @@ package imree.forms
 			
 			var textbox:TextField = new TextField();
 				
-				textbox.setTextFormat(inputFormat);
-				textbox.type = TextFieldType.INPUT;
-				textbox.text =  initial_val;
-				textbox.background = true;
-				
-				textbox.defaultTextFormat = inputFormat;
-				textbox.multiline = false;
-				textbox.wordWrap = false;
-				textbox.autoSize = TextFieldAutoSize.NONE;
-				textbox.height = input_element_fontSize * 2 - 10;
-				textbox.width = input_w;
-				textbox.border = true;
-				textbox.borderColor = 0x000000;
-				textbox.x = label_width + padding;
-				textbox.y = 0;
-				txt = textbox;
-				ui.addChild(textbox);
-				
-			if (is_password) {
-				txt.displayAsPassword = true;
-			}
+			textbox.setTextFormat(inputFormat);
+			textbox.type = TextFieldType.INPUT;
+			//textbox.text =  initial_val;
+			textbox.background = true;
+			textbox.htmlText = initial_val;
+			textbox.defaultTextFormat = inputFormat;
+			textbox.multiline = true;
+			textbox.wordWrap = true;
+			textbox.autoSize = TextFieldAutoSize.LEFT;
+			textbox.height = 400;			//@todo re evaluate what this value is
+			textbox.width = input_w;
+			textbox.border = true;
+			textbox.borderColor = 0x000000;
+			textbox.x = label_width + padding;
+			textbox.y = 20;
+			txt = textbox;
+			ui.addChild(textbox);
 			loader_x = label_width + input_w + padding + 2;
 			super.draw(label_width, input_w, padding);
+			
+			var butt_u_ui:Button = new Button();
+			butt_u_ui.label = "Underline";
+			butt_u_ui.setSize(20, 20);
+			var butt_u:smart_button = new smart_button(butt_u_ui, do_underline);
+			function do_underline(e:*= null):void {
+				trace("Selection from " + textbox.selectionBeginIndex + " to " + textbox.selectionEndIndex);
+			}
+			ui.addChild(butt_u);
+			
+			
+			
+			
+			
+			
 		}
 		override public function get_value():* {
 			return txt.text;
@@ -90,5 +101,4 @@ package imree.forms
 			}
 		}
 	}
-
 }

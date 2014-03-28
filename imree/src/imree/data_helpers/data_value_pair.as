@@ -13,7 +13,9 @@ package imree.data_helpers
 			label = _label;
 			value = _value;
 		}
-		
+		public function toString():String {
+			return label + ": " + String(value);
+		}
 	}
 
 }

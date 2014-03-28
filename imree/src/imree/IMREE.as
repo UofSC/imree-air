@@ -15,6 +15,7 @@ package imree
 	import imree.display_helpers.smart_button;
 	import imree.forms.authentication;
 	import imree.forms.exhibit_properties;
+	import imree.forms.f_element_WYSIWYG;
 	import imree.pages.admin_exhibits;
 	import imree.pages.home;
 	import imree.pages.exhibit_display;
@@ -44,6 +45,16 @@ package imree
 			Device = new device(main);
 			padding = 10;
 			
+			
+			var bxTainer:Sprite = new Sprite;
+			bxTainer.graphics.beginFill(0xC0C0C0);
+			bxTainer.graphics.lineStyle(3);
+			bxTainer.graphics.endFill();
+			bxTainer.width = 500;
+			bxTainer.height = 500;						
+			addChild(bxTainer);
+			
+			
 			sample_button = new button_home();
 			UI_size(sample_button);
 			if (main.stage.stageWidth > main.stage.stageHeight) {
@@ -54,9 +65,23 @@ package imree
 				staging_area.y = sample_button.height + padding;
 			}
 			
+			
+			
+			
 			Home = new home(main.stage.stageWidth, main.stage.stageHeight, main.connection, main);
 			Home.onSelect = load_exhibit;
 			addChild(Home);
+						
+			Home.visible = false;
+			main.preloader.hide();
+			
+			
+			var test_wysiwg:f_element_WYSIWYG = new f_element_WYSIWYG("A test", "nothing", "Hello my name is <b>Tonya</b>");
+			addChild(test_wysiwg);
+			test_wysiwg.draw(300, 500);
+			test_wysiwg.x = 150;
+			test_wysiwg.y = 50;
+			
 			
 			page_admin_exhibits = new admin_exhibits(staging_area.width, staging_area.height, main);
 			page_admin_exhibits.x = staging_area.x;

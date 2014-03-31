@@ -23,7 +23,8 @@ package imree.display_helpers {
 	 */
 	public class search extends Sprite {
 		
-		public var onSelect:Function;
+		public var onComplete:Function;
+		public var onDestroy:Function;
 		private var w:int;
 		private var h:int;
 		private var wrapper:Sprite;
@@ -35,12 +36,12 @@ package imree.display_helpers {
 		public var selections:Vector.<data_value_pair>;
 		private var btn_confirm:smart_button;
 		private var btn_cancel:smart_button;
-		public function search(_onSelect:Function, _main:Main, _w:int = 300, _h:int = 300) {
-			onSelect = _onSelect;
+		public function search(_onComplete:Function, _main:Main, _onDestroy:Function, _w:int = 300, _h:int = 300) {
+			onComplete = _onComplete;
 			main = _main;
+			onDestroy = _onDestroy;
 			w = _w;
 			h = _h;
-			
 		}
 		public function draw_search_box():void {
 			main.clean_slate([wrapper, search_box, search_submit, search_ui_wrapper]);
@@ -101,6 +102,7 @@ package imree.display_helpers {
 			}
 			var lay:layout = new layout();
 			var positions:Vector.<position_data> = lay.abstract_box_solver(proxies, stage.stageWidth, stage.stageHeight * 999);
+			var boxes:Vector.<box> = new Vector.<box>();
 			for (var i:String in proxies) {
 				var bk:box = new box(main.Imree.Device.box_size, main.Imree.Device.box_size, 0xF0F0F0, .2, 1);
 				bk.data = { repository:xml.result.children.children()[i].repository, id:xml.result.children.children()[i].id, collection:xml.result.children.children()[i].collection };
@@ -126,6 +128,7 @@ package imree.display_helpers {
 				bk.mouseChildren = false;
 				bk.mouseEnabled = true;
 				bk.addEventListener(MouseEvent.CLICK, item_selected);
+				boxes.push(bk);
 			}
 			scroller_contents.x = main.stage.stageWidth / 2 - scroller_contents.width / 2 - 20;
 			scroller.update();
@@ -138,6 +141,7 @@ package imree.display_helpers {
 				var label:String = String(target.data.repository) + String(target.data.id) + String(target.data.collection);
 				if (in_selections(label)) { 
 					target.highlight_remove();
+					selections.splice(selections_indexOf(label), 1);
 				} else {
 					selections.push(new data_value_pair(label, target.data));
 					target.highlight();
@@ -156,7 +160,10 @@ package imree.display_helpers {
 			/**
 			 * Top UI Buttons
 			 */
-			
+			var butt_wrapper:box = new box(200, 85);
+			wrapper.addChild(butt_wrapper);
+			butt_wrapper.x = main.stage.stageWidth - butt_wrapper.width - 5;
+			butt_wrapper.y = 5;
 			var btn_cancel_UI:Button = new Button();
 				btn_cancel_UI.setSize(75, 75);
 				btn_cancel_UI.label = "Cancel";
@@ -166,18 +173,53 @@ package imree.display_helpers {
 			btn_cancel = new smart_button(btn_cancel_UI, cancel);
 			btn_confirm = new smart_button(btn_confirm_UI, confirm);
 			btn_confirm.disable();
+			butt_wrapper.addChild(btn_cancel);
+			butt_wrapper.addChild(btn_confirm);
+			btn_confirm.x = 80;
 			
 			function cancel(me:*= null):void {
-				main.clean_slate([wrapper, search_box, search_submit, search_ui_wrapper, this]);
+				for each (var bk:box in boxes) {
+					bk.removeEventListener(MouseEvent.CLICK, item_selected);
+				}
+				onDestroy();
 			}
 			function confirm(me:*= null):void {
-				trace("IMPORTS " + selections);
+				var ingestion_count:int = 0;
+				for each(var selection:data_value_pair in selections) {
+					var data:Object = { asset_repository:selection.value.repository, asset_id:selection.value.id, asset_collection:selection.value.collection };
+					ingestion_count++;
+					main.connection.server_command('ingest', data, ingest_response);
+				}
+				var ingestions:Array = [];
+				var fails:int = 0;
+				function ingest_response(loaderevent:LoaderEvent):void  {
+					ingestion_count--;
+					var answer:XML = XML(LoaderEvent(loaderevent).target.content);
+					if (answer.success == "true") {
+						ingestions.push(answer.result.asset_id);
+					} else {
+						fails++;
+					}
+					if (ingestion_count === 0) {
+						onComplete(ingestions, fails);
+						main.log('ASSET INGEST COMPLETE');
+						cancel();
+					}
+				}
 			}
 		}
 		private function in_selections(label:String):Boolean {
 			for each(var i:data_value_pair in selections) {
 				if (label == i.label) {
 					return true;
+				}
+			}
+			return false;
+		}
+		public function selections_indexOf(label:String):* {
+			for (var i:String in selections) {
+				if (label == selections[i].label) {
+					return selections.indexOf(selections[i]);
 				}
 			}
 			return false;

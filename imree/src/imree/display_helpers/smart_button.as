@@ -3,6 +3,7 @@ package imree.display_helpers
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.filters.ColorMatrixFilter;
 	import flash.filters.GlowFilter;
@@ -19,7 +20,17 @@ package imree.display_helpers
 			button = _button;
 			onInteract = _onInteract;
 			addChild(button);
+			addEventListener(Event.ADDED_TO_STAGE, added);
+		}
+		private function added(e:Event):void {
 			button.addEventListener(MouseEvent.CLICK, clicked);
+			addEventListener(Event.REMOVED_FROM_STAGE,removed);
+		}
+		private function removed(e:Event):void {
+			removeEventListener(Event.REMOVED_FROM_STAGE, removed);
+			if(button !== null) {
+				button.removeEventListener(MouseEvent.CLICK, clicked);
+			}
 		}
 		private function clicked(e:MouseEvent):void {
 			onInteract();

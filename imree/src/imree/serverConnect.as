@@ -74,7 +74,6 @@ package imree
 			xmlloader.load(true);
 			
 			function getxmldata(e:LoaderEvent):void {
-				
 				onCompleteFunction(e);
 			}
 			function failed(e:LoaderEvent):void {

@@ -271,8 +271,6 @@ package imree.modules
 			add_butt.label = "Add Assets";
 			var add_asset_button:smart_button = new smart_button(add_butt, draw_search);
 			edit_wrapper.addChild(add_asset_button);
-			var Search:search = new search(new_asset_selected, main, stage.stageWidth, stage.stageHeight);
-			Search
 			if(main.Imree.Device.orientation === "portrait") {
 				add_asset_button.y = proxies_wrapper.y + proxies_wrapper.height + 20;
 				add_asset_button.x = stage.stageWidth/2- 120 / 2;
@@ -281,18 +279,25 @@ package imree.modules
 				add_asset_button.x = proxies_wrapper.x + proxies_wrapper.width + 20;
 				add_asset_button.y = (main.stage.stageHeight-95) / 2 - 120 / 2;
 			}
-			var search_wrapper:Sprite = new Sprite();
-			edit_background.addChild(search_wrapper);
+			
 			function draw_search(e:*= null):void  {
+				var Search:search = new search(new_assets_ingested, main, destroy_search, stage.stageWidth, stage.stageHeight);
+				var search_wrapper:Sprite = new Sprite();
+				edit_background.addChild(search_wrapper);
 				search_wrapper.addChild(new box(edit_background.width, edit_background.height, 0xFFFFFF, 1));
 				Search.draw_search_box();
 				search_wrapper.addChild(Search);
-				
-				
+				function destroy_search(e:*= null):void {
+					search_wrapper.removeChild(Search);
+					edit_background.removeChild(search_wrapper);
+					Search = null;
+					search_wrapper = null;
+				}
 			}
-			function new_asset_selected(e:*= null):void {
-				trace(e);
+			function new_assets_ingested(ingests:Array, fails:int):void {
+				trace(ingests + " :: Fails: " + fails);
 			}
+			
 		}
 		
 		public function make_proxies(wrapper:DisplayObject):Vector.<box> {

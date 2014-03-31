@@ -62,7 +62,7 @@ package imree
 			Home.onSelect = load_exhibit;
 			addChild(Home);
 			
-			/**
+			
 			Home.visible = false;
 			main.preloader.hide();
 			
@@ -71,7 +71,7 @@ package imree
 			test_wysiwg.draw(500, 500);
 			test_wysiwg.x = 150;
 			test_wysiwg.y = 50;
-			*/
+			
 			
 			page_admin_exhibits = new admin_exhibits(staging_area.width, staging_area.height, main);
 			page_admin_exhibits.x = staging_area.x;

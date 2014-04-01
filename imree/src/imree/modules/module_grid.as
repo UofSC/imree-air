@@ -281,7 +281,7 @@ package imree.modules
 			}
 			
 			function draw_search(e:*= null):void  {
-				var Search:search = new search(new_assets_ingested, main, destroy_search, stage.stageWidth, stage.stageHeight);
+				var Search:search = new search(new_assets_ingested, main, t, destroy_search, stage.stageWidth, stage.stageHeight);
 				var search_wrapper:Sprite = new Sprite();
 				edit_background.addChild(search_wrapper);
 				search_wrapper.addChild(new box(edit_background.width, edit_background.height, 0xFFFFFF, 1));

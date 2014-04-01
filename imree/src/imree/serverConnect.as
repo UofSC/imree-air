@@ -45,6 +45,7 @@ package imree
 			if (typeof(command_parameter) === "object") {
 				var j:JSONEncoder = new JSONEncoder(command_parameter);
 				command_parameter = j.getString();
+				trace(command_parameter);
 			}
 			
 			var post_data:URLVariables = new URLVariables();

@@ -1,4 +1,5 @@
 package imree.display_helpers {
+	import com.adobe.serialization.json.*;
 	import com.greensock.events.LoaderEvent;
 	import com.greensock.layout.ScaleMode;
 	import com.greensock.loading.data.ImageLoaderVars;
@@ -14,6 +15,7 @@ package imree.display_helpers {
 	import imree.images.loading_spinner_sprite;
 	import imree.layout;
 	import imree.Main;
+	import imree.modules.module;
 	import imree.shortcuts.box;
 	import imree.text;
 	import imree.textFont;
@@ -30,15 +32,17 @@ package imree.display_helpers {
 		private var wrapper:Sprite;
 		private var search_ui_wrapper:Sprite;
 		private var main:Main;
+		private var Module:module;
 		private var search_box:f_element_text;
 		private var search_submit:smart_button;
 		private var spinner:loading_spinner_sprite;
 		public var selections:Vector.<data_value_pair>;
 		private var btn_confirm:smart_button;
 		private var btn_cancel:smart_button;
-		public function search(_onComplete:Function, _main:Main, _onDestroy:Function, _w:int = 300, _h:int = 300) {
+		public function search(_onComplete:Function, _main:Main, _Module:module, _onDestroy:Function, _w:int = 300, _h:int = 300) {
 			onComplete = _onComplete;
 			main = _main;
+			Module = _Module;
 			onDestroy = _onDestroy;
 			w = _w;
 			h = _h;
@@ -127,7 +131,14 @@ package imree.display_helpers {
 				scroller.update();
 				bk.mouseChildren = false;
 				bk.mouseEnabled = true;
-				bk.addEventListener(MouseEvent.CLICK, item_selected);
+				
+				if (xml.result.children.children()[i].children.children().length() > 0) {
+					bk.data.children_xml = xml.result.children.children()[i].children.children();
+					bk.addEventListener(MouseEvent.CLICK, complex_object_selected);
+				} else {
+					bk.addEventListener(MouseEvent.CLICK, item_selected);
+				}
+				
 				boxes.push(bk);
 			}
 			scroller_contents.x = main.stage.stageWidth / 2 - scroller_contents.width / 2 - 20;
@@ -186,15 +197,16 @@ package imree.display_helpers {
 			function confirm(me:*= null):void {
 				var ingestion_count:int = 0;
 				for each(var selection:data_value_pair in selections) {
-					var data:Object = { asset_repository:selection.value.repository, asset_id:selection.value.id, asset_collection:selection.value.collection };
 					ingestion_count++;
-					main.connection.server_command('ingest', data, ingest_response);
+					var data:Object = { asset_repository:String(selection.value.repository), asset_id:String(selection.value.id), asset_collection:String(selection.value.collection), module_id:String(Module.module_id) };
+					main.connection.server_command('ingest', data, ingest_response, true);
 				}
 				var ingestions:Array = [];
 				var fails:int = 0;
 				function ingest_response(loaderevent:LoaderEvent):void  {
 					ingestion_count--;
 					var answer:XML = XML(LoaderEvent(loaderevent).target.content);
+					trace(answer);
 					if (answer.success == "true") {
 						ingestions.push(answer.result.asset_id);
 					} else {
@@ -207,6 +219,44 @@ package imree.display_helpers {
 					}
 				}
 			}
+			
+			
+			function complex_object_selected(me:MouseEvent):void {
+				var target:box = box(me.currentTarget);
+				var c_xml:XMLList = XMLList(target.data.children_xml);
+				var multiselect_window:box = new box(main.stage.stageWidth, main.stage.stageHeight, 0x000000, .9);
+				addChild(multiselect_window);
+				
+				var child_positions:Vector.<position_data> = new Vector.<position_data>();
+				for each(var childdata:XML in c_xml) {
+					child_positions.push(new position_data());
+				}
+				var c_pos:Vector.<position_data> = lay.abstract_box_solver(child_positions, main.stage.stageWidth * .9, main.stage.stageHeight * .9);
+				var child_boxes:Vector.<box> = new Vector.<box>();
+				var childs_wrapper:Sprite = new Sprite();
+				multiselect_window.addChild(childs_wrapper);
+				childs_wrapper.x = 100;
+				childs_wrapper.y = 100;
+				for (var c:int = 0; c < c_xml.length(); c++ ) {
+					var child:box = new box(100, 100);
+					childs_wrapper.addChild(child);
+					child.x = c_pos[c].x;
+					child.y = c_pos[c].y;
+					child.data = { repository:c_xml[c].repository, id:c_xml[c].id, collection:c_xml[c].collection };
+					child.addEventListener(MouseEvent.CLICK, item_selected);
+					var c_thumb_loader_vars:ImageLoaderVars = new ImageLoaderVars();
+					c_thumb_loader_vars.container(child);
+					c_thumb_loader_vars.crop(true);
+					c_thumb_loader_vars.scaleMode(ScaleMode.PROPORTIONAL_INSIDE);
+					c_thumb_loader_vars.width(child.width);
+					c_thumb_loader_vars.height(child.height);
+					new ImageLoader(String(c_xml[c].thumbnail_url), c_thumb_loader_vars).load();
+				}
+				
+			}
+			
+			
+			
 		}
 		private function in_selections(label:String):Boolean {
 			for each(var i:data_value_pair in selections) {

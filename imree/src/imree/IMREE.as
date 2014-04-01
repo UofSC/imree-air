@@ -15,6 +15,7 @@ package imree
 	import imree.display_helpers.smart_button;
 	import imree.forms.authentication;
 	import imree.forms.exhibit_properties;
+	import imree.forms.f_element_date;
 	import imree.forms.f_element_WYSIWYG;
 	import imree.pages.admin_exhibits;
 	import imree.pages.home;
@@ -62,16 +63,32 @@ package imree
 			Home.onSelect = load_exhibit;
 			addChild(Home);
 			
+			
 			/**
+			
+			//Turn off main IMREE display
 			Home.visible = false;
 			main.preloader.hide();
 			
+			//Turn on Datepicker Tester (Tabitha);
+			var datepicker:f_element_date = new f_element_date("some label", "dontmatter", "");
+			datepicker.draw(100, 500);
+			addChild(datepicker);
+			datepicker.x = 200;
+			datepicker.y = 200;
+			datepicker.set_value("1981-03-01 18:20:00");
+			
+			
+			
+			//Turn on wysiwg tester (Tonya)
 			var test_wysiwg:f_element_WYSIWYG = new f_element_WYSIWYG("", "nothing", "Hello my name is <b>Tonya</b>");
 			addChild(test_wysiwg);
 			test_wysiwg.draw(500, 500);
 			test_wysiwg.x = 150;
 			test_wysiwg.y = 50;
 			*/
+			
+			
 			
 			page_admin_exhibits = new admin_exhibits(staging_area.width, staging_area.height, main);
 			page_admin_exhibits.x = staging_area.x;

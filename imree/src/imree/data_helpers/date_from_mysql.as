@@ -40,7 +40,7 @@ package imree.data_helpers
 			//expects string like 1995/03/12 15:29:45
 			//var year:int = int(string.substr(0, 4));
 			//create an array for months string an d short date to return date 
-			return new Date();
+			return new Date(newyear, newmonth, newday, newhour, newminute, newsecond);
 		}
 		
 		private function timestring(date:Date):String {

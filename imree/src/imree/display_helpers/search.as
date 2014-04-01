@@ -19,6 +19,7 @@ package imree.display_helpers {
 	import imree.shortcuts.box;
 	import imree.text;
 	import imree.textFont;
+	import Icon_book_background;
 	/**
 	 * ...
 	 * @author Jason Steelman
@@ -105,13 +106,13 @@ package imree.display_helpers {
 				proxies.push(new position_data(main.Imree.Device.box_size, main.Imree.Device.box_size));
 			}
 			var lay:layout = new layout();
-			var positions:Vector.<position_data> = lay.abstract_box_solver(proxies, stage.stageWidth, stage.stageHeight * 999);
+			var positions:Vector.<position_data> = lay.abstract_box_solver(proxies, stage.stageWidth, stage.stageHeight * 999, 20);
 			var boxes:Vector.<box> = new Vector.<box>();
 			for (var i:String in proxies) {
 				var bk:box = new box(main.Imree.Device.box_size, main.Imree.Device.box_size, 0xF0F0F0, .2, 1);
 				bk.data = { repository:xml.result.children.children()[i].repository, id:xml.result.children.children()[i].id, collection:xml.result.children.children()[i].collection };
 				
-				var image_portion_of_bk:box = new box(bk.width, bk.height / 2);
+				var image_portion_of_bk:box = new box(bk.width, bk.height * .75);
 				bk.addChild(image_portion_of_bk);
 				var thumb_loader_vars:ImageLoaderVars = new ImageLoaderVars();
 				thumb_loader_vars.container(image_portion_of_bk);
@@ -122,7 +123,7 @@ package imree.display_helpers {
 				new ImageLoader(String(xml.result.children.children()[i].thumbnail_url), thumb_loader_vars).load();
 				
 				var txt:text = new text(String(xml.result.children.children()[i].title), main.Imree.Device.box_size - 10, new textFont('_sans', 14));
-				txt.y = bk.height / 2 + 5;
+				txt.y = image_portion_of_bk.height + 5;
 				txt.x = 5;
 				bk.addChild(txt);
 				bk.x = positions[i].x;
@@ -135,6 +136,10 @@ package imree.display_helpers {
 				if (xml.result.children.children()[i].children.children().length() > 0) {
 					bk.data.children_xml = xml.result.children.children()[i].children.children();
 					bk.addEventListener(MouseEvent.CLICK, complex_object_selected);
+					var book_indicator:Icon_book_background = new Icon_book_background();
+					book_indicator.width = bk.width + 5;
+					book_indicator.height = bk.height + 15;
+					bk.addChild(book_indicator);
 				} else {
 					bk.addEventListener(MouseEvent.CLICK, item_selected);
 				}
@@ -234,6 +239,10 @@ package imree.display_helpers {
 				var c_pos:Vector.<position_data> = lay.abstract_box_solver(child_positions, main.stage.stageWidth * .9, main.stage.stageHeight * .9);
 				var child_boxes:Vector.<box> = new Vector.<box>();
 				var childs_wrapper:Sprite = new Sprite();
+				/**
+				 * The problem seems here. 
+				 * bad childs_wrapper needs new UI like the original search interface. Maybe a whole modular class on its own. Class Modal extends ScollPaneFancy
+				 */
 				multiselect_window.addChild(childs_wrapper);
 				childs_wrapper.x = 100;
 				childs_wrapper.y = 100;

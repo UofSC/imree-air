@@ -19,6 +19,7 @@ package imree.shortcuts
 		 * @param	alpha
 		 */
 		private var t:box;
+		public var data:*;
 		public function box(width:Number, height:Number, color:uint = 0x000000, alpha:Number = 0, border_width:* = 0, border_color:uint = 0x000000) {
 			if (border_width === true) {
 				border_width = 1;
@@ -49,6 +50,28 @@ package imree.shortcuts
 			} else {
 				this.y = target.height / 2 - this.height / 2 ;
 			}
+		}
+		
+		public var stroke:Sprite;
+		public function highlight(color:uint = 0xFFFF00):void {
+			if (stroke === null) {
+				stroke = new Sprite();
+				addChild(stroke);
+				stroke.graphics.lineStyle(2, color);
+				stroke.graphics.drawRect(0, 0, width, height);
+				stroke.graphics.lineStyle();
+			}
+		}
+		
+		public function highlight_remove():void {
+			if (stroke !== null) {
+				removeChild(stroke);
+				stroke = null;
+			}
+		}
+		
+		public function is_highlighted():Boolean {
+			return stroke !== null;
 		}
 	}
 	

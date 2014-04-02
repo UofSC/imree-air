@@ -2,6 +2,7 @@ package imree
 {
 	import com.adobe.serialization.json.*;
 	import com.greensock.events.LoaderEvent;
+	import com.greensock.loading.DataLoader;
 	import com.greensock.loading.XMLLoader;
 	import com.greensock.loading.data.XMLLoaderVars;
 	import flash.events.Event;
@@ -19,18 +20,24 @@ package imree
 		public var uri:String;
 		public var session_key:String;
 		public var username:String;
-		private var password:String;
-		public function serverConnect(URI:String="") {
+		public var password:String;
+		private var current_loader_number:int;
+		private var main:Main;
+		public function serverConnect(URI:String="", _main:Main=null) {
 			this.uri = URI;
+			current_loader_number = 0;
+			main = _main;
 		}
-		
-		/**
-		 * This sends command:command_parameter to the PHP server and returns XML data to onCompleteFunction
-		 * @param	command				The command to be executed
-		 * @param	command_parameters	The paramater to pass with command [optional]
-		 * @param	onCompleteFunction	The function to be executed when xml data is received. This function should accept one parameter of type :XML
-		 */
+		public function clone():serverConnect {
+			var n:serverConnect = new serverConnect();
+			n.uri = uri;
+			n.session_key = session_key;
+			n.username = username;
+			n.password = password;
+			return n;
+		}
 		public function server_command(command:String, command_parameter:*, onCompleteFunction:Function=null, elevatedPrivileges:Boolean = false):void {
+			
 			if (this.uri.length < 1) {
 				trace("No connection uri set. Use   ... = new serverConnect('http://site.com/imree/api/'); ... ");
 			}
@@ -38,6 +45,7 @@ package imree
 			if (typeof(command_parameter) === "object") {
 				var j:JSONEncoder = new JSONEncoder(command_parameter);
 				command_parameter = j.getString();
+				trace(command_parameter);
 			}
 			
 			var post_data:URLVariables = new URLVariables();
@@ -48,7 +56,7 @@ package imree
 				post_data.username = username;
 				post_data.password = password;
 			}
-				
+			
 			var request:URLRequest = new URLRequest(this.uri);
 				request.method = URLRequestMethod.POST;
 				request.data = post_data;				
@@ -59,33 +67,42 @@ package imree
 				xmlloadervars.onFail(failed);
 				xmlloadervars.onError(errored);
 				xmlloadervars.autoDispose(true);
+				xmlloadervars.onInit(initialized);
+				xmlloadervars.onOpen(opened);
+				xmlloadervars.onIOError(IOERROR);
+				xmlloadervars.prop("properties", {index:current_loader_number++, command:command, paramater:command_parameter, urlvars:post_data});
 			var xmlloader:XMLLoader = new XMLLoader(request, xmlloadervars );
 			xmlloader.load(true);
 			
 			function getxmldata(e:LoaderEvent):void {
-				if (onCompleteFunction !== null) {
-					onCompleteFunction(e.currentTarget.content);
-				}
-				XMLLoader(e.currentTarget).unload();
-				
+				onCompleteFunction(e);
 			}
 			function failed(e:LoaderEvent):void {
-				trace("XMLLoader faild! " + XMLLoader(e.currentTarget).url + " Command:" + command + " Parameter:" + command_parameter);
-				if (String(XMLLoader(e.currentTarget).content).length > 0) {
-					trace("XML::\n" + XMLLoader(e.currentTarget).content);
-				}
+				main.log(say_loader_event(e) + " FAAILED", e.target.content);
+			}
+			function IOERROR(e:LoaderEvent):void {
+				main.log(say_loader_event(e) + " IOERROR", e.target.content);
 			}
 			function errored(e:LoaderEvent):void {
-				trace("XMLLoader faild! " + XMLLoader(e.currentTarget).url + " Command:" + command + " Parameter:" + command_parameter);
-				if (String(XMLLoader(e.currentTarget).content).length > 0) {
-					trace("XML::\n" + XMLLoader(e.currentTarget).content);
-				}
+				main.log(say_loader_event(e) + " ERRORED", e.target.content);
+			}
+			function initialized(e:LoaderEvent):void {
+				main.log(say_loader_event(e) + " INITIAL", say_loader_event(e) + " INITIAL");
+			}
+			function opened(e:LoaderEvent):void {
+				main.log(say_loader_event(e) + " OPENED", say_loader_event(e) + " OPENED");
 			}
 		}
 		public function set_password(str:String):void {
 			password = str;
 		}
-		
+		public function password_is_set():Boolean {
+			return password != null;
+		}
+		public function say_loader_event(e:LoaderEvent):String {
+			var vars:Object = DataLoader(e.currentTarget).vars.properties;
+			return "[#" + vars.index + "] \t[" + vars.command + "] \t[" + vars.parameter + "]";
+		}
 	}
 	
 }

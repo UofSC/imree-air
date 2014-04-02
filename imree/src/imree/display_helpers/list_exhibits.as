@@ -7,6 +7,7 @@ package imree.display_helpers
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import imree.serverConnect;
+	import com.greensock.events.LoaderEvent;
 	/**
 	 * ...
 	 * @author Jason Steelman
@@ -22,7 +23,8 @@ package imree.display_helpers
 			this.t = this;
 			this.conn = conn;
 			conn.server_command("exhibits", filter, ready);
-			function ready(xml:XML):void {
+			function ready(evt:LoaderEvent):void {
+				var xml:XML = XML(evt.currentTarget.content);
 				var dat:Array = [];
 				for each(var x:XML in xml.result.children()) {
 					dat.push( {label:x.exhibit_name.toString(), data:x.exhibit_id } );

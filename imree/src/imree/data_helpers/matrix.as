@@ -56,8 +56,8 @@ package imree.data_helpers
 					}
 				}
 			} else if(from === "top") {
-				for (var y1:int = 0; y1 < this.data[0].length - columns + 1; y1++) {
-					for (var x1:int = 0; x1 < this.data.length - rows + 1; x1++) {
+				for (var y1:int = 0; y1 < this.data.length - columns + 1; y1++) {
+					for (var x1:int = 0; x1 < this.data[0].length  - rows + 1; x1++) {
 						if (this.sum_region(rows, columns, x1, y1) === 0) {
 							this.set_region(rows, columns, x1, y1, v);
 							return new Point(x1, y1);

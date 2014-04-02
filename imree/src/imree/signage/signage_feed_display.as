@@ -51,8 +51,8 @@ package imree.signage
 			this.max_items = Math.floor(this.target_w / this.min_size);
 			this.feed_background_color = 0xFFFFFF;
 			this.feed_background_alpha = 0;
-			this.feed_border_width = 10;
-			this.feed_border_color = 0x800000;
+			this.feed_border_width = 5;
+			this.feed_border_color = 0x000000;
 			this.item_background_color = 0xFFFFFF;
 			this.item_background_alpha = 0;
 		}

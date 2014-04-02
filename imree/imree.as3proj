@@ -5,17 +5,18 @@
     <movie outputType="Application" />
     <movie input="" />
     <movie path="bin\imree.swf" />
-    <movie fps="30" />
+    <movie fps="60" />
     <movie width="480" />
-    <movie height="762" />
+    <movie height="786" />
     <movie version="3" />
     <movie minorVersion="9" />
     <movie platform="AIR Mobile" />
-    <movie background="#F3EFD1" />
+    <movie background="#800000" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="src" />
+    <class path="QR\qr-zbar-ane-master\NativeAndroid\src" />
   </classpaths>
   <!-- Build options -->
   <build>
@@ -52,11 +53,12 @@
   </includeLibraries>
   <!-- SWC Libraries -->
   <libraryPaths>
-    <element path="src\Combobox.swc" />
+    <element path="src\userinterface_components.swc" />
+    <element path="lib\com.sbhave.nativeExtensions.zbar.ane" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>
-    <!-- example: <element path="..." /> -->
+    <element path="lib\qreader.ane" />
   </externalLibraryPaths>
   <!-- Runtime Shared Libraries -->
   <rslPaths>

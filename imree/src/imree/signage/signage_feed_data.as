@@ -73,7 +73,7 @@ package imree.signage
 					callback();
 				}
 				
-				trace(x);
+				//trace(x);
 			}
 			
 		}

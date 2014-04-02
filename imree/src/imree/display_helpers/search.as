@@ -7,6 +7,7 @@ package imree.display_helpers {
 	import com.greensock.TweenLite;
 	import fl.containers.ScrollPane;
 	import fl.controls.Button;
+	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import imree.data_helpers.data_value_pair;
@@ -91,28 +92,19 @@ package imree.display_helpers {
 			
 			
 			var xml:XML = XML(e.target.content);
-			var scroller:scrollPaneFancy = new scrollPaneFancy();
-			wrapper.addChild(scroller);
-			scroller.y = 100;
+			
 			var scroller_contents:Sprite = new Sprite();
-			scroller.setSize(stage.stageWidth, stage.stageHeight - 95 - search_box.get_height() -20) ;
-			scroller.source = scroller_contents;
-			scroller.drag_enable("top");
 			if (xml.result.children.children().length() == 0) {
 				trace("no results"); //@todo add visual message to results pane
 			}
-			var proxies:Vector.<position_data> = new Vector.<position_data>();
-			for each(var x:XML in xml.result.children.children()) {
-				proxies.push(new position_data(main.Imree.Device.box_size, main.Imree.Device.box_size));
-			}
-			var lay:layout = new layout();
-			var positions:Vector.<position_data> = lay.abstract_box_solver(proxies, stage.stageWidth, stage.stageHeight * 999, 20);
-			var boxes:Vector.<box> = new Vector.<box>();
-			for (var i:String in proxies) {
-				var bk:box = new box(main.Imree.Device.box_size, main.Imree.Device.box_size, 0xF0F0F0, .2, 1);
+			
+			var boxes:Vector.<DisplayObjectContainer> = new Vector.<DisplayObjectContainer>();
+			for (var i:String in xml.result.children.children()) {
+				var bk:box = new box(main.Imree.Device.box_size, main.Imree.Device.box_size, 0xF0F0F0, 1, 1);
 				bk.data = { repository:xml.result.children.children()[i].repository, id:xml.result.children.children()[i].id, collection:xml.result.children.children()[i].collection };
 				
 				var image_portion_of_bk:box = new box(bk.width, bk.height * .75);
+				image_portion_of_bk.y = 2;
 				bk.addChild(image_portion_of_bk);
 				var thumb_loader_vars:ImageLoaderVars = new ImageLoaderVars();
 				thumb_loader_vars.container(image_portion_of_bk);
@@ -124,45 +116,45 @@ package imree.display_helpers {
 				
 				var txt:text = new text(String(xml.result.children.children()[i].title), main.Imree.Device.box_size - 10, new textFont('_sans', 14));
 				txt.y = image_portion_of_bk.height + 5;
-				txt.x = 5;
+				txt.x = 6;
 				bk.addChild(txt);
-				bk.x = positions[i].x;
-				bk.y = positions[i].y;
-				scroller_contents.addChild(bk);
-				scroller.update();
 				bk.mouseChildren = false;
 				bk.mouseEnabled = true;
 				
-				if (xml.result.children.children()[i].children.children().length() > 0) {
-					bk.data.children_xml = xml.result.children.children()[i].children.children();
-					bk.addEventListener(MouseEvent.CLICK, complex_object_selected);
-					var book_indicator:Icon_book_background = new Icon_book_background();
-					book_indicator.width = bk.width + 5;
-					book_indicator.height = bk.height + 15;
-					bk.addChild(book_indicator);
-				} else {
-					bk.addEventListener(MouseEvent.CLICK, item_selected);
-				}
-				
 				boxes.push(bk);
 			}
-			scroller_contents.x = main.stage.stageWidth / 2 - scroller_contents.width / 2 - 20;
-			scroller.update();
 			
 			TweenLite.to(search_ui_wrapper, .25, { alpha:0 } );
 			TweenLite.from(wrapper, .35, { alpha:0 } );
 			
 			function item_selected(evt:MouseEvent):void {
 				var target:box = box(evt.currentTarget);
+				item_toggle_selected(target);
+			}
+			function item_toggle_selected(target:box):void {
+				var label:String = String(target.data.repository) + String(target.data.id) + String(target.data.collection);
+				if (in_selections(label)) { 
+					item_select_remove(target);
+				} else {
+					item_select_add(target);
+				}
+				check_top_UI_buttons();
+			}
+			function item_select_remove(target:box):void {
 				var label:String = String(target.data.repository) + String(target.data.id) + String(target.data.collection);
 				if (in_selections(label)) { 
 					target.highlight_remove();
 					selections.splice(selections_indexOf(label), 1);
-				} else {
+				}
+			}
+			function item_select_add(target:box):void {
+				var label:String = String(target.data.repository) + String(target.data.id) + String(target.data.collection);
+				if (!in_selections(label)) { 
 					selections.push(new data_value_pair(label, target.data));
 					target.highlight();
 				}
-				
+			}
+			function check_top_UI_buttons():void {
 				if (selections.length > 0) {
 					btn_confirm.enable();
 					btn_confirm.highlight();
@@ -176,22 +168,18 @@ package imree.display_helpers {
 			/**
 			 * Top UI Buttons
 			 */
-			var butt_wrapper:box = new box(200, 85);
-			wrapper.addChild(butt_wrapper);
-			butt_wrapper.x = main.stage.stageWidth - butt_wrapper.width - 5;
-			butt_wrapper.y = 5;
+			
 			var btn_cancel_UI:Button = new Button();
-				btn_cancel_UI.setSize(75, 75);
+				btn_cancel_UI.setSize(80, 70);
 				btn_cancel_UI.label = "Cancel";
 			var btn_confirm_UI:Button = new Button();
-				btn_confirm_UI.setSize(75, 75);
+				btn_confirm_UI.setSize(80, 70);
 				btn_confirm_UI.label = "Import";
 			btn_cancel = new smart_button(btn_cancel_UI, cancel);
 			btn_confirm = new smart_button(btn_confirm_UI, confirm);
 			btn_confirm.disable();
-			butt_wrapper.addChild(btn_cancel);
-			butt_wrapper.addChild(btn_confirm);
-			btn_confirm.x = 80;
+			var top_buttons:Vector.<smart_button> = new Vector.<smart_button>();
+			top_buttons.push(btn_cancel, btn_confirm);
 			
 			function cancel(me:*= null):void {
 				for each (var bk:box in boxes) {
@@ -225,32 +213,32 @@ package imree.display_helpers {
 				}
 			}
 			
+			var search_modal:modal = new modal(stage.stageWidth, stage.stageHeight, top_buttons);
+			search_modal.add_displayObjects_as_grid(boxes, 20);
+			addChild(search_modal);
+			
+			for (var b:int = 0; b < boxes.length; b++) {
+				i = String(b);
+				if (xml.result.children.children()[i].children.children().length() > 0) {
+					box(boxes[i]).data.children_xml = xml.result.children.children()[i].children.children();
+					boxes[i].addEventListener(MouseEvent.CLICK, complex_object_selected);
+					var book_indicator:Icon_book_background = new Icon_book_background();
+					book_indicator.width = bk.width + 5;
+					book_indicator.height = bk.height + 15;
+					boxes[i].addChild(book_indicator);
+				} else {
+					boxes[i].addEventListener(MouseEvent.CLICK, item_selected);
+				}
+			}
 			
 			function complex_object_selected(me:MouseEvent):void {
 				var target:box = box(me.currentTarget);
 				var c_xml:XMLList = XMLList(target.data.children_xml);
-				var multiselect_window:box = new box(main.stage.stageWidth, main.stage.stageHeight, 0x000000, .9);
-				addChild(multiselect_window);
 				
-				var child_positions:Vector.<position_data> = new Vector.<position_data>();
-				for each(var childdata:XML in c_xml) {
-					child_positions.push(new position_data());
-				}
-				var c_pos:Vector.<position_data> = lay.abstract_box_solver(child_positions, main.stage.stageWidth * .9, main.stage.stageHeight * .9);
-				var child_boxes:Vector.<box> = new Vector.<box>();
-				var childs_wrapper:Sprite = new Sprite();
-				/**
-				 * The problem seems here. 
-				 * bad childs_wrapper needs new UI like the original search interface. Maybe a whole modular class on its own. Class Modal extends ScollPaneFancy
-				 */
-				multiselect_window.addChild(childs_wrapper);
-				childs_wrapper.x = 100;
-				childs_wrapper.y = 100;
+				var child_boxes:Vector.<DisplayObjectContainer> = new Vector.<DisplayObjectContainer>();
 				for (var c:int = 0; c < c_xml.length(); c++ ) {
-					var child:box = new box(100, 100);
-					childs_wrapper.addChild(child);
-					child.x = c_pos[c].x;
-					child.y = c_pos[c].y;
+					var child:box = new box(main.Imree.Device.box_size, main.Imree.Device.box_size);
+					child_boxes.push(child);
 					child.data = { repository:c_xml[c].repository, id:c_xml[c].id, collection:c_xml[c].collection };
 					child.addEventListener(MouseEvent.CLICK, item_selected);
 					var c_thumb_loader_vars:ImageLoaderVars = new ImageLoaderVars();
@@ -262,10 +250,55 @@ package imree.display_helpers {
 					new ImageLoader(String(c_xml[c].thumbnail_url), c_thumb_loader_vars).load();
 				}
 				
+				var c_butt_confirm_ui:Button = new Button();
+				c_butt_confirm_ui.label = "Confirm";
+				c_butt_confirm_ui.setSize(80, 40);
+				var c_butt_confirm:smart_button = new smart_button(c_butt_confirm_ui, c_confirm);
+				function c_confirm(c_evt:MouseEvent=null):void {
+					c_clean();
+				}
+				
+				var c_butt_close_ui:Button  = new Button();
+				c_butt_close_ui.label = "Cancel";
+				c_butt_close_ui.setSize(80, 40);
+				var c_butt_close:smart_button = new smart_button(c_butt_close_ui, c_close);
+				function c_close(c_evt:MouseEvent=null):void {
+					for each(var ci:box in child_boxes) {
+						item_select_remove(ci);
+					}
+					c_clean();
+				}
+				
+				var c_butt_all_ui:Button = new Button();
+				c_butt_all_ui.label = "Select All";
+				c_butt_all_ui.setSize(80, 40);
+				var c_butt_all:smart_button = new smart_button(c_butt_all_ui, c_all);
+				function c_all(c_evt:MouseEvent=null):void {
+					for each(var ci:box in child_boxes) {
+						item_select_add(ci);
+					}
+				}
+				
+				function c_clean():int {
+					var c_selected:int = 0;
+					for each(var ci:box in child_boxes) {
+						if (ci.is_highlighted()) {
+							c_selected++;
+						}
+						ci.removeEventListener(MouseEvent.CLICK, item_selected);
+						main.clean_slate(ci);
+					}
+					c_xml = null;
+					main.clean_slate([c_modal]);
+					return c_selected;
+				}
+				
+				var  c_buttons:Vector.<smart_button> = new Vector.<smart_button>();
+				c_buttons.push(c_butt_close, c_butt_confirm, c_butt_all);
+				var c_modal:modal = new modal(stage.stageWidth, stage.stageHeight, c_buttons);
+				c_modal.add_displayObjects_as_grid(child_boxes);
+				addChild(c_modal);
 			}
-			
-			
-			
 		}
 		private function in_selections(label:String):Boolean {
 			for each(var i:data_value_pair in selections) {

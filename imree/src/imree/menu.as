@@ -1,12 +1,16 @@
 package imree 
 {
+	import com.greensock.easing.Cubic;
 	import com.greensock.events.LoaderEvent;
 	import com.greensock.loading.XMLLoader;
+	import com.greensock.TweenLite;
 	import flash.display.DisplayObject;
 	import flash.display.SimpleButton;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
+	import flash.utils.Timer;
 	import imree.display_helpers.smart_button;
 	import imree.shortcuts.box;
 	/**
@@ -145,15 +149,29 @@ package imree
 		}
 		public function hide(e:*=null):void {
 			if (main.stage.stageWidth > main.stage.stageHeight) {
-				body.x = 0 - body.width - 1;
+				body.x = 0 - body.width - 1;				
 			} else {
 				body.y = 0 - body.height - 1;
 			}
-			menu_toggle_button.x = 0;
 			menu_toggle_button.y = 0;
+			menu_toggle_button.x = 0;
 			animator.off_stage(body, false);
 			animator.on_stage(menu_toggle_button);
 			on = false;
+			var tim:Timer = new Timer(5500, 1);
+			tim.addEventListener(TimerEvent.TIMER, tick);
+			tim.start();
+			function tick(te:TimerEvent):void {
+				tim.removeEventListener(TimerEvent.TIMER, tick);
+				tim = null;
+				if (on === false) {
+					if(main.stage.stageWidth > main.stage.stageHeight) {
+						TweenLite.to(menu_toggle_button, 1, { ease:Cubic.easeInOut, x: 0 -  menu_toggle_button.width * .6 } );
+					} else {
+						TweenLite.to(menu_toggle_button, 1, { ease:Cubic.easeInOut, y: 0 -  menu_toggle_button.height * .6 } );
+					}
+				}
+			}
 		}
 		public function toggle(e:*=null):void {
 			if (on) {

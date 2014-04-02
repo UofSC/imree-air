@@ -26,6 +26,9 @@ package imree.modules
 		public var description:String;
 		public var filename:String;
 		public var scroller:scrollPaneFancy;
+		public var wrapper:Sprite;
+		public var slidder:Sprite;
+		public var wrapper_handle:Sprite;
 		public function module_narrative( _main:Main, _Exhibit:exhibit_display, _items:Vector.<module>=null)
 		{
 			super(_main, _Exhibit, _items);
@@ -33,12 +36,12 @@ package imree.modules
 		
 		override public function draw_feature(_w:int, _h:int):void {
 			var position:int = main.Imree.Device.box_size /2 ;
-			var wrapper:Sprite = new Sprite();
-			var slidder:Sprite = new Sprite();
-			var wrapper_handle:Sprite = new Sprite();
+			wrapper = new Sprite();
+			slidder = new Sprite();
+			wrapper_handle = new Sprite();
 			slidder.addChild(wrapper_handle);
 			for each(var i:module in items) {
-				i.draw_feature(_w, _h);
+				i.draw_feature(_w-30, _h-30);
 				i.phase_feature = true;
 				i.alpha = .8;
 				slidder.addChild(i);
@@ -53,8 +56,6 @@ package imree.modules
 					i.y = _h / 2 - i.height / 2;
 				}
 				i.slide_out();
-				
-				
 			}
 			
 			scroller = new scrollPaneFancy();
@@ -106,12 +107,19 @@ package imree.modules
 				scroller.horizontalScrollPosition -= e.delta * 15;
 			}
 		}
-		override public function dump():void 
+		override public function dump(e:*=null):void 
 		{
+			trace("dump on account of ", e);
 			if (scroller !== null) {
 				scroller.removeEventListener(MouseEvent.MOUSE_WHEEL, scrollwheel);
 				scroller.drag_disable();
+				scroller = null;
 			}
+			feature_item = null;
+			
+			wrapper_handle = null;
+			wrapper = null;
+			slidder = null;
 			super.dump();
 		}
 	}

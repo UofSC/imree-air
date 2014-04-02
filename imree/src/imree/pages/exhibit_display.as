@@ -304,7 +304,7 @@ package imree.pages
 		
 		public function draw(id:int):void
 		{
-			modules[id].draw_feature(stage.stageWidth, stage.stageHeight);
+			modules[id].draw_feature(w, h);
 			addChild(modules[int(id)]);
 		}
 		
@@ -423,13 +423,20 @@ package imree.pages
 		}
 		
 		public function reload_current_page():void {
+			dump();
+			main.Imree.load_exhibit(id);
+		}
+		public function dump():void {
 			for each(var m:module in modules) {
 				m.dump();
 			}
 			while (numChildren) {
 				removeChildAt(0);
 			}
-			main.Imree.load_exhibit(id);
+			for each(m in modules) {
+				m = null;
+			}
+			
 		}
 	}
 

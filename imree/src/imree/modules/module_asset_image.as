@@ -29,15 +29,18 @@ package imree.modules
 	{
 		
 		public var loading_indicator:loading_spinner_sprite;
+		public var result:box;
 		public function module_asset_image(_main:Main, _Exhibit:exhibit_display,_items:Vector.<module>=null)
 		{
 			t = this;
 			super(_main, _Exhibit, _items);
 			module_supports_reordering = true;
+			
 		}
 		override public function draw_thumb(_w:int = 200, _h:int = 200):void {
-			var result:box = new box(_w, _h, 0xFFFFFF, .2);
+			result = new box(_w, _h, 0xFFFFFF, .2);
 			addChild(result);
+			
 			var url_request:URLRequest = new URLRequest(asset_url);
 			var url_data:URLVariables = new URLVariables();
 			if (can_resize) {
@@ -46,7 +49,15 @@ package imree.modules
 			
 			url_request.data = url_data;
 			url_request.method = URLRequestMethod.GET;
-			new ImageLoader(asset_url + "?size=" + String(_h), main.img_loader_vars(result)).load();
+			
+			var imgvars:ImageLoaderVars = new ImageLoaderVars();
+			imgvars.crop(true);
+			imgvars.width(_w);
+			imgvars.height(_h);
+			imgvars.noCache(true);
+			imgvars.scaleMode(ScaleMode.PROPORTIONAL_OUTSIDE);
+			imgvars.container(result);
+			new ImageLoader(asset_url + "?size=" + String(_h), imgvars).load();
 			if (onSelect !== null) {
 				result.addEventListener(MouseEvent.CLICK, selected);
 			}
@@ -55,6 +66,9 @@ package imree.modules
 					onSelect(t);
 				}
 			}
+			trace(module_name + " :: " + result.getBounds(stage) + " VS " + _h);
+			
+			
 		}
 		override public function draw_feature(_w:int, _h:int):void {
 			if (draw_feature_on_object !== null) {

@@ -4,8 +4,10 @@ package imree.modules
 	import com.greensock.TimelineLite;
 	import com.greensock.TweenLite;
 	import fl.controls.Button;
+	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import imree.Main;
 	import imree.pages.exhibit_display;
 	/**
@@ -45,6 +47,7 @@ package imree.modules
 			Exhibit = _Exhibit;
 			phase_feature = false;
 			module_is_visible = true;
+			addEventListener(Event.REMOVED_FROM_STAGE, dump);
 		}
 		public function draw_thumb(_w:int = 200, _h:int = 200):void {
 			
@@ -89,12 +92,29 @@ package imree.modules
 			}
 			return str;
 		}
-		public function dump():void {
+		public function dump(e:*=null):void {
+			removeEventListener(Event.REMOVED_FROM_STAGE, dump);
 			for each(var i:module in items) {
 				i.dump();
+				i = null;
 			}
 			while (numChildren) {
+				if (getChildAt(0) is DisplayObjectContainer) {
+					dump_recursive(DisplayObjectContainer(getChildAt(0)));
+				}
 				removeChildAt(0);
+			}
+			if (t !== null && t.parent !== null) {
+				t.parent.removeChild(t);
+			}
+			items = null;
+		}
+		public function dump_recursive(obj:DisplayObjectContainer):void {
+			while (obj.numChildren) {
+				if (obj.getChildAt(0) is DisplayObjectContainer) {
+					dump_recursive(DisplayObjectContainer(obj.getChildAt(0)));
+				}
+				obj.removeChildAt(0);
 			}
 		}
 		

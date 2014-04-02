@@ -69,6 +69,10 @@ package imree.shortcuts
 				stroke = null;
 			}
 		}
+		
+		public function is_highlighted():Boolean {
+			return stroke !== null;
+		}
 	}
 	
 }

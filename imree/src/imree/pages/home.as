@@ -41,7 +41,7 @@ package imree.pages
 		
 		public function exhibits_data_receieved(e:LoaderEvent):void {
 			main.preloader.hide();
-			
+			main.Imree.Menu.hide();
 			xml = XML(e.target.content);
 		
 			

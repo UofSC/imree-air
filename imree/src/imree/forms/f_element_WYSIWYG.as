@@ -93,7 +93,17 @@ package imree.forms
 			
 			function UnderlineClick(e:MouseEvent):void
 			{
-				replace_with("u");
+				//replace_with("u");
+				var t:TextFormat = new TextFormat;
+				var s:int = txt.selectionBeginIndex;
+				var f:int = txt.selectionEndIndex;
+				if (s != f)
+				{
+					t = txt.getTextFormat(s, f);
+					t.underline ? t.underline = false : t.underline = true;
+					txt.setTextFormat(t, s, f);
+					
+				}
 			}
 			
 			var butt_i_ui:Button = new Button();
@@ -112,7 +122,17 @@ package imree.forms
 			
 			function ItalicClick(e:MouseEvent):void
 			{
-				replace_with("i");
+				//replace_with("i");
+				var t:TextFormat = new TextFormat;
+				var s:int = txt.selectionBeginIndex;
+				var f:int = txt.selectionEndIndex;
+				if (s != f)
+				{
+					t = txt.getTextFormat(s, f);
+					t.italic ? t.italic = false : t.italic = true;
+					txt.setTextFormat(t, s, f);
+					
+				}
 			
 			}
 			
@@ -132,10 +152,19 @@ package imree.forms
 			
 			function BoldClick(e:MouseEvent):void
 			{
-				replace_with("b");
-			}
+				//replace_with("b");
+				var t:TextFormat = new TextFormat;
+				var s:int = txt.selectionBeginIndex;
+				var f:int = txt.selectionEndIndex;
+				if (s != f)
+				{
+					t = txt.getTextFormat(s, f);
+					t.bold ? t.bold = false : t.bold = true;
+					txt.setTextFormat(t, s, f);
+					
+				}
 			
-		
+			}
 			
 			function replace_with(format:String):void
 			{
@@ -148,7 +177,7 @@ package imree.forms
 				//trace(currentText.substr(positions[txt.selectionEndIndex - 1]+ 1, 4));
 				trace(currentText.substr(positions[txt.selectionBeginIndex - 1] + 1, 3));
 				
-				if (currentText.substr(positions[txt.selectionBeginIndex - 1] + 1, 3) == "<" + format + ">"  && currentText.substr(positions[txt.selectionEndIndex-1]+1, 4) == "</" + format + ">")
+				if (currentText.substr(positions[txt.selectionBeginIndex - 1] + 1, 3) == "<" + format + ">" && currentText.substr(positions[txt.selectionEndIndex - 1] + 1, 4) == "</" + format + ">")
 				{
 					trace("we're removing <u> and </u> from <u>...</u>");
 					
@@ -156,7 +185,9 @@ package imree.forms
 					beforeSelect = currentText.substring(0, positions[txt.selectionBeginIndex]);
 					afterSelect = currentText.substring(positions[txt.selectionEndIndex]);
 					initial_val = beforeSelect + currentSelect + afterSelect;
-				} else {
+				}
+				else
+				{
 					//we're adding <u>...</u>
 					currentSelect = currentText.substring(positions[txt.selectionBeginIndex], positions[txt.selectionEndIndex]);
 					beforeSelect = currentText.substring(0, positions[txt.selectionBeginIndex]);
@@ -165,21 +196,27 @@ package imree.forms
 				}
 				ui = null;
 				draw(label_width, input_w, padding);
-				
-				
-				
+			
 			}
 			
-			function get_tag_lengths(xstr:String):Array {
+			function get_tag_lengths(xstr:String):Array
+			{
 				var Arr:Array = new Array();
-				for (var current_pos:int = 0; current_pos < xstr.length; current_pos++) {
-					if (xstr.substr(current_pos, 1) === "<") {
-						if (xstr.substr(current_pos, 1) === "</") {
+				for (var current_pos:int = 0; current_pos < xstr.length; current_pos++)
+				{
+					if (xstr.substr(current_pos, 1) === "<")
+					{
+						if (xstr.substr(current_pos, 1) === "</")
+						{
 							current_pos += 4;
-						} else {
+						}
+						else
+						{
 							current_pos += 3;
 						}
-					} else {
+					}
+					else
+					{
 						Arr.push(current_pos);
 					}
 				}

@@ -29,7 +29,6 @@ package imree.modules
 	{
 		
 		public var loading_indicator:loading_spinner_sprite;
-		public var result:box;
 		public function module_asset_image(_main:Main, _Exhibit:exhibit_display,_items:Vector.<module>=null)
 		{
 			t = this;
@@ -37,9 +36,11 @@ package imree.modules
 			module_supports_reordering = true;
 			
 		}
-		override public function draw_thumb(_w:int = 200, _h:int = 200):void {
-			result = new box(_w, _h, 0xFFFFFF, .2);
-			addChild(result);
+		override public function draw_thumb(_w:int = 200, _h:int = 200, Return:Boolean = false):* {
+			thumb_wrapper = new Sprite();
+			
+			var result:box = new box(_w, _h, 0xFFFFFF, .2);
+			thumb_wrapper.addChild(result);
 			
 			var url_request:URLRequest = new URLRequest(asset_url);
 			var url_data:URLVariables = new URLVariables();
@@ -58,17 +59,27 @@ package imree.modules
 			imgvars.scaleMode(ScaleMode.PROPORTIONAL_OUTSIDE);
 			imgvars.container(result);
 			new ImageLoader(asset_url + "?size=" + String(_h), imgvars).load();
+			if (onSelect !== null && Return === false) {
+				thumb_wrapper.addEventListener(MouseEvent.CLICK, thumb_clicked);
+			}
+			if (Return) {
+				return thumb_wrapper;
+			} else {
+				addChild(thumb_wrapper);
+				return null;
+			}
+		}
+		private function thumb_clicked(e:MouseEvent):void {
 			if (onSelect !== null) {
-				result.addEventListener(MouseEvent.CLICK, selected);
+				onSelect(t);
 			}
-			function selected(e:MouseEvent):void {
-				if (onSelect !== null) {
-					onSelect(t);
-				}
+		}
+		
+		override public function drop_thumb():void {
+			if (thumb_wrapper !== null) {
+				thumb_wrapper.removeEventListener(MouseEvent.CLICK, thumb_clicked);
 			}
-			trace(module_name + " :: " + result.getBounds(stage) + " VS " + _h);
-			
-			
+			super.drop_thumb();
 		}
 		override public function draw_feature(_w:int, _h:int):void {
 			if (draw_feature_on_object !== null) {

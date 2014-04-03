@@ -2,7 +2,9 @@ package imree.modules
 {
 	import com.greensock.easing.Cubic;
 	import com.greensock.TweenLite;
+	import fl.containers.BaseScrollPane;
 	import fl.containers.ScrollPane;
+	import fl.controls.Button;
 	import fl.events.ScrollEvent;
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
@@ -11,7 +13,14 @@ package imree.modules
 	import flash.events.NativeDragEvent;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
+	import imree.data_helpers.data_value_pair;
+	import imree.display_helpers.modal;
 	import imree.display_helpers.scrollPaneFancy;
+	import imree.display_helpers.smart_button;
+	import imree.forms.f_data;
+	import imree.forms.f_element;
+	import imree.forms.f_element_select;
+	import imree.forms.f_element_text;
 	import imree.Main;
 	import imree.pages.exhibit_display;
 	import imree.shortcuts.box;
@@ -97,6 +106,13 @@ package imree.modules
 			}
 			phase_feature = true;
 		}
+		override public function draw_edit_button():void {
+			
+		}
+		override public function draw_edit_UI(e:* = null, animate:Boolean = true):void {
+			standard_edit_UI();
+		}
+		
 		override public function focus_on_sub_module(mod:module, focused:Function = null):void {
 			TweenLite.to(scroller, 1, {verticalScrollPosition:mod.y - main.Imree.Device.box_size*.5, horizontalScrollPosition :mod.x - main.Imree.Device.box_size*.5, onComplete:focused} );
 		}
@@ -109,7 +125,6 @@ package imree.modules
 		}
 		override public function dump(e:*=null):void 
 		{
-			trace("dump on account of ", e);
 			if (scroller !== null) {
 				scroller.removeEventListener(MouseEvent.MOUSE_WHEEL, scrollwheel);
 				scroller.drag_disable();

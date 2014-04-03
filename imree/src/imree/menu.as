@@ -4,6 +4,7 @@ package imree
 	import com.greensock.events.LoaderEvent;
 	import com.greensock.loading.XMLLoader;
 	import com.greensock.TweenLite;
+	import fl.controls.Button;
 	import flash.display.DisplayObject;
 	import flash.display.SimpleButton;
 	import flash.display.Sprite;
@@ -12,6 +13,8 @@ package imree
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	import imree.display_helpers.smart_button;
+	import imree.modules.module;
+	import imree.pages.exhibit_display;
 	import imree.shortcuts.box;
 	/**
 	 * ...
@@ -28,6 +31,7 @@ package imree
 		private var body:Sprite;
 		public var size_percentage:Number;
 		private var back_btn:smart_button;
+		private var edit_current_mod:Button;
 		public function menu(_contents:Vector.<DisplayObject>, _main:Main, _imree:IMREE) 
 		{
 			contents = _contents;
@@ -71,6 +75,8 @@ package imree
 			}
 			back_btn = new smart_button(new button_back(), toggle);
 			
+			
+			
 			if (body !== null) {
 				while (body.numChildren) {
 					body.getChildAt(0).removeEventListener(MouseEvent.CLICK, hide);
@@ -84,6 +90,26 @@ package imree
 			
 			body = new Sprite();
 			this.addChild(body);
+			
+			if (edit_current_mod !== null) {
+				edit_current_mod.removeEventListener(MouseEvent.CLICK, hide);
+				edit_current_mod.removeEventListener(MouseEvent.CLICK, edit_current_mod_clicked);
+				if (body.contains(edit_current_mod)) {
+					body.removeChild(edit_current_mod);
+				}
+				edit_current_mod = null;
+			}
+			if (main.Imree !== null && main.Imree.current_page is exhibit_display) {
+				var current_top_module:module = exhibit_display(main.Imree.current_page).current_module();
+				if (current_top_module.user_can_edit) {
+					edit_current_mod = new Button();
+					edit_current_mod.setSize(128, 128);
+					edit_current_mod.label = "Edit Module: \n" + current_top_module.module_name;
+					
+					edit_current_mod.addEventListener(MouseEvent.CLICK, edit_current_mod_clicked);
+					contents.push(edit_current_mod);
+				}
+			}
 			
 			for each(var Obj:DisplayObject in contents) {
 				Obj.addEventListener(MouseEvent.CLICK, hide);
@@ -178,6 +204,13 @@ package imree
 				hide();
 			} else {
 				show();
+			}
+		}
+		
+		private function edit_current_mod_clicked(e:MouseEvent):void {
+			if (main.Imree.current_page is exhibit_display) {
+				var current_top_module:module = exhibit_display(main.Imree.current_page).current_module();
+				current_top_module.draw_edit_UI(e);
 			}
 		}
 		

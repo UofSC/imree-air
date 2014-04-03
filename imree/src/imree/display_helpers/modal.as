@@ -20,11 +20,20 @@ package imree.display_helpers {
 		public var w:int;
 		public var h:int;
 		private var t:modal;
-		public function modal(_w:int, _h:int, _buttons:Vector.<smart_button>=null, preset_content:DisplayObjectContainer=null, objects:Vector.<DisplayObjectContainer>=null) {
+		private var dir:String;
+		public function modal(_w:int, _h:int, _buttons:Vector.<smart_button>=null, preset_content:DisplayObjectContainer=null, objects:Vector.<DisplayObjectContainer>=null, background_color:uint = 0x000000, background_alpha:int = .8, direction:String = null) {
 			w = _w;
 			h = _h;
 			t = this;
-			background = new box(w, h, 0x000000, .8);
+			if (w > h) {
+				dir = "left";
+			} else {
+				dir = "top";
+			}
+			if (direction !== null) {
+				dir = direction;
+			}
+			background = new box(w, h, background_color, background_alpha);
 			addChild(background);
 			scroller = new scrollPaneFancy();
 			scroller.setSize(w - 20, h- 80);
@@ -66,6 +75,11 @@ package imree.display_helpers {
 		}
 		public function close(e:*=null):void {
 			removeEventListener(Event.REMOVED_FROM_STAGE, close);
+			for each(var butt:smart_button in buttons) {
+				if (butt !== null && butt.parent !== null) {
+					butt.parent.removeChild(butt);
+				}
+			}
 		}
 		public function update():void {
 			scroller.update();
@@ -75,17 +89,25 @@ package imree.display_helpers {
 			for each(var obj:DisplayObjectContainer in items) {
 				proxies.push(new position_data(obj.width, obj.height));
 			}
+			trace("PROX: " + proxies);
 			var mason:layout = new layout();
-			var positions:Vector.<position_data> = mason.abstract_box_solver(proxies, w, h, padding);
+			var positions:Vector.<position_data> = mason.abstract_box_solver(proxies, w, h, padding,dir);
 			var objs_wrapper:Sprite = new Sprite();
-			content.addChild(objs_wrapper);
-			objs_wrapper.y = content.height;
+			
 			for (var i:int = 0; i < items.length; i++) {
 				objs_wrapper.addChild(items[i]);
 				items[i].x = positions[i].x;
 				items[i].y = positions[i].y;
 			}
-			objs_wrapper.x = w / 2 - objs_wrapper.width / 2 - 20;
+			
+			if (dir == "left") {
+				objs_wrapper.x = content.width;
+				objs_wrapper.y = h / 2 - objs_wrapper.height / 2 -40 ;
+			} else {
+				objs_wrapper.y = content.height;
+				objs_wrapper.x = w / 2 - objs_wrapper.width / 2 - 20;
+			}
+			content.addChild(objs_wrapper);
 			update();
 		}
 		private function okay_event(e:*= null):void  {

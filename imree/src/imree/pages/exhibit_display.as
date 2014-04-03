@@ -41,6 +41,7 @@ package imree.pages
 		public var w:int;
 		public var h:int;
 		public var modules:Vector.<module>;
+		public var current_module_i:int = 0;
 		public var exhibit_name:String;
 		public var exhibit_sub_name:String;
 		public var exhibit_date_start:String;
@@ -287,7 +288,6 @@ package imree.pages
 			}
 		}
 		
-		public var current_module_i:int = 0;
 		public function draw_next(e:* = null):void
 		{
 			dump_module(current_module_i);
@@ -300,6 +300,7 @@ package imree.pages
 				current_module_i++;
 			}
 			draw(current_module_i);
+			main.Imree.Menu.update();
 		}
 		
 		public function draw(id:int):void
@@ -420,6 +421,7 @@ package imree.pages
 			{
 				i.update_user_privileges(main.User.can(Permission.USE, "exhibit", String(id)), main.User.can(Permission.EDIT, "exhibit", String(id)), main.User.can(Permission.ADMIN, "exhibit", String(id)));
 			}
+			main.Imree.Menu.update();
 		}
 		
 		public function reload_current_page():void {
@@ -437,6 +439,9 @@ package imree.pages
 				m = null;
 			}
 			
+		}
+		public function current_module():module {
+			return modules[current_module_i];
 		}
 	}
 

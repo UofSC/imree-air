@@ -210,7 +210,7 @@ package imree
 				vars.width(container.width);
 				vars.height(container.height);
 				vars.crop(true);
-				//vars.noCache(true);
+				vars.noCache(true);
 				vars.onIOError(general_io_error);
 				vars.onFail(general_loader_fail);
 				vars.estimatedBytes(10000);

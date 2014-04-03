@@ -25,6 +25,7 @@ package imree.pages
 	import imree.modules.module_grid;
 	import imree.modules.module_narrative;
 	import imree.modules.module_next;
+	import imree.modules.module_pager;
 	import imree.modules.module_title;
 	import imree.shortcuts.box;
 	import imree.text;
@@ -185,7 +186,11 @@ package imree.pages
 				{
 					mod = new module_title(main, t, result);
 				}
-				else
+				else if (type == 'pager') 
+				{
+					mod = new module_pager(main, t, result);
+				}
+				else 
 				{
 					mod = new module(main, t, result);
 				}
@@ -257,6 +262,26 @@ package imree.pages
 			asset_background.addChild(asset_feature_wrapper);
 			e.draw_feature_on_object = asset_feature_wrapper;
 			e.draw_feature(asset_feature_wrapper.width, asset_feature_wrapper.height);
+		}
+		public function bring_pager_to_front(e:module_pager):void {
+			asset_wrapper = new Sprite();
+			addChild(asset_wrapper);
+			
+			var underlay:box = new box(main.stage.stageWidth, main.stage.stageWidth, 0xFFFFFF, .8);
+			asset_wrapper.addChild(underlay);
+			underlay.addEventListener(MouseEvent.CLICK, remove_asset_wrapper);
+			
+			var snuggly:box;
+			if (main.Imree.Device.orientation === "portrait") {
+				snuggly = new box(main.stage.stageWidth, main.stage.stageHeight * .9, 0xEDEDED, 1);
+				snuggly.y = main.stage.stageHeight * .1;
+			} else {
+				snuggly = new box(main.stage.stageWidth * .9, main.stage.stageHeight, 0xEDEDED, 1);
+				snuggly.x = main.stage.stageWidth * .1;
+			}
+			asset_wrapper.addChild(snuggly);
+			e.draw_feature_on_object = snuggly;
+			e.draw_feature(snuggly.width, snuggly.height);
 		}
 		
 		public function remove_asset_wrapper(e:* = null):void

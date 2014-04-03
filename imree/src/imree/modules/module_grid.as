@@ -109,7 +109,11 @@ package imree.modules
 			}
 			addChild(wrapper);
 			function item_selected(e:MouseEvent):void {
-				Exhibit.bring_asset_to_front(module_asset(e.currentTarget));
+				if(e.currentTarget is module_asset) {
+					Exhibit.bring_asset_to_front(module_asset(e.currentTarget));
+				} else if (e.currentTarget is module_pager) {
+					Exhibit.bring_pager_to_front(module_pager(e.currentTarget));
+				}
 			}
 			
 		}

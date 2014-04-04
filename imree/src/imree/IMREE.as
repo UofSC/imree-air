@@ -17,6 +17,7 @@ package imree
 	import imree.forms.exhibit_properties;
 	import imree.forms.f_element_date;
 	import imree.forms.f_element_WYSIWYG;
+	import imree.modules.module_asset_video;
 	import imree.pages.admin_exhibits;
 	import imree.pages.home;
 	import imree.pages.exhibit_display;
@@ -77,17 +78,17 @@ package imree
 			datepicker.x = 200;
 			datepicker.y = 200;
 			datepicker.set_value("1981-03-01 18:20:00");
-			
-			
-			
-			
+						
 			//Turn on wysiwg tester (Tonya)
 			var test_wysiwg:f_element_WYSIWYG = new f_element_WYSIWYG("", "nothing", "Hello my name is <b>Tonya</b>");
 			addChild(test_wysiwg);
 			test_wysiwg.draw(500, 500);
 			test_wysiwg.x = 150;
 			test_wysiwg.y = 50;
-			*/
+			
+			//Turn on Video tester (Tonya) 
+			
+			//*/
 			
 			
 			

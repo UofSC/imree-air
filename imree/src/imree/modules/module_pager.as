@@ -127,14 +127,12 @@ package imree.modules {
 							load_image_on_page(items[page_num], content1);
 							page_num++;
 						} 
-						
 						if (page_num < items.length) {
 							load_image_on_page(items[page_num], content2);
 							page_num++;
 						} 
 						
 					}
-					trace(page_num + " VS " + items.length);
 					if (page_num +1<= items.length) {
 						arrow_right.visible = true;
 					} else {

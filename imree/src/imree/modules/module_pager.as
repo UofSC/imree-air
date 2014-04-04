@@ -1,5 +1,14 @@
 package imree.modules {
+	import com.greensock.events.LoaderEvent;
+	import com.greensock.layout.AlignMode;
+	import com.greensock.layout.ScaleMode;
+	import com.greensock.loading.data.ImageLoaderVars;
+	import com.greensock.loading.display.ContentDisplay;
 	import com.greensock.loading.ImageLoader;
+	import flash.display.Bitmap;
+	import flash.display.DisplayObject;
+	import flash.display.DisplayObjectContainer;
+	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import imree.IMREE;
 	import imree.Main;
@@ -42,103 +51,132 @@ package imree.modules {
 				trace("Must set draw-feature-on-object-first");
 			}
 			
-			var wraps:box = new box(_w , _h);
-			if (main.Imree.Device.box_size * 4 < _w && items.length < 2) {
-				pages_up = 1;
-			} else {
-				pages_up = 2;
-			}
-			
-			var page0:box = new box(_w / pages_up - 10, _h) ;
-			var page1:box = new box(_w / pages_up - 10, _h);
 			var arrow_right:button_right = new button_right();
 			var arrow_left:button_left = new button_left();
-			var page_holder:box = new box(_w, _h);
-			wraps.addChild(page_holder);
+			var wraps:box = new box(_w , _h);
 			main.Imree.UI_size(arrow_right);
 			main.Imree.UI_size(arrow_left);
-			page_holder.addChild(page0);
-			wraps.addChild(arrow_left);
-			wraps.addChild(arrow_right);
-			arrow_right.x = _w - arrow_right.width;
-			arrow_right.y = _h / 2 - arrow_right.height / 2;
-			arrow_left.y = _h / 2 - arrow_left.height / 2;
-			arrow_right.addEventListener(MouseEvent.CLICK, page_next);
-			arrow_left.addEventListener(MouseEvent.CLICK, page_back);
-			check_buttons();
 			
-			if (pages_up === 2 ) {
-				page_holder.addChild(page1);
-				page1.x = _w / 2 ;
-			}
-			
-			var current_i:int = 0-pages_up;
-			page_next();
-			
-			function page_next(e:MouseEvent=null):void {
-				current_i += pages_up;
-				image_on_page(items[current_i], page0);
-				if (pages_up === 2) {
-					if(current_i + 1 < items.length) {
-						image_on_page(items[current_i +1], page1);
+			if (main.Imree.Device.box_size * 4 < _w && items.length > 1) {
+				var pages_holder:box = new box(_w, _h);
+				wraps.addChild(pages_holder);
+				var page1:box = new box(_w / 2 , _h, 0x123456, 0);
+				var page2:box = new box(_w / 2, _h, 0x098765, 0);
+				pages_holder.addChild(page1);
+				pages_holder.addChild(page2);
+				page2.x = page1.width;
+				page1.data = page1.width;
+				page2.data = page2.width;
+				
+				var content1:box = new box(page1.width, page1.height, 0x009900, 0);
+				var content2:box = new box(page2.width, page2.height, 0x000099, 0);
+				page1.addChild(content1);
+				page2.addChild(content2);
+				content1.name = "one";
+				content2.name = "two";
+				var page_num:int = 0;
+				
+				wraps.addChild(arrow_right);
+				wraps.addChild(arrow_left);
+				arrow_right.x = _w - arrow_right.width+2;
+				arrow_left.x = 0;
+				arrow_right.y = _h / 2 - arrow_right.height / 2;
+				arrow_left.y = _h / 2 - arrow_left.height / 2;
+				arrow_right.addEventListener(MouseEvent.CLICK, page_click);
+				arrow_left.addEventListener(MouseEvent.CLICK, page_click);
+				function page_click(e:MouseEvent = null):void {
+					if (content1 != null) {
+						page1.removeChild(content1);
+					}
+					if(content2 != null) {
+						page2.removeChild(content2);
+					}
+					content1 = null;
+					content2 = null;
+					var content1:box = new box(page1.width, page1.height, 0x009900, 0);
+					var content2:box = new box(page2.width, page2.height, 0x000099, 0);
+					content1.name = "one";
+					content2.name = "two";
+					page1.addChild(content1);
+					page2.addChild(content2);
+					if(e !== null) {
+						if (e.currentTarget == arrow_right) {
+							//page right
+							if (page_num + 2 <= items.length) {
+								load_image_on_page(items[page_num], content1);
+								load_image_on_page(items[page_num++], content2);
+								page_num++;
+							} else if (page_num + 1 <= items.length) {
+								load_image_on_page(items[page_num], content1);
+								page_num++;
+							}
+						} else {
+							//page left
+							if (page_num >= 2) {
+								page_num--;
+								load_image_on_page(items[page_num--], content2);
+								load_image_on_page(items[page_num--], content1);
+							} else if (page_num === 1) {
+								page_num--;
+								load_image_on_page(items[page_num--], content2);
+							}
+						}
 					} else {
-						trace("HERE");
-						page1.addChild(new box(page1.width, page1.height, 0xFFFFFF, 1));
+						//first pages
+						if (page_num < items.length) {
+							load_image_on_page(items[page_num], content1);
+							page_num++;
+						} 
+						
+						if (page_num < items.length) {
+							load_image_on_page(items[page_num], content2);
+							page_num++;
+						} 
+						
+					}
+					trace(page_num + " VS " + items.length);
+					if (page_num +1<= items.length) {
+						arrow_right.visible = true;
+					} else {
+						arrow_right.visible = false;
+					}
+					if (page_num > 0) {
+						arrow_left.visible = true;
+					} else {
+						arrow_left.visible = false;
 					}
 				}
-				check_buttons();
-			}
-			function page_back(e:MouseEvent = null):void {
-				current_i -= pages_up;
-				if (pages_up === 2)  {
-					image_on_page(items[current_i +1], page1);
-				}
-				if(current_i >  items.length) {
-					image_on_page(items[current_i], page0);
-				} else {
-					if (page0.parent !== null) {
-						page0.parent.removeChild(page0);
+				function load_image_on_page(img_mod:module_asset_image, page:box):void  {
+					trace("Loading page index #" + page_num);
+					var vars:ImageLoaderVars = new ImageLoaderVars();
+					vars.width(int(box(page.parent).data));
+					vars.height(page.height);
+					vars.container(page);
+					vars.crop(true);
+					vars.noCache(true);
+					if (page.name === "one") {
+						vars.hAlign(AlignMode.RIGHT);
+					} else {
+						vars.hAlign(AlignMode.LEFT);
 					}
+					vars.scaleMode(ScaleMode.PROPORTIONAL_INSIDE);
+					vars.allowMalformedURL(true);
+					var url:String = img_mod.asset_url;
+					if (img_mod.can_resize) {
+						url += "?size=" + page.height;
+					}
+					new ImageLoader(url, vars).load();
 				}
-				check_buttons();
+				page_click();
+				
+			} else {
+				pages_up = 1;
 			}
-			function image_on_page(m:module_asset_image, pg:box):void {
-				trace("Drawing: " + m + " :: " + current_i + " of " + items.length);
-				var new_pg:box = new box(pg.width, pg.height);
-				new_pg.x = pg.x;
-				new_pg.y = pg.y;
-				if (pg.parent !== null) {
-					pg.parent.removeChild(pg);
-				}
-				pg = new_pg;
-				page_holder.addChild(pg);
-				pg.addChild(new box(pg.width, pg.height, 0xFFFFFF, 1));
-				var url:String = m.asset_url;
-				if (m.can_resize) {
-					url += "?size=" + pg.height;
-				}
-				new ImageLoader(url, main.img_loader_vars(pg)).load();
-			}
-			function check_buttons():void {
-				if (current_i + pages_up > items.length) {
-					arrow_right.alpha = .3;
-					arrow_right.mouseEnabled = false;
-					arrow_right.removeEventListener(MouseEvent.CLICK, page_next);
-				} else {
-					arrow_right.alpha = 1;
-					arrow_right.mouseEnabled = true;
-					arrow_right.addEventListener(MouseEvent.CLICK, page_next);
-				}
-				if (current_i - pages_up < 0) {
-					arrow_left.alpha = .3;
-					arrow_left.mouseEnabled = false;
-					arrow_left.removeEventListener(MouseEvent.CLICK, page_back);
-				} else {
-					arrow_left.alpha = 1;
-					arrow_left.mouseEnabled = true;
-					arrow_left.addEventListener(MouseEvent.CLICK, page_back);
-				}
-			}
+			
+			
+			
+			
+			
 			draw_feature_on_object.addChild(wraps);
 		}
 		

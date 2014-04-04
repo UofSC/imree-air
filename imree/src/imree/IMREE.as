@@ -23,7 +23,7 @@ package imree
 	import imree.shortcuts.box;
 	/**
 	 * ...
-	 * @author Jason Steelman
+	 * @author Jason Steelman, Tonya Holladay
 	 */
 	public class IMREE extends Sprite
 	{

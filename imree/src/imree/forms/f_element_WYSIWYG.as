@@ -2,7 +2,7 @@ package imree.forms
 {
 	/**
 	 * ...
-	 * @author Jason Steelman / Tonya Holladay
+	 * @author  Tonya Holladay
 	 */
 	
 	import fl.controls.Button;

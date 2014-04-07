@@ -2,7 +2,7 @@ package imree.forms
 {
 	/**
 	 * ...
-	 * @author Jason Steelman
+	 * @author Jason Steelman, Tabitha Samuel
 	 */
 	
 	import fl.controls.NumericStepper;
@@ -38,11 +38,10 @@ package imree.forms
 				
 		}
 		
-		override public function draw(label_width:int = 100, input_w:int = 200, padding:int = 10 ):void {
+		override public function draw(label_width:int = 100, input_w:int = 200, padding:int = 20 ):void {
 			ui = new Sprite();
 			addChild(ui);
-			
-			//This is a simple way to make text
+					
 			var special_font:textFont = new textFont('_sans', 12);
 			var label_display:text = new text(this.label, label_width, this.special_font);
 			
@@ -60,7 +59,12 @@ package imree.forms
 			txtyr.minimum = -9999;
 			txtyr.maximum = 9999;
 			txtyr.value = 1883;
-			ui.addChild(txtyr);
+			
+			/*var txtyr_lab:String = new String();
+			txtyr_lab = "Year";
+			label_display.addChild(txtyr_lab);*/
+			
+			ui.addchild("Year" + txtyr);
 			
 			txtmo= new NumericStepper();
 			txtmo.setSize(stepper_width, stepper_height);
@@ -68,7 +72,12 @@ package imree.forms
 			txtmo.minimum = 1;
 			txtmo.maximum = 12;
 			txtmo.stepSize = 1;
-			ui.addChild(txtmo);
+			
+			/*var txtmo_lab:String = new String();
+			txtmo_lab = "Month";
+			label_display.addChild(txtmo_lab);*/
+			
+			ui.addChild("Month" + txtmo);
 			
 			
 			txtdate = new NumericStepper();
@@ -77,7 +86,12 @@ package imree.forms
 			txtdate.minimum = 1;
 			txtdate.maximum = 31;
 			txtdate.stepSize = 1;
-			ui.addChild(txtdate);
+			
+			
+			/*var txtdate_lab:String = new String();
+			txtdate_lab = "Day";
+			label_display.addChild(txtdate_lab);*/
+			ui.addChild("Date" + txtdate);
 			
 			
 			txthr = new NumericStepper();
@@ -85,9 +99,13 @@ package imree.forms
 			txthr.x = label_width + padding;
 			txthr.y = stepper_height + internal_padding;
 			txthr.minimum = 1;
-			txthr.maximum = 23;
+			txthr.maximum = 24;
 			txthr.stepSize = 1;
-			ui.addChild(txthr);
+			
+			/*var txthr_lab:String = new String();
+			txthr_lab = "Hour(s)";
+			label_display.addChild(txthr_lab);*/
+			ui.addChild("Hour(s)" + txthr);
 			
 			
 			txtmin = new NumericStepper();
@@ -97,7 +115,11 @@ package imree.forms
 			txtmin.minimum = 0;
 			txtmin.maximum = 59;
 			txtmin.stepSize = 1;
-			ui.addChild(txtmin);
+			
+			/*var txtmin_lab:String = new String();
+			txtmin_lab = "Minute(s)";
+			label_display.addChild(txtmin_lab);*/
+			ui.addChild("Minute(s)" + txtmin);
 			
 			
 			txtsec = new NumericStepper();
@@ -107,7 +129,11 @@ package imree.forms
 			txtsec.minimum = 0;
 			txtsec.maximum = 59;
 			txtsec.stepSize = 1;
-			ui.addChild(txtsec);
+			
+			/*var txtsec_lab:String = new String();
+			txtsec_lab = "Second(s)";
+			label_display.addChild(txtsec_lab);*/
+			ui.addChild("Seconds" + txtsec);
 			
 			
 			/**
@@ -139,8 +165,7 @@ package imree.forms
 		
 		override public function get_value():* {
 			
-			
-				//return (stepper_year.value + "/" + stepper_month.value + "/" + stepperday.value + " " + stepper_hours.value + ":" + stepper_minutes.value + ":" + stepper_seconds.value);
+				return (txtyr.value + "/" + txtmo.value + "/" + txtdate.value + " " + txthr.value + ":" + txtmin.value + ":" + txtsec.value);
 			
 			return null;
 		}

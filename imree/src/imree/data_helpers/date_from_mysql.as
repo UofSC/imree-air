@@ -2,7 +2,7 @@ package imree.data_helpers
 {
 	/**
 	 * ...
-	 * @author Jason Steelman
+	 * @author Jason Steelman, Tabitha Samuel
 	 */
 	public class date_from_mysql extends Object
 	{

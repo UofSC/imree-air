@@ -24,7 +24,7 @@ package imree
 	import imree.shortcuts.box;
 	/**
 	 * ...
-	 * @author Jason Steelman, Tonya Holladay
+	 * @author Jason Steelman, Tonya Holladay, Tabitha Samuel
 	 */
 	public class IMREE extends Sprite
 	{
@@ -64,20 +64,21 @@ package imree
 			Home.onSelect = load_exhibit;
 			addChild(Home);
 			
-			
-			/**
-			
-			//Turn off main IMREE display
-			Home.visible = false;
-			main.preloader.hide();
-			
-			//Turn on Datepicker Tester (Tabitha);
-			var datepicker:f_element_date = new f_element_date("some label", "dontmatter", "");
+			var datepicker:f_element_date = new f_element_date("New Date", "New Date", "Set Date");
 			datepicker.draw(100, 500);
 			addChild(datepicker);
 			datepicker.x = 200;
 			datepicker.y = 200;
 			datepicker.set_value("1981-03-01 18:20:00");
+			
+			
+			/**
+			//Turn off main IMREE display
+			Home.visible = false;
+			main.preloader.hide();
+			
+			//Turn on Datepicker Tester (Tabitha);
+			
 						
 			//Turn on wysiwg tester (Tonya)
 			var test_wysiwg:f_element_WYSIWYG = new f_element_WYSIWYG("", "nothing", "Hello my name is <b>Tonya</b>");

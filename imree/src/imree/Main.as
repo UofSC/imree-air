@@ -10,6 +10,7 @@ package imree
 	import com.greensock.loading.core.LoaderItem;
 	import com.greensock.loading.data.ImageLoaderVars;
 	import com.greensock.loading.data.LoaderMaxVars;
+	import com.greensock.loading.data.VideoLoaderVars;
 	import com.greensock.loading.LoaderMax;
 	import com.greensock.loading.ImageLoader;
 	import com.greensock.TimelineLite;
@@ -55,6 +56,7 @@ package imree
 		public var Logger_IO:logger;
 		public var User:user;
 		public var image_loader_que:LoaderMax;
+		public var video_loader_queue:LoaderMax;
 		public var preloader:Preloader;
 		public var t:Main;
 		public function Main():void 
@@ -216,7 +218,7 @@ package imree
 				vars.estimatedBytes(10000);
 				vars.allowMalformedURL(true);
 			return vars;
-		}
+		}		
 		
 		
 		public function que_image(e:LoaderCore):void {
@@ -227,6 +229,35 @@ package imree
 		public function image_is_resizeable(url:String):Boolean {
 			return url.search(/\/file\/[0-9^\.]*$/gm) > -1;
 		}
+		
+		public function vid_loader_vars(container:DisplayObjectContainer):VideoLoaderVars {
+			var vars:VideoLoaderVars = new VideoLoaderVars();
+				vars.scaleMode(ScaleMode.PROPORTIONAL_OUTSIDE); 
+				vars.container(container);
+				vars.width(container.width);
+				vars.height(container.height);
+				vars.crop(true);
+				vars.noCache(true);
+				vars.onIOError(general_io_error);
+				vars.onFail(general_loader_fail);
+				vars.estimatedBytes(10000);
+				vars.allowMalformedURL(true);
+			return vars;
+		}
+		
+		public function queue_video(e:LoaderMax):void {
+			video_loader_queue.append(e);
+			//video_loader_queue.append(new DataLoader("asset_url"));
+			video_loader_queue.append(new ImageLoader("asset_url"))
+			
+			video_loader_queue.load();
+			
+			video_loader_queue.pause();
+			
+			video_loader_queue.resume();
+				
+			}
 	}
+	
 	
 }

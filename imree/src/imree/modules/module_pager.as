@@ -303,6 +303,10 @@ package imree.modules {
 			form = new f_data(elements);
 			form.connect(main.connection, int(module_id), "modules", "module_id");
 			form.draw();
+			var form_wrapper:box = new box(400, 400);
+			form_wrapper.addChild(form);
+			form.x = form_wrapper.width / 2 - form.width / 2;
+			form.y = form_wrapper.height / 2 - form.height / 2;
 			
 			
 			var objects:Vector.<DisplayObjectContainer> = new Vector.<DisplayObjectContainer>();
@@ -326,7 +330,7 @@ package imree.modules {
 				objects.push(prox);
 			}
 			
-			var edit_ui:modal = new modal(main.stage.stageWidth, main.stage.stageHeight, buttons, form, objects);
+			var edit_ui:modal = new modal(main.stage.stageWidth, main.stage.stageHeight, buttons, form_wrapper, objects,0x000000,1,"left");
 			Exhibit.overlay_add(edit_ui);
 			
 			
@@ -348,12 +352,14 @@ package imree.modules {
 				edit_ui.addChild(hero);
 				hero.startDrag(true);
 				main.stage.addEventListener(MouseEvent.MOUSE_UP, reorder_end);
-				main.stage.addEventListener(MouseEvent.MOUSE_OUT, reorder_end);
 			}
 			function reorder_end(f:MouseEvent):void {
 				main.stage.removeEventListener(MouseEvent.MOUSE_UP, reorder_end);
 				hero.stopDrag();
-				edit_ui.removeChild(hero);
+				if (hero !== null && edit_ui.contains(hero)) {
+					edit_ui.removeChild(hero);
+				}
+				
 				var result:box = hit_object();
 				if (result !== null) {
 					change_mod_order(hero.data, objects.indexOf(result));

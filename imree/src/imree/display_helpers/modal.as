@@ -42,7 +42,15 @@ package imree.display_helpers {
 			content = new Sprite();
 			if (preset_content !== null) {
 				content.addChild(preset_content);
+				if (direction === "left") {
+					preset_content.x = 10;
+					preset_content.y = h / 2 - preset_content.height / 2;
+				} else {
+					preset_content.y = 10;
+					preset_content.x = w / 2 - preset_content.width / 2;
+				}
 			}
+			
 			
 			scroller.source = content;
 			update();
@@ -89,7 +97,6 @@ package imree.display_helpers {
 			for each(var obj:DisplayObjectContainer in items) {
 				proxies.push(new position_data(obj.width, obj.height));
 			}
-			trace("PROX: " + proxies);
 			var mason:layout = new layout();
 			var positions:Vector.<position_data> = mason.abstract_box_solver(proxies, w, h, padding,dir);
 			var objs_wrapper:Sprite = new Sprite();

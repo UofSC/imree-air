@@ -102,10 +102,12 @@ package imree
 				function sign_mode_loader(evt:LoaderEvent):void {
 					var xml:XML = XML(evt.currentTarget.content);
 					if (xml.result.signage_mode == 'signage') {
+						connection.session_key = xml.result.key;
 						trace("Based on our IP, this device has been instructed to be digital signage");
 						load_imree();
 						t.preloader.hide();
 					} else {
+						connection.session_key = xml.result.key;
 						trace("Based on our IP, this device has been instructed to be IMREE");
 						t.load_imree();
 					}

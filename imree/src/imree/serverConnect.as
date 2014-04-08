@@ -51,6 +51,7 @@ package imree
 			var post_data:URLVariables = new URLVariables();
 				post_data.command = command;
 				post_data.command_parameter = command_parameter;
+				post_data.session_key = session_key;
 				
 			if (elevatedPrivileges && username.length > 0 && password.length > 0) {
 				post_data.username = username;
@@ -73,6 +74,7 @@ package imree
 				xmlloadervars.prop("properties", {index:current_loader_number++, command:command, paramater:command_parameter, urlvars:post_data});
 			var xmlloader:XMLLoader = new XMLLoader(request, xmlloadervars );
 			xmlloader.load(true);
+			
 			
 			function getxmldata(e:LoaderEvent):void {
 				onCompleteFunction(e);

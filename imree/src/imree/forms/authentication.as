@@ -36,7 +36,7 @@ package imree.forms
 		}
 		private function added_to_stage(e:Event):void {
 			t.removeEventListener(Event.ADDED_TO_STAGE, added_to_stage);
-			if (t.conn.session_key === null) {
+			if(!t.conn.password_is_set()) {
 				var background:box = new box(stage.stageWidth, stage.stageHeight, 0x000000, .6);
 				t.addChild(background);
 				
@@ -69,7 +69,7 @@ package imree.forms
 				
 				
 			} else {
-				//how you say already logged in?
+				trace("how you say already logged in?");
 			}
 		}
 		private function auth(elements:Object):void {

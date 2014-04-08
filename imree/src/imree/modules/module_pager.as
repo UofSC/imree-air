@@ -7,6 +7,8 @@ package imree.modules {
 	import com.greensock.loading.ImageLoader;
 	import com.greensock.TweenMax;
 	import com.soulwire.display.PaperSprite;
+	import fl.containers.BaseScrollPane;
+	import fl.controls.Button;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
@@ -16,10 +18,16 @@ package imree.modules {
 	import flash.events.MouseEvent;
 	import flash.geom.PerspectiveProjection;
 	import flash.geom.Point;
+	import imree.display_helpers.modal;
+	import imree.display_helpers.smart_button;
+	import imree.forms.f_data;
+	import imree.forms.f_element;
+	import imree.forms.f_element_text;
 	import imree.IMREE;
 	import imree.Main;
 	import imree.pages.exhibit_display;
 	import imree.shortcuts.box;
+	import imree.text;
 	/**
 	 * ...
 	 * @author Jason Steelman
@@ -27,6 +35,7 @@ package imree.modules {
 	public class module_pager extends module {
 		
 		private var pages_up:int;
+		private var feature_wrapper:box;
 		public function module_pager(_main:Main, _Exhibit:exhibit_display, _items:Vector.<module>=null)
 		{
 			t = this;
@@ -56,17 +65,17 @@ package imree.modules {
 			if (draw_feature_on_object === null) {
 				trace("Must set draw-feature-on-object-first");
 			}
-			
+			feature_wrapper = new box(_w, _h);
 			var arrow_right:button_right = new button_right();
 			var arrow_left:button_left = new button_left();
-			var wraps:box = new box(_w , _h);
+			
 			var waiting_on:int = 0;
 			main.Imree.UI_size(arrow_right);
 			main.Imree.UI_size(arrow_left);
 			
 			if (main.Imree.Device.box_size * 4 < _w && items.length > 1) {
 				var pages_holder:box = new box(_w, _h);
-				wraps.addChild(pages_holder);
+				feature_wrapper.addChild(pages_holder);
 				var page1:box = new box(_w / 2 , _h, 0x123456, 0);
 				var page2:box = new box(_w / 2, _h, 0x098765, 0);
 				pages_holder.addChild(page1);
@@ -90,8 +99,8 @@ package imree.modules {
 				var page_num:int = 0;
 				
 				
-				wraps.addChild(arrow_right);
-				wraps.addChild(arrow_left);
+				feature_wrapper.addChild(arrow_right);
+				feature_wrapper.addChild(arrow_left);
 				arrow_right.x = _w - arrow_right.width+2;
 				arrow_left.x = 0;
 				arrow_right.y = _h / 2 - arrow_right.height / 2;
@@ -109,7 +118,7 @@ package imree.modules {
 					pg2_cache = new Sprite();
 					
 					flipper = new PaperSprite();
-					wraps.addChild(flipper);
+					feature_wrapper.addChild(flipper);
 					flipper.pivot = new Point(0, .5);
 					flipper.x = page2.x;
 					flipper.y = page2.y + page2.height / 2;
@@ -253,14 +262,120 @@ package imree.modules {
 			} else {
 				pages_up = 1;
 			}
-			
-			
-			
-			
-			
-			draw_feature_on_object.addChild(wraps);
+			draw_feature_on_object.addChild(feature_wrapper);
+			if (can_edit) {
+				draw_edit_button();
+			}
 		}
 		
+		private var can_edit:Boolean = false;
+		override public function draw_edit_button():void {
+			can_edit = true;
+			edit_button = new Sprite();
+			var edit_butt_ui:Button = new Button();
+			edit_butt_ui.label = "Edit";
+			edit_butt_ui.setSize(80, 80);
+			edit_button.addChild(new smart_button(edit_butt_ui, draw_edit_UI));
+			edit_button.x -= 80;
+			if (feature_wrapper !== null) {
+				feature_wrapper.addChild(edit_button);
+			}
+		}
+		
+		override public function draw_edit_UI(e:* = null, animate:Boolean = true):void {
+			Exhibit.overlay_remove();
+			var buttons:Vector.<smart_button> = new Vector.<smart_button>();
+			
+			var close_ui:Button = new Button();
+			close_ui.setSize(70, 70);
+			close_ui.label = "Cancel";
+			buttons.push(new smart_button(close_ui, close_event));
+			
+			var okay_ui:Button = new Button();
+			okay_ui.setSize(70, 70);
+			okay_ui.label = "Save Order";
+			buttons.push(new smart_button(okay_ui, okay_event));
+			
+			
+			var form:f_data;
+			var elements:Vector.<f_element> = new Vector.<f_element>();
+			elements.push(new f_element_text("Title", "module_name"));
+			form = new f_data(elements);
+			form.connect(main.connection, int(module_id), "modules", "module_id");
+			form.draw();
+			
+			
+			var objects:Vector.<DisplayObjectContainer> = new Vector.<DisplayObjectContainer>();
+			for each (var i:module_asset in items) {Exhibit.overlay_remove();
+				var prox:box = new box(main.Imree.Device.box_size, main.Imree.Device.box_size, 0xEDEDED, 1);
+				var img_wrap:box = new box(main.Imree.Device.box_size, main.Imree.Device.box_size * .7);
+				var url:String = i.asset_url;
+				if (i.can_resize) {
+					url += "?size" + Math.round(img_wrap.height);
+				}
+				new ImageLoader(url, main.img_loader_vars(img_wrap)).load();
+				prox.addChild(img_wrap);
+				var txt:text = new text(i.module_name, prox.width - 10);
+				txt.x = 5;
+				txt.y = img_wrap.height + 5;
+				prox.addChild(txt);
+				prox.mouseChildren = false;
+				prox.mouseEnabled = true;
+				prox.data = i;
+				prox.addEventListener(MouseEvent.MOUSE_DOWN, reorder_start);
+				objects.push(prox);
+			}
+			
+			var edit_ui:modal = new modal(main.stage.stageWidth, main.stage.stageHeight, buttons, form, objects);
+			Exhibit.overlay_add(edit_ui);
+			
+			
+			function close_event(f:*= null):void {
+				Exhibit.overlay_remove();
+			}
+			function okay_event(f:*= null):void {
+				save_new_mod_order();
+			}
+			
+			var hero:box;
+			function reorder_start(f:MouseEvent):void {
+				var tmp:box = box(f.target);
+				hero = new box(tmp.width, tmp.height);
+				var tmp_bits:BitmapData = new BitmapData(tmp.width, tmp.height);
+				tmp_bits.draw(tmp);
+				hero.addChild(new Bitmap(tmp_bits));
+				hero.data = tmp.data;
+				edit_ui.addChild(hero);
+				hero.startDrag(true);
+				main.stage.addEventListener(MouseEvent.MOUSE_UP, reorder_end);
+				main.stage.addEventListener(MouseEvent.MOUSE_OUT, reorder_end);
+			}
+			function reorder_end(f:MouseEvent):void {
+				main.stage.removeEventListener(MouseEvent.MOUSE_UP, reorder_end);
+				hero.stopDrag();
+				edit_ui.removeChild(hero);
+				var result:box = hit_object();
+				if (result !== null) {
+					change_mod_order(hero.data, objects.indexOf(result));
+					dump_objects();
+					Exhibit.overlay_remove();
+					draw_edit_UI();
+				}
+			}
+			function dump_objects():void {
+				for each(var obj:DisplayObjectContainer in objects) {
+					obj.removeEventListener(MouseEvent.MOUSE_DOWN, reorder_start);
+				}
+			}
+			function hit_object():box {
+				for each(var s:DisplayObjectContainer in objects) {
+					if (s.hitTestPoint(main.stage.mouseX, main.stage.mouseY)) {
+						return box(s);
+					}
+				}
+				return null;
+			}
+		}
 	}
 
 }

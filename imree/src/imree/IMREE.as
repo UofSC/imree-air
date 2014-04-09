@@ -88,9 +88,10 @@ package imree
 			addChild(test_wysiwg);
 			test_wysiwg.draw(500, 500);
 			test_wysiwg.x = 150;
-			test_wysiwg.y = 50;
+			test_wysiwg.y = 50;*/
 			
 			//Turn on Video tester (Tonya) 
+			
 			
 			//*/
 			

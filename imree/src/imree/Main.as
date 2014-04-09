@@ -13,6 +13,7 @@ package imree
 	import com.greensock.loading.data.VideoLoaderVars;
 	import com.greensock.loading.LoaderMax;
 	import com.greensock.loading.ImageLoader;
+	import com.greensock.loading.VideoLoader;
 	import com.greensock.TimelineLite;
 	import com.greensock.TweenLite;
 	import flash.desktop.NativeApplication;
@@ -249,14 +250,12 @@ package imree
 		
 		public function queue_video(e:LoaderMax):void {
 			video_loader_queue.append(e);
-			//video_loader_queue.append(new DataLoader("asset_url"));
-			video_loader_queue.append(new ImageLoader("asset_url"))
-			
+			video_loader_queue.append(new ImageLoader ("http://images3.alphacoders.com/377/3779.jpg"));
 			video_loader_queue.load();
 			
-			video_loader_queue.pause();
+			//video_loader_queue.pause();
 			
-			video_loader_queue.resume();
+			//video_loader_queue.resume();
 				
 			}
 	}

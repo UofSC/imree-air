@@ -22,6 +22,7 @@ package imree.pages
 	import imree.modules.module;
 	import imree.modules.module_asset;
 	import imree.modules.module_asset_image;
+	import imree.modules.module_asset_video;
 	import imree.modules.module_grid;
 	import imree.modules.module_narrative;
 	import imree.modules.module_next;
@@ -150,12 +151,11 @@ package imree.pages
 			{
 				var asset:module_asset;
 				var mime_parts:Array = String(xml.module_type).toLowerCase().split('/');
-				if (mime_parts[0] == "image")
-				{
+				if (mime_parts[0] == "image") {
 					asset = new module_asset_image(main, t, result);
-				}
-				else
-				{
+				} else if (mime_parts[0] == "video") {
+					asset = new module_asset_video(main, t, result);
+				} else {
 					asset = new module_asset(main, t, result);
 				}
 				asset.module_name = xml.module_asset_title;

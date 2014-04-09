@@ -18,6 +18,7 @@ package imree
 	import imree.forms.f_element_date;
 	import imree.forms.f_element_WYSIWYG;
 	import imree.modules.module_asset_video;
+	import imree.pages.admin_exhibit;
 	import imree.pages.admin_exhibits;
 	import imree.pages.home;
 	import imree.pages.exhibit_display;
@@ -35,6 +36,7 @@ package imree
 		public var Home:home;
 		public var Exhibit:exhibit_display;
 		public var page_admin_exhibits:admin_exhibits;
+		public var page_admin_exhibit:admin_exhibit;
 		public var pages:Vector.<DisplayObject>;
 		public var menu_items:Vector.<DisplayObject>;
 		public var current_page:DisplayObject;
@@ -64,6 +66,7 @@ package imree
 			Home.onSelect = load_exhibit;
 			addChild(Home);
 			
+			/**
 			var datepicker:f_element_date = new f_element_date("New Date", "New Date", "Set Date");
 			datepicker.draw(100, 500);
 			addChild(datepicker);
@@ -98,6 +101,10 @@ package imree
 			page_admin_exhibits.x = staging_area.x;
 			page_admin_exhibits.y = staging_area.y;
 			addChild(page_admin_exhibits);
+			page_admin_exhibit = new admin_exhibit(staging_area.width, staging_area.height, main);
+			page_admin_exhibit.x = staging_area.x;
+			page_admin_exhibit.y = staging_area.y;
+			addChild(page_admin_exhibit);
 			
 			current_page = Home;
 			
@@ -113,6 +120,7 @@ package imree
 			pages = new Vector.<DisplayObject>();
 			pages.push(Home);
 			pages.push(page_admin_exhibits);
+			pages.push(page_admin_exhibit);
 			
 			/**
 			 * SECTION: test for QR code support. 
@@ -207,9 +215,13 @@ package imree
 			show(Home);
 		}
 		
-		public function show_exhibit_admin(e:*= null):void {
-			page_admin_exhibits.draw();
+		public function show_exhibits_admin(id:int=0):void {
+			page_admin_exhibits.draw(id);
 			show(page_admin_exhibits);
+		}
+		public function show_exhibit_admin(id:int):void {
+			page_admin_exhibit.draw(id);
+			show(page_admin_exhibit);
 		}
 		
 		public function show(page:DisplayObject):void {

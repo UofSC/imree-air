@@ -13,7 +13,7 @@ package imree.pages
 	 * ...
 	 * @author Jason Steelman
 	 */
-	public class admin_exhibits extends Sprite
+	public class admin_exhibit extends Sprite
 	{
 		
 		public var w:Number;
@@ -21,7 +21,7 @@ package imree.pages
 		public var main:Main;
 		public var form:f_data;
 		private var options:f_element_DynamicOptions;
-		public function admin_exhibits(_w:int, _h:int, _main:Main)  {
+		public function admin_exhibit(_w:int, _h:int, _main:Main)  {
 			w = _w;
 			h = _h;
 			main = _main;
@@ -38,7 +38,7 @@ package imree.pages
 			exh.push(departments);
 			
 			form = new f_data(exh);
-			form.edit_siblings_allowed = true;
+			form.edit_siblings_allowed = false;
 			form.conn = main.connection;
 			form.f_table = "exhibits";
 			form.f_table_key_column_name = "exhibit_id";

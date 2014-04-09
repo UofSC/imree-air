@@ -32,6 +32,7 @@ package imree
 		public var size_percentage:Number;
 		private var back_btn:smart_button;
 		private var edit_current_mod:Button;
+		private var edit_current_exhibit:Button;
 		public function menu(_contents:Vector.<DisplayObject>, _main:Main, _imree:IMREE) 
 		{
 			contents = _contents;
@@ -97,17 +98,38 @@ package imree
 				if (body.contains(edit_current_mod)) {
 					body.removeChild(edit_current_mod);
 				}
+				if(contents.indexOf(edit_current_mod) !== false) {
+					contents.splice(contents.indexOf(edit_current_mod), 1);
+				}
 				edit_current_mod = null;
 			}
+			if ( edit_current_exhibit !== null) {
+				edit_current_exhibit.removeEventListener(MouseEvent.CLICK, hide);
+				edit_current_exhibit.removeEventListener(MouseEvent.CLICK, edit_current_exhibit_clicked);
+				if (body.contains(edit_current_exhibit)) {
+					body.removeChild(edit_current_exhibit);
+				}
+				if(contents.indexOf(edit_current_exhibit) !== false) {
+					contents.splice(contents.indexOf(edit_current_exhibit), 1);
+				}
+				edit_current_exhibit = null;
+			}
+			
 			if (main.Imree !== null && main.Imree.current_page is exhibit_display) {
 				var current_top_module:module = exhibit_display(main.Imree.current_page).current_module();
 				if (current_top_module.user_can_edit) {
 					edit_current_mod = new Button();
 					edit_current_mod.setSize(128, 128);
 					edit_current_mod.label = "Edit Module: \n" + current_top_module.module_name;
-					
 					edit_current_mod.addEventListener(MouseEvent.CLICK, edit_current_mod_clicked);
 					contents.push(edit_current_mod);
+				}
+				if (exhibit_display(main.Imree.current_page).user_can_edit) {
+					edit_current_exhibit = new Button();
+					edit_current_exhibit.setSize(128, 128);
+					edit_current_exhibit.label = "Edit Exhibit";
+					edit_current_exhibit.addEventListener(MouseEvent.CLICK, edit_current_exhibit_clicked);
+					contents.push(edit_current_exhibit);
 				}
 			}
 			
@@ -211,6 +233,12 @@ package imree
 			if (main.Imree.current_page is exhibit_display) {
 				var current_top_module:module = exhibit_display(main.Imree.current_page).current_module();
 				current_top_module.draw_edit_UI(e);
+			}
+		}
+		private function edit_current_exhibit_clicked(e:MouseEvent):void {
+			if (main.Imree.current_page is exhibit_display) {
+				var target:exhibit_display = exhibit_display(main.Imree.current_page);
+				main.Imree.show_exhibit_admin(int(target.id));
 			}
 		}
 		

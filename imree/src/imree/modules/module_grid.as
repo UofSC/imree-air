@@ -32,6 +32,8 @@ package imree.modules
 	import imree.Main;
 	import imree.pages.exhibit_display;
 	import imree.shortcuts.box;
+	import imree.text;
+	import imree.textFont;
 	/**
 	 * ...
 	 * @author Jason Steelman
@@ -114,6 +116,9 @@ package imree.modules
 				} else if (e.currentTarget is module_pager) {
 					Exhibit.bring_pager_to_front(module_pager(e.currentTarget));
 				}
+			}
+			if (items.length === 0) {
+				wrapper.addChild(new text("Empty Block", 150, new textFont('_sans', 24)));
 			}
 			
 		}

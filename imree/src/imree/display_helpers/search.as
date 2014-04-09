@@ -7,8 +7,15 @@ package imree.display_helpers {
 	import com.greensock.TweenLite;
 	import fl.containers.ScrollPane;
 	import fl.controls.Button;
+	import fl.controls.ComboBox;
+	import fl.data.DataProvider;
+	import fl.events.ComponentEvent;
+	import fl.events.DataChangeEvent;
+	import fl.events.DataChangeType;
+	import fl.events.ListEvent;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import imree.data_helpers.data_value_pair;
 	import imree.data_helpers.position_data;
@@ -29,6 +36,7 @@ package imree.display_helpers {
 		
 		public var onComplete:Function;
 		public var onDestroy:Function;
+		public var allow_modules:Boolean;
 		private var w:int;
 		private var h:int;
 		private var wrapper:Sprite;
@@ -48,6 +56,7 @@ package imree.display_helpers {
 			onDestroy = _onDestroy;
 			w = _w;
 			h = _h;
+			allow_modules = false;
 		}
 		public function draw_search_box():void {
 			main.clean_slate([wrapper, search_box, search_submit, search_ui_wrapper]);
@@ -70,7 +79,26 @@ package imree.display_helpers {
 			search_submit = new smart_button(search_submit_button, submit);
 			search_ui_wrapper.addChild(search_submit);
 			search_submit.x = search_box.width + 10;
+			
+			if (allow_modules) {
+				var selector:ComboBox = new ComboBox();
+				selector.prompt = "Add new module";
+				var datas:Array = [{label:"Grid/Gallery",data:"grid"}, {label:"Title", data:"title"}];
+				selector.dataProvider = new DataProvider(datas);
+				selector.addEventListener(Event.CHANGE, add_module_by_name);
+				search_ui_wrapper.addChild(selector);
+				selector.x = search_ui_wrapper.width / 2 - selector.width / 2;
+				selector.y = search_ui_wrapper.height;
+			}
+			function add_module_by_name(s:Event):void {
+				var obj:Object = {'table':'modules', 'columns':{'module_order':'9999','module_name':'new module','module_parent_id':String(Module.module_id),'module_type':String(selector.selectedItem.data)} };
+				main.connection.server_command("insert", obj, add_module_by_name_done, true);
+			}
+			function add_module_by_name_done(s:Event):void {
+				onDestroy();
+			}
 		}
+		
 		
 		public function submit(e:*=null):void {
 			trace("Query Started with " + search_box.get_value());
@@ -120,7 +148,6 @@ package imree.display_helpers {
 				bk.addChild(txt);
 				bk.mouseChildren = false;
 				bk.mouseEnabled = true;
-				
 				boxes.push(bk);
 			}
 			

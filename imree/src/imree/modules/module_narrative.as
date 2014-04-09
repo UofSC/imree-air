@@ -40,6 +40,7 @@ package imree.modules
 		public var wrapper_handle:Sprite;
 		public function module_narrative( _main:Main, _Exhibit:exhibit_display, _items:Vector.<module>=null)
 		{
+			t = this;
 			super(_main, _Exhibit, _items);
 		}
 		

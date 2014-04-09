@@ -1,4 +1,5 @@
 package imree.modules {
+	import com.greensock.easing.Cubic;
 	import com.greensock.events.LoaderEvent;
 	import com.greensock.layout.AlignMode;
 	import com.greensock.layout.ScaleMode;
@@ -229,14 +230,14 @@ package imree.modules {
 							pg1_bits.draw(page1);
 							page1.visible = false;
 							flipper.back = new Bitmap(pg1_bits);
-							TweenMax.to(flipper, 1, { rotationY:180, onComplete:animation_finished});
+							TweenMax.to(flipper, 1, { rotationY:180, onComplete:animation_finished, ease:Cubic.easeInOut});
 						} else {
 							page2.visible = true;
 							var pg2_bits:BitmapData = new BitmapData(page2.width, page2.height);
 							pg2_bits.draw(page2);
 							page2.visible = false;
 							flipper.front = new Bitmap(pg2_bits);
-							TweenMax.to(flipper, 1, { rotationY:0, onComplete:animation_finished } );
+							TweenMax.to(flipper, 1, { rotationY:0, onComplete:animation_finished, ease:Cubic.easeInOut } );
 						}
 						
 						
@@ -296,6 +297,10 @@ package imree.modules {
 			okay_ui.label = "Save Order";
 			buttons.push(new smart_button(okay_ui, okay_event));
 			
+			var add_ui:Button = new Button();
+			add_ui.setSize(70, 70);
+			add_ui.label = "Add More";
+			buttons.push(new smart_button(add_ui, add_event));
 			
 			var form:f_data;
 			var elements:Vector.<f_element> = new Vector.<f_element>();
@@ -339,6 +344,9 @@ package imree.modules {
 			}
 			function okay_event(f:*= null):void {
 				save_new_mod_order();
+			}
+			function add_event(f:*= null):void {
+				draw_search();
 			}
 			
 			var hero:box;

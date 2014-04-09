@@ -352,25 +352,26 @@ package imree.modules
 				return hero;
 			}
 			
-			
-			function draw_search(e:*= null):void  {
-				var Search:search = new search(new_assets_ingested, main, t, destroy_search, stage.stageWidth, stage.stageHeight);
-				var search_wrapper:Sprite = new Sprite();
-				Exhibit.overlay_add(search_wrapper);
-				search_wrapper.addChild(new box(main.stage.stageWidth, main.stage.stageHeight, 0xFFFFFF, 1));
-				Search.draw_search_box();
-				search_wrapper.addChild(Search);
-				function destroy_search(e:*= null):void {
-					search_wrapper.removeChild(Search);
-					Exhibit.overlay_remove();
-					Search = null;
-					search_wrapper = null;
-				}
-				function new_assets_ingested(ingests:Array, fails:int):void {
-					trace(ingests + " :: Fails: " + fails);
-					if (ingests.length > 0) {
-						Exhibit.reload_current_page();
-					}
+		}
+		
+		public function draw_search(e:*= null):void  {
+			var Search:search = new search(new_assets_ingested, main, this, destroy_search, stage.stageWidth, stage.stageHeight);
+			Search.allow_modules = true;
+			var search_wrapper:Sprite = new Sprite();
+			Exhibit.overlay_add(search_wrapper);
+			search_wrapper.addChild(new box(main.stage.stageWidth, main.stage.stageHeight, 0xFFFFFF, 1));
+			Search.draw_search_box();
+			search_wrapper.addChild(Search);
+			function destroy_search(e:*= null):void {
+				search_wrapper.removeChild(Search);
+				Exhibit.overlay_remove();
+				Search = null;
+				search_wrapper = null;
+			}
+			function new_assets_ingested(ingests:Array, fails:int):void {
+				trace(ingests + " :: Fails: " + fails);
+				if (ingests.length > 0) {
+					Exhibit.reload_current_page();
 				}
 			}
 		}

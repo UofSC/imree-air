@@ -55,6 +55,7 @@ package imree.pages
 		private var spinner:loading_spinner_sprite;
 		public var t:exhibit_display;
 		public var overlay:Sprite;
+		public var user_can_edit:Boolean = false;
 		
 		public function exhibit_display(_id:int, _w:int, _h:int, _main:Main)
 		{
@@ -110,7 +111,11 @@ package imree.pages
 				exhibit_name = xml.result.exhibit_properties.exhibit_name;
 				exhibit_sub_name = xml.result.exhibit_properties.exhibit_sub_name;
 				draw_background(exhibit_cover_image_url);
-				draw(0);
+				if (modules.length === 0) {
+					addChild(new text("An Empty Exhibit!? Oh, the possibilities. If you're a curator, hit the menu button and choose to edit the current exhibit.", 300, new textFont("_sans", 24)));
+				} else {
+					draw(0);
+				}
 				update_user_privileges();
 			}
 		}
@@ -436,7 +441,9 @@ package imree.pages
 			freeze_obj.y = modules[i].y;
 			addChild(freeze_obj);
 			modules[i].dump();
-			removeChild(modules[i]);
+			if (contains(modules[i])) {
+				removeChild(modules[i]);
+			}
 			main.animator.off_stage(freeze_obj);
 		}
 		
@@ -446,6 +453,7 @@ package imree.pages
 			{
 				i.update_user_privileges(main.User.can(Permission.USE, "exhibit", String(id)), main.User.can(Permission.EDIT, "exhibit", String(id)), main.User.can(Permission.ADMIN, "exhibit", String(id)));
 			}
+			user_can_edit = main.User.can(Permission.EDIT, "exhibit", String(id));
 			main.Imree.Menu.update();
 		}
 		

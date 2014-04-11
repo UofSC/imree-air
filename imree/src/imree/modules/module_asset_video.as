@@ -10,7 +10,9 @@ package imree.modules
 	import com.greensock.*;
 	import com.greensock.TweenLite;	
 	import fl.video.FLVPlayback;
-	
+	import fl.video.flvplayback_internal;
+	import fl.video.SkinErrorEvent;
+			
 	import com.greensock.BlitMask;
 	import com.greensock.easing.Cubic;
 	import com.greensock.easing.Elastic;
@@ -24,6 +26,7 @@ package imree.modules
 	import flash.display.BlendMode;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
+	import flash.display.SimpleButton;
 	import flash.events.MouseEvent;
 	import flash.net.URLRequest;
 	import flash.net.URLRequestMethod;
@@ -120,7 +123,9 @@ package imree.modules
 				var player:FLVPlayback = new FLVPlayback();
 				player.setSize(draw_feature_on_object.width, draw_feature_on_object.height);
 				player.load(asset_url);
-				player.skin = "MinimaFlatCustomColorPlayBackSeekCounterVolMute.swf";
+				player.skin = "SkinOverAllNoFullscreen.swf";
+				player.skinBackgroundColor = 0x808080;
+				player.skinAutoHide = true;
 				player.autoPlay = true;
 				draw_feature_on_object.addChild(player);
 				loading_indicator = new loading_spinner_sprite();

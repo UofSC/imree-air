@@ -16,7 +16,7 @@
     </define>
     <define append="true">
       <name>CONFIG::timeStamp</name>
-      <value>'4/2/2014'</value>
+      <value>'4/11/2014'</value>
     </define>
     <define append="true">
       <name>CONFIG::air</name>
@@ -32,18 +32,18 @@
     </define>
     <verbose-stacktraces>true</verbose-stacktraces>
     <source-path append="true">
-      <path-element>C:\Users\IllustriousT\Documents\GitHub\imree-air\imree\src</path-element>
+      <path-element>C:\Users\color corrector\Documents\GitHub\imree-air\imree\src</path-element>
       <path-element>C:\Program Files (x86)\FlashDevelop\Library\AS3\classes</path-element>
     </source-path>
     <external-library-path append="true">
-      <path-element>C:\Users\IllustriousT\Documents\GitHub\imree-air\imree\lib\qreader.ane</path-element>
+      <path-element>C:\Users\color corrector\Documents\GitHub\imree-air\imree\lib\qreader.ane</path-element>
     </external-library-path>
     <library-path append="true">
-      <path-element>C:\Users\IllustriousT\Documents\GitHub\imree-air\imree\src\userinterface_components.swc</path-element>
+      <path-element>C:\Users\color corrector\Documents\GitHub\imree-air\imree\src\userinterface_components.swc</path-element>
     </library-path>
   </compiler>
   <file-specs>
-    <path-element>C:\Users\IllustriousT\Documents\GitHub\imree-air\imree\src\imree\Main.as</path-element>
+    <path-element>C:\Users\color corrector\Documents\GitHub\imree-air\imree\src\imree\Main.as</path-element>
   </file-specs>
   <default-background-color>#800000</default-background-color>
   <default-frame-rate>60</default-frame-rate>

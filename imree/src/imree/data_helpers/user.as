@@ -13,6 +13,7 @@ package imree.data_helpers
 		public var person_name_first:String;
 		public var person_title:String;
 		public var person_department_id:int;
+		public var person_group_id:int;
 		public var ul_user_id:int;
 		public var user_is_superAdmin:Boolean = false;
 		public var user_is_logged_in:Boolean = false;
@@ -51,19 +52,20 @@ package imree.data_helpers
 		public function toString():String {
 			var str:String = "\n\
 			\nUSER DATA:\n\
-		id: "+ person_id + "\n\
-		name_first: "+ person_name_first + "\n\
-		name_last: "+ person_name_last + "\n\
-		title: "+ person_title + "\n\
-		department: "+ person_department_id + "\n\
-		ul_user_id: "+ ul_user_id + "\n\
-		super_admin: "+ user_is_superAdmin + "\n\
-		logged_in: "+ user_is_logged_in + "\n\
-			";
+			id: "+ person_id + "\n\
+			name_first: "+ person_name_first + "\n\
+			name_last: "+ person_name_last + "\n\
+			title: "+ person_title + "\n\
+			department: "+ person_department_id + "\n\
+			group: " + person_group_id + "\n\
+			ul_user_id: "+ ul_user_id + "\n\
+			super_admin: "+ user_is_superAdmin + "\n\
+			logged_in: "+ user_is_logged_in;
 			for each(var p:user_privilege in user_privileges) {
 				str += "\n\
-		PRIVILEGE: " + p.privilege + " = " + permission(p.permission_level).permission_level + " (scope:'" + p.asset_scope + "')";
+			PRIVILEGE: " + p.privilege + " = " + permission(p.permission_level).permission_level + " (scope:'" + p.asset_scope + "')";
 			}
+			str += "\n\n";
 			return str;
 			
 		}

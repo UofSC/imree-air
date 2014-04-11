@@ -49,6 +49,7 @@ package imree.pages
 		public var exhibit_date_start:String;
 		public var exhibit_date_end:String;
 		public var exhibit_theme_id:String;
+		public var exhibit_people_group_id:int;
 		public var exhibit_cover_image_url:String;
 		private var main:Main;
 		private var wrapper:Sprite;
@@ -109,6 +110,7 @@ package imree.pages
 				exhibit_date_end = xml.result.exhibit_properties.exhibit_date_end;
 				exhibit_date_start = xml.result.exhibit_properties.exhibit_date_start;
 				exhibit_theme_id = xml.result.exhibit_properties.theme_id;
+				exhibit_people_group_id = xml.result.exhibit_properties.people_group_id;
 				exhibit_name = xml.result.exhibit_properties.exhibit_name;
 				exhibit_sub_name = xml.result.exhibit_properties.exhibit_sub_name;
 				draw_background(exhibit_cover_image_url);

@@ -8,8 +8,8 @@ package imree.data_helpers
 	 */
 	public class user_privilege 
 	{
-		public var privilege:String;
-		public var permission_level:permission;
+		public var privilege:String;  //one of 'super_admin','publisher','group','exhibit'
+		public var permission_level:permission;  //one of 'NO','USR','EDIT','ADMIN'
 		public var asset_scope:String;
 		public function user_privilege(_privilege:String, _permission_level:String = "NO", _asset_scope:String = "") 
 		{
@@ -18,7 +18,8 @@ package imree.data_helpers
 			asset_scope = _asset_scope;
 		}
 		public function can(test_level:String):Boolean {
-			return permission_level.can(test_level);
+			var result:Boolean = permission_level.can(test_level);
+			return result;
 		}
 		
 	}

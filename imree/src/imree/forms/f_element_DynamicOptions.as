@@ -36,9 +36,9 @@ package imree.forms
 			is_ready = false;
 			var query:Object = { };
 				query.table = table;
-				query.columns = {0:key_column, 1:label_column};
-				query.where = " 1";
-			conn.server_command("query", query, fetched, true);
+				query.key_column = key_column;
+				query.label_column = label_column;
+			conn.server_command("query_fdata_DynamicOptions", query, fetched, true);
 		}
 		public function fetched(evt:LoaderEvent):void {
 			var xml:XML = XML(evt.currentTarget.content);

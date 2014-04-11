@@ -1,14 +1,10 @@
 package imree
 {
 	import com.adobe.serialization.json.*;
-	import com.greensock.events.LoaderEvent;
-	import com.greensock.loading.DataLoader;
-	import com.greensock.loading.XMLLoader;
-	import com.greensock.loading.data.XMLLoaderVars;
-	import flash.events.Event;
-	import flash.net.URLRequest;
-	import flash.net.URLRequestMethod;
-	import flash.net.URLVariables;
+	import com.greensock.events.*;
+	import com.greensock.loading.*;
+	import com.greensock.loading.data.*;
+	import flash.net.*;
 	
 	
 	/**

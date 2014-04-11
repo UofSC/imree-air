@@ -161,12 +161,10 @@ package imree.forms
 			obj.table = f_table;
 			obj.row_id = f_row_id;
 			obj.table_key_column_name = f_table_key_column_name;
-			obj.columns = new Object();
 			for(var i:String in elements) {
-				obj.columns[i] = elements[i].data_column_name;
 				elements[i].indicate_waiting();
 			}
-			conn.server_command("query", obj, data_ready, true);
+			conn.server_command("query_data_get_row", obj, data_ready, true);
 			function data_ready(evt:LoaderEvent):void {
 				var xml:XML = XML(evt.currentTarget.content);
 				for each (var row:f_element in elements) {
@@ -189,7 +187,7 @@ package imree.forms
 					trace("cannot update a row without a row_id");
 				} else {
 					obj.row_id = f_row_id;
-					obj.where = f_table_key_column_name + " = '" + f_row_id + "'";
+					obj.where_key_column = f_table_key_column_name;
 					conn.server_command("update", obj, update_response, true);
 				}
 			} else if (f_method === "insert") {

@@ -180,14 +180,16 @@ package imree
 				main.User.person_name_last = 		xml.result.user.person_name_last;
 				main.User.person_name_first = 		xml.result.user.person_name_first;
 				main.User.person_title = 			xml.result.user.person_title;
-				main.User.person_department_id = 	xml.result.user.person_department_id;
+				main.User.person_department_id = 		xml.result.user.person_department_id;
+				main.User.person_group_id = 			xml.result.user.person_group_id;
 				main.User.ul_user_id = 				xml.result.user.ul_user_id;
 				
 				for each(var xml:XML in xml.result.permissions.children()) {
-					if (xml.people_privilege_name == "super_admin" && xml.people_privilege_value == "ADMIN" && xml.people_privilege_scope == "system") {
+					trace(xml);
+					if (xml.name == "super_admin" && xml.value == "ADMIN") {
 						main.User.user_is_superAdmin = true;
 					}
-					main.User.user_privileges.push(new user_privilege(xml.people_privilege_name, xml.people_privilege_value, xml.people_privilege_scope));
+					main.User.user_privileges.push(new user_privilege(xml.name, xml.value, xml.scope));
 				}
 				trace(main.User);
 				main.animator.off_stage(auth);

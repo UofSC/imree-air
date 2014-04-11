@@ -168,6 +168,7 @@ package imree.pages
 				asset.module_type = xml.module_type;
 				asset.module_id = null; //redundant, but a reminder
 				asset.asset_url = xml.asset_url;
+				asset.asset_specific_thumb_url = xml.asset_specific_thumbnail_url;
 				if (xml.asset_resizeable == '1')
 				{
 					asset.can_resize = true;

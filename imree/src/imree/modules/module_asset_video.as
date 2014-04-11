@@ -68,11 +68,22 @@ package imree.modules
 		override public function draw_thumb(_w:int = 200, _h:int = 200, Return:Boolean = false):* {
 			
 			thumb_wrapper = new Sprite();
-			trace("IM FRIGGIN HERE");
 			var result:box = new box(_w, _h, 0xFFFFFF, .2);
 			thumb_wrapper.addChild(result);
 			
-			var url_request:URLRequest = new URLRequest("http://images3.alphacoders.com/377/3779.jpg");
+			var url_request:URLRequest;
+			if (asset_specific_thumb_url !== null && asset_specific_thumb_url.length > 0) {
+				url_request = new URLRequest(asset_specific_thumb_url);
+			} else {
+				/**
+				var img:icon_trashcan = new icon_trashcan();
+				result.addChild(img);
+				*/
+				
+				url_request = new URLRequest("http://images3.alphacoders.com/377/3779.jpg"); //generic thumb
+			}
+			
+			
 			
 			var imgvars:ImageLoaderVars = new ImageLoaderVars();
 			imgvars.crop(true);

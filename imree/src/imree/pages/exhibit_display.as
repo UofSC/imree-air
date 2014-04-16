@@ -21,6 +21,7 @@ package imree.pages
 	import imree.Main;
 	import imree.modules.module;
 	import imree.modules.module_asset;
+	import imree.modules.module_asset_audio;
 	import imree.modules.module_asset_image;
 	import imree.modules.module_asset_video;
 	import imree.modules.module_grid;
@@ -157,6 +158,8 @@ package imree.pages
 					asset = new module_asset_image(main, t, result);
 				} else if (mime_parts[0] == "video") {
 					asset = new module_asset_video(main, t, result);
+				} else if (mime_parts[0] == "audio") {
+					asset = new module_asset_audio(main, t, result);
 				} else {
 					asset = new module_asset(main, t, result);
 				}

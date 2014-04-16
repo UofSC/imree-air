@@ -13,6 +13,7 @@ package imree.modules
 	import com.greensock.TweenLite;
 	import com.greensock.loading.*;
 	import com.greensock.*;
+	import flash.events.Event;
 	
 	
 	import flash.display.Bitmap;
@@ -45,12 +46,12 @@ package imree.modules
 		
 		public var loading_indicator:loading_spinner_sprite;
 		
-		public function module_asset_video(_main:Main, _Exhibit:exhibit_display,_items:Vector.<module>=null) 
+		public function module_asset_audio(_main:Main, _Exhibit:exhibit_display,_items:Vector.<module>=null) 
 		{
 			this.asset_url;
-			super(_main, _Exhibit, _items);
+			
 			module_supports_reordering = true;	
-					
+			super(_main, _Exhibit, _items);
 		}
 		
 	
@@ -107,55 +108,50 @@ package imree.modules
 			super.drop_thumb();
 		}
 		
+		private var sound:MP3Loader;
 		override public function draw_feature(_w:int, _h:int):void {
 			var wrapper:box = new box(draw_feature_on_object.width, draw_feature_on_object.height);
+			phase_feature = true;
 			if (draw_feature_on_object !== null) {
 				main.log('Loading module.module_asset_image [id:' + module_id + '] [name: ' + module_name + '] ' + asset_url);
 				
-				
-				var vars:MP3LoaderVars = main.aud_loader_vars(draw_feature_on_object);
-				vars.noCache(true);
-					vars.scaleMode(ScaleMode.PROPORTIONAL_INSIDE);
+				var vars:MP3LoaderVars = new MP3LoaderVars();
+					vars.noCache(true);
+					
 					vars.onComplete(aud_downloaded);
-					vars.crop(false);
+					
 					vars.autoPlay(true);
-				new MP3LoaderLoader(asset_url, vars).load();
-				
-				/*var player:FLVPlayback = new FLVPlayback();
-				player.setSize(draw_feature_on_object.width, draw_feature_on_object.height);
-				player.load(asset_url);
-				player.skin = "SkinOverAllNoFullscreen.swf";
-				player.skinBackgroundColor = 0x808080;
-				player.skinAutoHide = true;
-				player.autoPlay = true;
-				draw_feature_on_object.addChild(player);*/
+				sound = new MP3Loader(asset_url, vars);
+				sound.load();
 				
 				loading_indicator = new loading_spinner_sprite();
 				loading_indicator.blendMode = BlendMode.SCREEN;
-				//draw_feature_on_object.addChild(loading_indicator);
+				draw_feature_on_object.addChild(loading_indicator);
 				loading_indicator.x = _w/ 2 - 128/2;
 				loading_indicator.y = _h/ 2 - 128/2;
 			} else {
 				main.log('you need to have set the draw_feature_on_object from outside the module before calling draw_feature()');
 			}
+			wrapper.addEventListener(Event.REMOVED_FROM_STAGE, stop_playing_the_damn_sound);
+			function stop_playing_the_damn_sound(dummy_var:Event):void  {
+				sound.pause();
+				sound.dispose();
+			}
+			
 			
 			function aud_downloaded(e:LoaderEvent):void {
 				draw_feature_on_object.removeChild(loading_indicator);
 				loading_indicator = null;
-				
-				
-				
 				var original_width:int = draw_feature_on_object.width;
 				var original_height:int = draw_feature_on_object.height;
-				
-				
+				var playpause_button:button_right = new button_right();
+				playpause_button.addEventListener(MouseEvent.CLICK, playpause_clicked);
+				function playpause_clicked(a_variable_that_dont_matter:MouseEvent):void {
+					sound.soundPaused = !sound.soundPaused;
+				}
+				wrapper.addChild(playpause_button);
 				draw_feature_on_object.addChild(wrapper);
-				
-				
 			}
-			phase_feature = true;
-			
-		
 		}
 		
 		
@@ -166,8 +162,7 @@ package imree.modules
 		
 		
 		
-		}
+		
 		
 	}
-
 }

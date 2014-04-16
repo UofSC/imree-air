@@ -21,7 +21,7 @@ package imree.display_helpers {
 		public var h:int;
 		private var t:modal;
 		private var dir:String;
-		public function modal(_w:int, _h:int, _buttons:Vector.<smart_button>=null, preset_content:DisplayObjectContainer=null, objects:Vector.<DisplayObjectContainer>=null, background_color:uint = 0x000000, background_alpha:int = .8, direction:String = null) {
+		public function modal(_w:int, _h:int, _buttons:Vector.<smart_button>=null, preset_content:DisplayObjectContainer=null, objects:Vector.<DisplayObjectContainer>=null, background_color:uint = 0x000000, background_alpha:Number = .8, direction:String = null) {
 			w = _w;
 			h = _h;
 			t = this;

@@ -2,12 +2,19 @@ package imree
 {
 	import com.greensock.loading.LoaderMax;
 	import com.sbhave.nativeExtensions.zbar.Scanner;
+	import imree.display_helpers.modal;
+	import imree.forms.super_admin;
+	//import net.steelman.WifiInfoLibrary;
 	import fl.controls.NumericStepper;
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.geom.Rectangle;
+	import flash.net.InterfaceAddress;
+	import flash.net.NetworkInfo;
+	import flash.net.NetworkInterface;
 	import flash.system.ApplicationDomain;
+	import flash.text.TextField;
 	import flash.utils.getDefinitionByName;
 	import imree.data_helpers.date_from_mysql;
 	import imree.data_helpers.user_privilege;
@@ -19,7 +26,6 @@ package imree
 	import imree.forms.f_element_WYSIWYG;
 	import imree.modules.module_asset_video;
 	import imree.pages.admin_exhibit;
-	import imree.pages.admin_exhibits;
 	import imree.pages.home;
 	import imree.pages.exhibit_display;
 	import imree.shortcuts.box;
@@ -35,8 +41,7 @@ package imree
 		public var Menu:menu
 		public var Home:home;
 		public var Exhibit:exhibit_display;
-		public var page_admin_exhibits:admin_exhibits;
-		public var page_admin_exhibit:admin_exhibit;
+		public var page_admin_exhibit:modal;
 		public var pages:Vector.<DisplayObject>;
 		public var menu_items:Vector.<DisplayObject>;
 		public var current_page:DisplayObject;
@@ -75,11 +80,14 @@ package imree
 			datepicker.set_value("1981-03-01 18:20:00");
 			
 			
-			/**
+			
 			//Turn off main IMREE display
+			
 			Home.visible = false;
 			main.preloader.hide();
 			
+			
+			/**
 			//Turn on Datepicker Tester (Tabitha);
 			
 						
@@ -98,15 +106,6 @@ package imree
 			
 			
 			
-			page_admin_exhibits = new admin_exhibits(staging_area.width, staging_area.height, main);
-			page_admin_exhibits.x = staging_area.x;
-			page_admin_exhibits.y = staging_area.y;
-			addChild(page_admin_exhibits);
-			page_admin_exhibit = new admin_exhibit(staging_area.width, staging_area.height, main);
-			page_admin_exhibit.x = staging_area.x;
-			page_admin_exhibit.y = staging_area.y;
-			addChild(page_admin_exhibit);
-			
 			current_page = Home;
 			
 			//menu is added last so it is on top of display list
@@ -120,8 +119,6 @@ package imree
 			
 			pages = new Vector.<DisplayObject>();
 			pages.push(Home);
-			pages.push(page_admin_exhibits);
-			pages.push(page_admin_exhibit);
 			
 			/**
 			 * SECTION: test for QR code support. 
@@ -216,21 +213,28 @@ package imree
 		
 		public function show_home(e:*= null):void {
 			show(Home);
+			Menu.update();
 		}
 		
-		public function show_exhibits_admin(id:int=0):void {
-			page_admin_exhibits.draw(id);
-			show(page_admin_exhibits);
+		public function show_super_admin():void {
+			var mod:modal = new modal(main.stage.stageWidth, main.stage.stageHeight, null, new super_admin(main.stage.stageWidth, main.stage.stageHeight,main));
+			addChild(mod);
+			main.animator.on_stage(mod);
 		}
+		
 		public function show_exhibit_admin(id:int):void {
-			page_admin_exhibit.draw(id);
-			show(page_admin_exhibit);
+			var pg:admin_exhibit = new admin_exhibit(staging_area.width, staging_area.height, main);
+			pg.draw(id);
+			var mod:modal = new modal(main.stage.stageWidth, main.stage.stageHeight, null, pg);
+			addChild(mod);
+			main.animator.on_stage(mod);
 		}
 		
 		public function show(page:DisplayObject):void {
 			if(page !== current_page) {
 				hide_all_except(page);
 				main.animator.on_stage(page);
+				current_page = page;
 			}
 		}
 		

@@ -324,22 +324,22 @@ package imree.pages
 		public function draw_next(e:* = null):void
 		{
 			dump_module(current_module_i);
-			if (current_module_i + 1 > modules.length)
-			{
-				current_module_i = 0;
+			var target_i:int;
+			if (current_module_i + 1 > modules.length) {
+				target_i = 0;
+			} else	{
+				target_i++;
 			}
-			else
-			{
-				current_module_i++;
-			}
-			draw(current_module_i);
+			draw(target_i);
 			main.Imree.Menu.update();
 		}
 		
 		public function draw(id:int):void
 		{
+			trace("drawwing " + id + " of " + modules.length);
 			modules[id].draw_feature(w, h);
 			addChild(modules[int(id)]);
+			current_module_i = id;
 		}
 		
 		public function reorder_items_in_module(mod:module, saveFunction:Function):void
@@ -436,18 +436,20 @@ package imree.pages
 			}
 		}
 		
-		public function dump_module(i:int):void{
-			var freeze:BitmapData = new BitmapData(modules[i].width, modules[i].height);
-			freeze.draw(modules[i]);
-			var freeze_obj:Bitmap = new Bitmap(freeze, 'auto', true);
-			freeze_obj.x = modules[i].x;
-			freeze_obj.y = modules[i].y;
-			addChild(freeze_obj);
-			modules[i].dump();
-			if (contains(modules[i])) {
-				removeChild(modules[i]);
+		public function dump_module(i:int):void {
+			if(modules[i] !== null && modules[i].parent !== null) {
+				var freeze:BitmapData = new BitmapData(modules[i].width, modules[i].height);
+				freeze.draw(modules[i]);
+				var freeze_obj:Bitmap = new Bitmap(freeze, 'auto', true);
+				freeze_obj.x = modules[i].x;
+				freeze_obj.y = modules[i].y;
+				addChild(freeze_obj);
+				modules[i].dump();
+				if (contains(modules[i])) {
+					removeChild(modules[i]);
+				}
+				main.animator.off_stage(freeze_obj);
 			}
-			main.animator.off_stage(freeze_obj);
 		}
 		
 		public function update_user_privileges():void{

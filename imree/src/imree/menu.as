@@ -12,6 +12,7 @@ package imree
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
+	import imree.data_helpers.user_privilege;
 	import imree.display_helpers.smart_button;
 	import imree.modules.module;
 	import imree.pages.exhibit_display;
@@ -33,6 +34,7 @@ package imree
 		private var back_btn:smart_button;
 		private var edit_current_mod:Button;
 		private var edit_current_exhibit:Button;
+		private var super_admin:button_SuperAdmin;
 		public function menu(_contents:Vector.<DisplayObject>, _main:Main, _imree:IMREE) 
 		{
 			contents = _contents;
@@ -75,8 +77,6 @@ package imree
 				back_btn = null;
 			}
 			back_btn = new smart_button(new button_back(), toggle);
-			
-			
 			
 			if (body !== null) {
 				while (body.numChildren) {
@@ -131,6 +131,31 @@ package imree
 					edit_current_exhibit.addEventListener(MouseEvent.CLICK, edit_current_exhibit_clicked);
 					contents.push(edit_current_exhibit);
 				}
+			}
+			
+			if (main.Imree !== null && main.Imree.current_page is exhibit_display) {
+				for each(var mod:module in exhibit_display(main.Imree.current_page).modules) {
+					var link_butt_ui:Button = new Button();
+					link_butt_ui.setSize(128, 128);
+					link_butt_ui.label = mod.module_name;
+					var link_butt:smart_button = new smart_button(link_butt_ui, link_button_clicked);
+					link_butt.data = mod;
+					contents.push(link_butt);
+				}
+			}
+			
+			if (super_admin !== null) {
+				if (body.contains(super_admin)) {
+					body.removeChild(super_admin);
+				}
+				contents.splice(contents.indexOf(super_admin), 1);
+				super_admin.removeEventListener(MouseEvent.CLICK, super_admin_clicked);				
+				super_admin = null;
+			}
+			if (main.User.can("exhibit", "ADMIN")) {
+				super_admin = new button_SuperAdmin();
+				super_admin.addEventListener(MouseEvent.CLICK, super_admin_clicked);
+				contents.push(super_admin);
 			}
 			
 			for each(var Obj:DisplayObject in contents) {
@@ -229,6 +254,11 @@ package imree
 			}
 		}
 		
+		private function link_button_clicked(e:*=null):void {
+			var mod:module = module(e);
+			exhibit_display(main.Imree.current_page).draw(exhibit_display(main.Imree.current_page).modules.indexOf(mod));
+		}
+		
 		private function edit_current_mod_clicked(e:MouseEvent):void {
 			if (main.Imree.current_page is exhibit_display) {
 				var current_top_module:module = exhibit_display(main.Imree.current_page).current_module();
@@ -241,7 +271,9 @@ package imree
 				main.Imree.show_exhibit_admin(int(target.id));
 			}
 		}
-		
+		private function super_admin_clicked(e:MouseEvent):void {
+			main.Imree.show_super_admin();
+		}
 	}
 
 }

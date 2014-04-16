@@ -15,6 +15,7 @@ package imree.display_helpers
 	{
 		public var button:DisplayObject;
 		public var onInteract:Function;
+		public var data:*;
 		public function smart_button(_button:DisplayObject, _onInteract:Function) 
 		{
 			button = _button;
@@ -33,7 +34,12 @@ package imree.display_helpers
 			}
 		}
 		private function clicked(e:MouseEvent):void {
-			onInteract();
+			if (data !== null) {
+				onInteract(data);
+			} else {
+				onInteract();
+			}
+			
 		}
 		public function dump():void {
 			if (button !== null) {

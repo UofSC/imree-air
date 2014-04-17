@@ -89,7 +89,7 @@ package imree.forms
 			
 			if (edit_siblings_allowed && conn !== null) {
 				edit_siblings_select = new f_element_select('Change', 'exhibit_name', null, 'Select');
-				edit_siblings_select.dynamic_options = new f_element_DynamicOptions(conn, 'exhibits', 'exhibit_id', 'exhibit_name',null, edit_siblings_select);
+				edit_siblings_select.dynamic_options = new f_element_DynamicOptions(conn, f_table, f_table_key_column_name, f_table_label_column_name, null, edit_siblings_select);
 				edit_siblings_select.onChange = edit_siblings_changed;
 				edit_siblings_select.draw();
 				t.addChild(edit_siblings_select);

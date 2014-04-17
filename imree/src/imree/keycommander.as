@@ -28,14 +28,7 @@ package imree
 			t.stage.addEventListener(KeyboardEvent.KEY_DOWN, testkey);
 		}
 		private function testkey(e:KeyboardEvent):void {
-			if (e.keyCode === KeyCode.T) {
-				trace("T");
-				stage.scaleMode = StageScaleMode.SHOW_ALL;
-				stage.displayState =  StageDisplayState.FULL_SCREEN;
-			}
-			if (e.keyCode === KeyCode.TAB) {
-				main.Imree.Menu.toggle();
-			}
+			
 			if (e.keyCode === KeyCode.I) {
 				main.removeChild(main.Logger);
 				main.addChild(main.Logger);

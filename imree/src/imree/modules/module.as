@@ -150,6 +150,12 @@ package imree.modules
 				obj.removeChildAt(0);
 			}
 		}
+		public function hide(e:*= null):void {
+			this.visible = false;
+		}
+		public function show(e:*= null):void {
+			this.visible = true;
+		}
 		
 		public function draw_edit_button():void {
 			if (phase_feature) {
@@ -192,7 +198,7 @@ package imree.modules
 				}
 				if (user_can_edit) {
 					draw_edit_button();
-					if (t === exhibit_display(main.Imree.current_page).current_module()) {
+					if (main.Imree.current_page is exhibit_display && t === exhibit_display(main.Imree.current_page).current_module()) {
 						main.Imree.Menu.update();
 					}
 				}

@@ -73,7 +73,9 @@ package imree
 			
 			
 			function getxmldata(e:LoaderEvent):void {
-				onCompleteFunction(e);
+				if (onCompleteFunction !== null) {
+					onCompleteFunction(e);
+				}
 			}
 			function failed(e:LoaderEvent):void {
 				main.log(say_loader_event(e) + " FAAILED", e.target.content);

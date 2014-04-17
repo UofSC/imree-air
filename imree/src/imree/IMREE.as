@@ -1,9 +1,14 @@
 package imree 
 {
+	import com.greensock.data.TweenLiteVars;
 	import com.greensock.loading.LoaderMax;
+	import com.greensock.TweenLite;
 	import com.sbhave.nativeExtensions.zbar.Scanner;
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import imree.display_helpers.modal;
 	import imree.forms.super_admin;
+	import imree.modules.module;
 	//import net.steelman.WifiInfoLibrary;
 	import fl.controls.NumericStepper;
 	import flash.display.DisplayObject;
@@ -217,7 +222,7 @@ package imree
 		}
 		
 		public function show_super_admin():void {
-			var mod:modal = new modal(main.stage.stageWidth, main.stage.stageHeight, null, new super_admin(main.stage.stageWidth, main.stage.stageHeight,main));
+			var mod:modal = new modal(main.stage.stageWidth, main.stage.stageHeight, null, new super_admin(main.stage.stageWidth, main.stage.stageHeight,main),null,0xFFFFFF);
 			addChild(mod);
 			main.animator.on_stage(mod);
 		}
@@ -245,19 +250,34 @@ package imree
 				}
 			}
 		}
-		public function load_exhibit(exhibit_id:*= null):void {
+		public function load_exhibit(exhibit_id:*= null, start_at:int = 0, focus_on_sub_module:int = 0):void {
+			var freeze_obj:Bitmap;
 			if (Exhibit !== null) {
+				if (Exhibit.parent !== null) {
+					var freeze:BitmapData = new BitmapData(main.stage.stageWidth, main.stage.stageHeight,true, 0);
+					freeze.draw(Exhibit);
+					freeze_obj = new Bitmap(freeze, 'auto', true);
+				}
+				for each(var mod:module in Exhibit.modules) {
+					mod.dump();
+				}
 				if (Exhibit.parent !== null) {
 					Exhibit.parent.removeChild(Exhibit);
 				}
 				Exhibit = null;
 			}
 			Exhibit = new exhibit_display(int(exhibit_id), main.stage.stageWidth, main.stage.stageHeight, main);
-			Exhibit.load();
+			Exhibit.load(start_at, focus_on_sub_module);
 			pages.push(Exhibit);
+			
+			if (freeze_obj !== null) {
+				addChild(freeze_obj);
+				TweenLite.to(freeze_obj, 1, { alpha:0, delay:1 } );
+			}
 			addChild(Exhibit);
 			addChildAt(Menu, numChildren);
 			current_page = Exhibit;
+			
 		}
 		
 		

@@ -92,6 +92,10 @@ package imree
 			body = new Sprite();
 			this.addChild(body);
 			
+			
+			/**
+			 * Setup edit buttons for the current "page" and the current exhibit
+			 */
 			if (edit_current_mod !== null) {
 				edit_current_mod.removeEventListener(MouseEvent.CLICK, hide);
 				edit_current_mod.removeEventListener(MouseEvent.CLICK, edit_current_mod_clicked);
@@ -114,7 +118,6 @@ package imree
 				}
 				edit_current_exhibit = null;
 			}
-			
 			if (main.Imree !== null && main.Imree.current_page is exhibit_display) {
 				var current_top_module:module = exhibit_display(main.Imree.current_page).current_module();
 				if (current_top_module.user_can_edit) {
@@ -133,17 +136,9 @@ package imree
 				}
 			}
 			
-			if (main.Imree !== null && main.Imree.current_page is exhibit_display) {
-				for each(var mod:module in exhibit_display(main.Imree.current_page).modules) {
-					var link_butt_ui:Button = new Button();
-					link_butt_ui.setSize(128, 128);
-					link_butt_ui.label = mod.module_name;
-					var link_butt:smart_button = new smart_button(link_butt_ui, link_button_clicked);
-					link_butt.data = mod;
-					contents.push(link_butt);
-				}
-			}
-			
+			/**
+			 * Setup super admin link
+			 */
 			if (super_admin !== null) {
 				if (body.contains(super_admin)) {
 					body.removeChild(super_admin);
@@ -158,10 +153,12 @@ package imree
 				contents.push(super_admin);
 			}
 			
+			/**
+			 * Process all the things
+			 */
 			for each(var Obj:DisplayObject in contents) {
 				Obj.addEventListener(MouseEvent.CLICK, hide);
 			}
-			
 			main.empty_display_object_container(body);
 			Imree.UI_size(menu_toggle_button);
 			Imree.UI_size(back_btn);
@@ -170,7 +167,6 @@ package imree
 				P.scaleY = 1;
 				Imree.UI_size(P);
 			}
-			
 			var placeKeeper:Number = 0;
 			if (main.stage.stageWidth > main.stage.stageHeight) {
 				size_percentage = (menu_toggle_button.width + 10) / main.stage.stageWidth;
@@ -205,6 +201,7 @@ package imree
 					placeKeeper += i.width +5;
 				}
 			}
+			
 			hide();
 		}
 		
@@ -254,10 +251,6 @@ package imree
 			}
 		}
 		
-		private function link_button_clicked(e:*=null):void {
-			var mod:module = module(e);
-			exhibit_display(main.Imree.current_page).draw(exhibit_display(main.Imree.current_page).modules.indexOf(mod));
-		}
 		
 		private function edit_current_mod_clicked(e:MouseEvent):void {
 			if (main.Imree.current_page is exhibit_display) {

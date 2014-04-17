@@ -16,6 +16,7 @@ package imree.pages
 	import flash.utils.Timer;
 	import imree.data_helpers.permission;
 	import imree.data_helpers.position_data;
+	import imree.display_helpers.exhibit_navigator;
 	import imree.images.loading_spinner_sprite;
 	import imree.layout;
 	import imree.Main;
@@ -58,6 +59,7 @@ package imree.pages
 		private var spinner:loading_spinner_sprite;
 		public var t:exhibit_display;
 		public var overlay:Sprite;
+		public var navigator:exhibit_navigator;
 		public var user_can_edit:Boolean = false;
 		
 		public function exhibit_display(_id:int, _w:int, _h:int, _main:Main)
@@ -80,7 +82,7 @@ package imree.pages
 			spinner.y = h / 2 - spinner.height / 2;
 		}
 		
-		public function load():void
+		public function load(start_at:int = 0, focus_on_sub_module:int =0):void
 		{
 			main.connection.server_command("exhibit_data", id, data_loaded);
 			function data_loaded(e:LoaderEvent):void
@@ -118,9 +120,11 @@ package imree.pages
 				if (modules.length === 0) {
 					addChild(new text("An Empty Exhibit!? Oh, the possibilities. If you're a curator, hit the menu button and choose to edit the current exhibit.", 300, new textFont("_sans", 24)));
 				} else {
-					draw(0);
+					current_module_i = start_at;
+					draw(start_at);
 				}
 				update_user_privileges();
+				update_navigator();
 			}
 		}
 		private function build_module(xml:XML, has_next:Boolean):module 
@@ -172,6 +176,9 @@ package imree.pages
 				asset.module_id = null; //redundant, but a reminder
 				asset.asset_url = xml.asset_url;
 				asset.asset_specific_thumb_url = xml.asset_specific_thumbnail_url;
+				asset.source_credit = xml.source_credit_statement;
+				asset.source_url = xml.source_url;
+				asset.source_common_name = xml.source_common_name;
 				if (xml.asset_resizeable == '1')
 				{
 					asset.can_resize = true;
@@ -230,47 +237,61 @@ package imree.pages
 			var asset_background:box;
 			var asset_description:text;
 			var asset_feature_wrapper:box;
-			if (main.Imree.Device.orientation == 'portrait')
-			{
+			var string:String = "";
+			
+			if (main.Imree.Device.orientation == 'portrait')	{
 				asset_background = new box(w, h * .9, 0x959595, 1);
 				asset_wrapper.addChild(asset_background);
 				asset_background.y = h * .1;
-				if (e.description !== null && e.description.length > 0)
-				{
-					asset_description = new text(e.description, asset_background.width - 20, new textFont(), asset_background.height * .3);
+				if (e.description !== null && e.description.length > 0)	{
+					string = e.description;
+					if (e.source_credit !== null && e.source_credit.length > 0) {
+						string += " source: " + e.source_credit;
+					}
+					asset_description = new text(string, asset_background.width - 20, new textFont(), asset_background.height * .3);
 					asset_feature_wrapper = new box(asset_background.width, asset_background.height * .65);
 					asset_description.x = 10;
 					asset_description.y = asset_background.height * .68;
-				}
-				else
-				{
+				} else	{
 					asset_feature_wrapper = new box(asset_background.width, asset_background.height);
+					if (e.source_credit !== null && e.source_credit.length > 0) {
+						string = " source: " + e.source_credit;
+					}
+					asset_description = new text(string);
+					asset_description.x = 30;
+					asset_description.y = asset_wrapper.height - asset_description.height - 30;
+					
 				}
-			}
-			else
-			{
+			} else	{
 				asset_background = new box(w * .9, h, 0x959595, 1);
 				asset_wrapper.addChild(asset_background);
 				asset_background.x = w * .1;
-				if (e.description !== null && e.description.length > 0)
-				{
-					asset_description = new text(e.description, asset_background.width * .3, new textFont(), asset_background.height - 20);
+				if (e.description !== null && e.description.length > 0)	{
+					string = e.description;
+					if (e.source_credit !== null && e.source_credit.length > 0) {
+						string += " source: " + e.source_credit;
+					}
+					asset_description = new text(string, asset_background.width * .3, new textFont(), asset_background.height - 20);
 					asset_feature_wrapper = new box(asset_background.width * .65, asset_background.height, 0x00FF00, .5);
 					asset_description.x = asset_background.width * .68;
 					asset_description.y = 10;
-				}
-				else
-				{
+				} else {
 					asset_feature_wrapper = new box(asset_background.width, asset_background.height);
+					if (e.source_credit !== null && e.source_credit.length > 0) {
+						string = " source: " + e.source_credit;
+					}
+					asset_description = new text(string, 500);
+					asset_description.x = 30;
+					asset_description.y = asset_wrapper.height - asset_description.height - 30;
 				}
 			}
-			if (asset_description !== null)
-			{
-				asset_background.addChild(asset_description);
-			}
+			
 			main.animator.on_stage(asset_background);
 			
 			asset_background.addChild(asset_feature_wrapper);
+			if (asset_description !== null)	{
+				asset_background.addChild(asset_description);
+			}
 			e.draw_feature_on_object = asset_feature_wrapper;
 			e.draw_feature(asset_feature_wrapper.width, asset_feature_wrapper.height);
 		}
@@ -337,12 +358,20 @@ package imree.pages
 			main.Imree.Menu.update();
 		}
 		
-		public function draw(id:int):void
+		public function draw(id:int, focus_on_sub_module:int =0):void
 		{
-			trace("drawwing " + id + " of " + modules.length);
+			modules[id].show();
 			modules[id].draw_feature(w, h);
+			if (focus_on_sub_module) {
+				modules[id].focus_on_sub_module(modules[id].items[focus_on_sub_module]);
+			}
 			addChild(modules[int(id)]);
 			current_module_i = id;
+			update_navigator();
+		}
+		public function dump_and_draw(page_id:int = 0):void  {
+			dump_module(current_module_i);
+			main.Imree.load_exhibit(id, page_id);
 		}
 		
 		public function reorder_items_in_module(mod:module, saveFunction:Function):void
@@ -441,7 +470,7 @@ package imree.pages
 		
 		public function dump_module(i:int):void {
 			if(modules[i] !== null && modules[i].parent !== null) {
-				var freeze:BitmapData = new BitmapData(modules[i].width, modules[i].height);
+				var freeze:BitmapData = new BitmapData(modules[i].width, modules[i].height,true, 0);
 				freeze.draw(modules[i]);
 				var freeze_obj:Bitmap = new Bitmap(freeze, 'auto', true);
 				freeze_obj.x = modules[i].x;
@@ -483,6 +512,16 @@ package imree.pages
 		}
 		public function current_module():module {
 			return modules[current_module_i];
+		}
+		public function update_navigator(e:*= null):void {
+			if (navigator !== null) {
+				if (contains(navigator)) {
+					removeChild(navigator);
+				}
+				navigator = null;
+			}
+			navigator = new exhibit_navigator(t, main);
+			addChild(navigator);
 		}
 	}
 

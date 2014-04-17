@@ -44,10 +44,10 @@ package imree.forms
 				t.addChild(auth_wrapper);
 				auth_wrapper.center();
 				
-				var labelfont:textFont = new textFont('_sans', 22);
+				var labelfont:textFont = new textFont( '_sans', 22);
 				var inputFormat:TextFormat = new TextFormat("_sans", 20);
 				
-				var title:text = new text("Please log in", 300, new textFont('_sans', 32));
+				var title:text = new text("Please log in", 300, new textFont( '_sans', 32));
 				auth_wrapper.addChild(title);
 				title.y = 10;
 				title.center_x(auth_wrapper);
@@ -62,7 +62,7 @@ package imree.forms
 					form.y = 50;
 				auth_wrapper.addChild(form);
 				
-				status = new text("Supports QR = " + main.Imree.Device.supports_qr, auth_wrapper.width, new textFont('_sans', 18));
+				status = new text("Supports QR = " + main.Imree.Device.supports_qr, auth_wrapper.width, new textFont( '_sans', 18));
 				status.y = form.height + 50 + 10;
 				status.center_x(auth_wrapper);
 				auth_wrapper.addChild(status);

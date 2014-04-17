@@ -137,7 +137,7 @@ package imree.signage
 			alerts_wrapper.x = 0;
 			alerts_wrapper.y = 0;
 			
-			var alerts_format:textFont = new textFont('AbrahamLincoln', 25);
+			var alerts_format:textFont = new textFont( 'AbrahamLincoln', 25);
 				alerts_format.color = 0x000000;
 				alerts_format.padding = 15;
 				alerts_wrapper.addChild(new text ("Stop, Drop and Roll! DUH!", alerts_wrapper.width, alerts_format));
@@ -146,7 +146,7 @@ package imree.signage
 			timeDate.x = stage.stageWidth * .8;
 			alerts_wrapper.addChild(timeDate);
 			
-			var timeDate_format:textFont = new textFont('AbrahamLincoln', 20);
+			var timeDate_format:textFont = new textFont( 'AbrahamLincoln', 20);
 				timeDate_format.color = 0xFFFFFF;
 				timeDate_format.padding = 15;
 				timeDate.addChild(new text ("Time/Date/Logo", timeDate.width, timeDate_format));
@@ -173,7 +173,7 @@ package imree.signage
 			
 			eventsList_wrapper.addChild(evt_title);
 			
-			var evt_title_format:textFont = new textFont('AbrahamLincoln', 25);
+			var evt_title_format:textFont = new textFont( 'AbrahamLincoln', 25);
 				evt_title_format.color = 0xFFFFFF;
 				evt_title_format.padding = 15;
 				evt_title.addChild(new text ("Events", evt_title.width, evt_title_format));
@@ -191,7 +191,7 @@ package imree.signage
 			
 			var openSession_title: box = new box (openSession_wrapper.width, .6 * tonyasUnit, 0x800000, 1, 1,0x000000);
 			openSession_wrapper.addChild(openSession_title);
-			var openSessions_title_format:textFont = new textFont('AbrahamLincoln', 25);
+			var openSessions_title_format:textFont = new textFont( 'AbrahamLincoln', 25);
 				openSessions_title_format.color = 0xFFFFFF;
 				openSessions_title_format.padding = 15;
 			openSession_title.addChild(new text ("Open Study Sessions", openSession_title.width, openSessions_title_format));
@@ -205,7 +205,7 @@ package imree.signage
 			var classWrap_title:box = new box (class_wrapper.width, .5 * tonyasUnit, 0x800000, 1, 1,0x000000);
 			class_wrapper.addChild(classWrap_title);
 			
-			var classWrap_title_format:textFont = new textFont('AbrahamLincoln', 25);
+			var classWrap_title_format:textFont = new textFont( 'AbrahamLincoln', 25);
 				classWrap_title_format.color = 0xFFFFFF;
 				classWrap_title_format.padding = 15;
 				classWrap_title.addChild(new text ("Classes and Workshops", classWrap_title.width, classWrap_title_format));

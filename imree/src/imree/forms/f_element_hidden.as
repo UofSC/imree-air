@@ -12,8 +12,6 @@ package imree.forms
 	import flash.text.TextFieldAutoSize;
 	import imree.forms.f_element;
 	import imree.shortcuts.box;
-	import imree.text;
-	import imree.textFont;
 	
 	public class f_element_hidden extends f_element
 	{

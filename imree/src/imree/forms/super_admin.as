@@ -23,7 +23,7 @@ package imree.forms
 			w = _w;
 			h = _h;
 			main = _main;
-			var textf:textFont = new textFont('_sans', 24);
+			var textf:textFont = new textFont( '_sans', 24);
 			
 			options = new f_element_DynamicOptions(main.connection, 'exhibits', 'exhibit_id', 'exhibit_name');
 			

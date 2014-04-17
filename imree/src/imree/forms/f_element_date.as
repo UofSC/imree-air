@@ -42,7 +42,7 @@ package imree.forms
 			ui = new Sprite();
 			addChild(ui);
 					
-			var special_font:textFont = new textFont('_sans', 12);
+			var special_font:textFont = new textFont( '_sans', 12);
 			var label_display:text = new text(this.label, label_width, this.special_font);
 			
 			label_display.y += 5;

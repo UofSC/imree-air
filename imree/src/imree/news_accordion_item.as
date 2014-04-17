@@ -36,13 +36,13 @@ package imree
 			img_wrapper.x = 1;
 			img_wrapper.y = 1;
 			
-			var headline_format:textFont = new textFont("_sans", 26);
+			var headline_format:textFont = new textFont( "_sans", 26);
 			var headline_text:text = new text(headline, w - img_wrapper.width - 20, headline_format);
 			wrapper.addChild(headline_text);
 			headline_text.x = .5 * w + 10;
 			headline_text.y = 10;
 			
-			var desc_format:textFont = new textFont("_sans", 16);
+			var desc_format:textFont = new textFont( "_sans", 16);
 			var desc_text:text = new text(description, w - img_wrapper.width - 20, desc_format);
 			desc_text.x = headline_text.x;
 			desc_text.y = headline_text.height + 20;

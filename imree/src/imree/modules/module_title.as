@@ -29,7 +29,7 @@ package imree.modules
 			super(_main, _Exhibit, _items);
 		}
 		override public function draw_thumb(_w:int = 200, _h:int = 200, Return:Boolean = false):* {
-			var coverfont:textFont = new textFont('_sans', 28);
+			var coverfont:textFont = new textFont( '_sans', 28);
 			coverfont.align = TextAlign.CENTER;
 			var covertext:text = new text(module_name, _w * .5, coverfont, _h * .5);
 			covertext.x = (_w * .5) / 2 - covertext.width / 2;
@@ -49,7 +49,7 @@ package imree.modules
 			phase_feature = true;
 		}
 		override public function draw_feature(_w:int, _h:int):void {
-			var coverfont:textFont = new textFont('_sans', 28);
+			var coverfont:textFont = new textFont( '_sans', 28);
 			coverfont.align = TextAlign.CENTER;
 			var covertext:text = new text(module_name, _w * .5, coverfont, _h * .5);
 			covertext.x = (_w * .5) / 2 - covertext.width / 2;

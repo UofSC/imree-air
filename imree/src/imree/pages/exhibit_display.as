@@ -118,7 +118,7 @@ package imree.pages
 				exhibit_sub_name = xml.result.exhibit_properties.exhibit_sub_name;
 				draw_background(exhibit_cover_image_url);
 				if (modules.length === 0) {
-					addChild(new text("An Empty Exhibit!? Oh, the possibilities. If you're a curator, hit the menu button and choose to edit the current exhibit.", 300, new textFont("_sans", 24)));
+					addChild(new text("An Empty Exhibit!? Oh, the possibilities. If you're a curator, hit the menu button and choose to edit the current exhibit.", 300, new textFont( "_sans", 24)));
 				} else {
 					current_module_i = start_at;
 					draw(start_at);
@@ -257,7 +257,7 @@ package imree.pages
 					if (e.source_credit !== null && e.source_credit.length > 0) {
 						string = " source: " + e.source_credit;
 					}
-					asset_description = new text(string);
+					asset_description = new text(string, 300, new textFont());
 					asset_description.x = 30;
 					asset_description.y = asset_wrapper.height - asset_description.height - 30;
 					

@@ -34,8 +34,8 @@ package imree.signage
 			this.background_color = 0xFFFFFF;
 			this.border_width = 2;
 			this.border_color = 0x999999;
-			this.textFont_headline = new textFont('_sans',18);
-			this.textFont_body = new textFont('_sans', 12);
+			this.textFont_headline = new textFont( '_sans',18);
+			this.textFont_body = new textFont( '_sans', 12);
 			this.padding = 10;
 			this.use_image = true;
 			t = this;

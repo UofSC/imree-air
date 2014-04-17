@@ -118,7 +118,7 @@ package imree.modules
 				}
 			}
 			if (items.length === 0) {
-				wrapper.addChild(new text("Empty Block", 150, new textFont('_sans', 24)));
+				wrapper.addChild(new text("Empty Block", 150, new textFont( '_sans', 24)));
 			}
 			
 		}

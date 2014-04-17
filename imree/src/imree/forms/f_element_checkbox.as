@@ -14,7 +14,7 @@ package imree.forms
 	import imree.forms.f_element;
 	import imree.shortcuts.box;
 	import imree.text;
-	import imree.textFont;
+
 	
 	public class f_element_checkbox extends f_element
 	{

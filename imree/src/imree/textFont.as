@@ -1,5 +1,6 @@
 package imree 
 {
+	import flash.system.Capabilities;
 	import flash.text.engine.FontDescription;
 	import flash.text.engine.FontLookup;
 	import flash.text.engine.FontPosture;
@@ -26,7 +27,7 @@ package imree
 		public var leading:Number;
 		public var align:String;
 		public var padding:Number;
-				
+		public static var main:Main;
 		
 		public function textFont(name:String = '_sans', size:int=12) {
 			if (name.substr(0, 1) === '_') {
@@ -46,6 +47,8 @@ package imree
 			
 		}
 		public function describe():TextLayoutFormat {
+			
+			
 			var weight:String;
 			if (this.bold) {
 				weight = FontWeight.BOLD;
@@ -59,16 +62,20 @@ package imree
 				posture = FontPosture.NORMAL;
 			}
 			var f:TextLayoutFormat = new TextLayoutFormat();
-				f.kerning = Kerning.ON;
-				f.fontLookup = FontLookup.EMBEDDED_CFF;
-				f.fontFamily = this.name;
-				f.color = this.color;
-				f.lineHeight = this.size + leading;
-				
-				f.fontSize = this.size;
-				//f.fontWeight = weight;
-				f.fontStyle = posture;
-				f.textAlign = this.align;
+			f.kerning = Kerning.ON;
+			f.fontLookup = FontLookup.EMBEDDED_CFF;
+			f.fontFamily = this.name;
+			f.color = this.color;
+			f.lineHeight = this.size + leading;
+			f.fontSize = this.size;
+			f.fontStyle = posture;
+			f.textAlign = this.align;
+			
+			if (main !== null && main.Imree !== null && main.Imree.Device !== null) {
+				var DPI:Number = Capabilities.screenDPI;
+				f.fontSize = ((2 / 9) *  DPI) * (f.fontSize / 12);
+			}
+			
 			return f;
 		}
 		

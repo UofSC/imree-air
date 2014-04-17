@@ -75,6 +75,7 @@ package imree
 			stage.addEventListener(Event.DEACTIVATE, deactivate);
 			//Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
 			Multitouch.inputMode = MultitouchInputMode.GESTURE;
+			textFont.main = this;
 			stage.addChild(this);
 			
 			function resizedstage(e:*= null):void {

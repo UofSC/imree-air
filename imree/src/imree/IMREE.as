@@ -53,14 +53,11 @@ package imree
 		public var staging_area:box;
 		public var padding:int;
 		public var sample_button:button_home;
-		public function IMREE(_main:Main) 
+		public function IMREE(_main:Main, start_at_exhibit:int = -1, start_at_module:int = 0, start_at_sub_module:int = 0) 
 		{
 			main = _main;
 			Device = new device(main);
 			padding = 10;
-			
-			
-			
 			
 			sample_button = new button_home();
 			UI_size(sample_button);
@@ -72,45 +69,17 @@ package imree
 				staging_area.y = sample_button.height + padding;
 			}
 			
-			Home = new home(main.stage.stageWidth, main.stage.stageHeight, main.connection, main);
-			Home.onSelect = load_exhibit;
-			addChild(Home);
-			
 			/**
-			var datepicker:f_element_date = new f_element_date("New Date", "New Date", "Set Date");
-			datepicker.draw(100, 500);
-			addChild(datepicker);
-			datepicker.x = 200;
-			datepicker.y = 200;
-			datepicker.set_value("1981-03-01 18:20:00");
-			
-			
-			
 			//Turn off main IMREE display
-			
 			Home.visible = false;
 			main.preloader.hide();
+			*/
 			
 			
-			/**
-			//Turn on Datepicker Tester (Tabitha);
-			
-						
-			//Turn on wysiwg tester (Tonya)
-			var test_wysiwg:f_element_WYSIWYG = new f_element_WYSIWYG("", "nothing", "Hello my name is <b>Tonya</b>");
-			addChild(test_wysiwg);
-			test_wysiwg.draw(500, 500);
-			test_wysiwg.x = 150;
-			test_wysiwg.y = 50;*/
-			
-			//Turn on Video tester (Tonya) 
-			
-			
-			//*/
-			
-			
-			
-			
+			Home = new home(main.stage.stageWidth, main.stage.stageHeight, main.connection, main);
+			Home.onSelect = load_exhibit;
+			pages = new Vector.<DisplayObject>();
+			addChild(Home);
 			current_page = Home;
 			
 			//menu is added last so it is on top of display list
@@ -122,7 +91,6 @@ package imree
 			Menu = new menu(menu_items,main,this);
 			addChild(Menu);
 			
-			pages = new Vector.<DisplayObject>();
 			pages.push(Home);
 			
 			/**
@@ -147,7 +115,9 @@ package imree
 				Device.supports_qr = false;
 			}
 			
-		
+			if (start_at_exhibit > -1) {
+				load_exhibit(start_at_exhibit, start_at_module, start_at_sub_module);
+			}
 		}
 		
 		public var UI_min_size:Number = 32;

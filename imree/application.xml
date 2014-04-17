@@ -14,7 +14,6 @@
 	<uses-feature android:name="android.hardware.camera" android:required="true" />
 	<uses-feature android:name="android.hardware.camera.front" android:required="false" />
 	<uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
-	<uses-permission android:name="android.permission.RECORD_AUDIO" />
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 </manifest>]]></manifestAdditions>
@@ -23,7 +22,7 @@
     <InfoAdditions><![CDATA[<key>UIStatusBarStyle</key>
 <string>UIStatusBarStyleBlackOpaque</string>
 <key>UIRequiresPersistentWiFi</key>
-<string>NO</string>
+<string>YES</string>
 <key>UIPrerenderedIcon</key>
 <true />
 <key>UIApplicationExitsOnSuspend</key>
@@ -44,10 +43,11 @@
     <fullScreen>true</fullScreen>
     <!--<autoOrients>false</autoOrients>-->
     <!--<aspectRatio>landscape</aspectRatio>-->
-    <renderMode>direct</renderMode>
+    <renderMode>gpu</renderMode>
     <!--<depthAndStencil>true</depthAndStencil>-->
     <!-- required for 3D -->
     <systemChrome>standard</systemChrome>
+    <autoOrients>true</autoOrients>
   </initialWindow>
   <icon>
     <image48x48>icons/icon_48.png</image48x48>
@@ -74,5 +74,5 @@
 	Android manifest documentation:
 	http://developer.android.com/guide/topics/manifest/manifest-intro.html
 	-->
-	
+  <supportedLanguages>en</supportedLanguages>
 </application>

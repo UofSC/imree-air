@@ -28,7 +28,9 @@ package imree
 			t.stage.addEventListener(KeyboardEvent.KEY_DOWN, testkey);
 		}
 		private function testkey(e:KeyboardEvent):void {
-			
+			if (e.keyCode === KeyCode.SPACEBAR) {
+				main.orientation_update(null);
+			}
 			if (e.keyCode === KeyCode.I) {
 				main.removeChild(main.Logger);
 				main.addChild(main.Logger);

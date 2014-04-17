@@ -79,11 +79,13 @@ package imree.pages
 				tim.stop();
 				tim.removeEventListener(TimerEvent.TIMER, tick);
 				tim = null;
-				TweenLite.to(wrapper, 2.5, { alpha:0, onComplete:removefromstage} );
+				if (wrapper !== null) {
+					TweenLite.to(wrapper, 2.5, { alpha:0, onComplete:removefromstage} );
+				}
 				function removefromstage(e:*= null):void {
-				removeChild(wrapper);
-				wrapper = null;
-			}
+					removeChild(wrapper);
+					wrapper = null;
+				}
 			}
 			
 		}

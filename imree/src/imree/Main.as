@@ -18,6 +18,8 @@ package imree
 	import com.greensock.TimelineLite;
 	import com.greensock.TweenLite;
 	import flash.desktop.NativeApplication;
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
 	import flash.events.Event;
@@ -26,6 +28,7 @@ package imree
 	import flash.display.StageScaleMode;
 	import flash.display.Stage;
 	import flash.events.MouseEvent;
+	import flash.events.StageOrientationEvent;
 	import flash.geom.Rectangle;
 	import flash.text.TextFormat;
 	import flash.ui.Multitouch;
@@ -36,6 +39,7 @@ package imree
 	import imree.display_helpers.*;
 	import imree.forms.*;
 	import imree.images.loading_flower_sprite;
+	import imree.pages.exhibit_display;
 	import imree.pages.Preloader;
 	import imree.shortcuts.box;
 	import imree.keycommander;
@@ -64,11 +68,13 @@ package imree
 		public function Main():void 
 		{
 			t = this;
-			stage.addEventListener(Event.RESIZE, resizedstage);
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
+			stage.autoOrients = true;
+			stage.addEventListener(Event.RESIZE, resizedstage);
 			stage.addEventListener(Event.DEACTIVATE, deactivate);
-			Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
+			//Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
+			Multitouch.inputMode = MultitouchInputMode.GESTURE;
 			stage.addChild(this);
 			
 			function resizedstage(e:*= null):void {
@@ -105,13 +111,14 @@ package imree
 					var xml:XML = XML(evt.currentTarget.content);
 					if (xml.result.signage_mode == 'signage') {
 						connection.session_key = xml.result.key;
-						trace("Based on our IP, this device has been instructed to be digital signage");
+						trace("Based on our IP, this device has been instructed to be digital signage, but I'm overriding that");
 						load_imree();
 						t.preloader.hide();
 					} else {
 						connection.session_key = xml.result.key;
 						trace("Based on our IP, this device has been instructed to be IMREE");
 						t.load_imree();
+						stage.addEventListener(StageOrientationEvent.ORIENTATION_CHANGE, orientation_update);
 					}
 				}
 				
@@ -120,6 +127,26 @@ package imree
 				t.preloader = new Preloader(t);
 				t.addChild(preloader);
 			}				
+		}
+		
+		public  function orientation_update(e:StageOrientationEvent=null):void {
+			var cache_data:BitmapData = new BitmapData(stage.stageWidth, stage.stageHeight, false);
+			cache_data.draw(stage);
+			var start_at_exhibit:int = -1;
+			var start_at_module:int = 0;
+			var start_at_sub_module:int = 0;
+			if (Imree !== null) {
+				if (Imree.current_page !== null && Imree.current_page is exhibit_display) {
+					start_at_exhibit = exhibit_display(Imree.current_page).id;
+					start_at_module = exhibit_display(Imree.current_page).current_module_i;
+				}
+				empty_display_object_container(Imree);
+				if (contains(Imree) ) {
+					removeChild(Imree);
+				}
+				Imree = null;
+			}
+			load_imree(start_at_exhibit, start_at_module, start_at_sub_module);
 		}
 		
 		private function load_signage():void {
@@ -154,9 +181,8 @@ package imree
 
 		}
 		
-		private function load_imree():void {
-			Imree = new IMREE(this);
-			trace("The size is really really: " + stage.stageWidth);
+		private function load_imree(start_at_exhibit:int = -1, start_at_module:int = 0, start_at_sub_module:int = 0):void {
+			Imree = new IMREE(this, start_at_exhibit, start_at_module, start_at_sub_module);
 			addChild(Imree);
 		}
 		
@@ -177,7 +203,7 @@ package imree
 		private function deactivate(e:Event):void 
 		{
 			// make sure the app behaves well (or exits) when in background
-			//NativeApplication.nativeApplication.exit();
+			NativeApplication.nativeApplication.exit();
 		}
 		public function randomize ( a : *, b : * ) : int {
 			return ( Math.random() > .5 ) ? 1 : -1;

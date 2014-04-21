@@ -327,13 +327,17 @@ package imree.pages
 		
 		public function draw_background(url:String):void
 		{
+			var image_wrapper:box = new box(wrapper.width, wrapper.height);
+			wrapper.addChild(image_wrapper);
 			var imageloadervars:ImageLoaderVars = new ImageLoaderVars();
-				imageloadervars.container(wrapper);
+				imageloadervars.container(image_wrapper);
 				imageloadervars.crop(true);
-				imageloadervars.width(wrapper.width);
-				imageloadervars.height(wrapper.height);
+				imageloadervars.width(image_wrapper.width);
+				imageloadervars.height(image_wrapper.height);
 				imageloadervars.scaleMode(ScaleMode.PROPORTIONAL_OUTSIDE);
-			new ImageLoader(url+"?size="+String(wrapper.height), imageloadervars).load();
+			new ImageLoader(url + "?size=" + String(image_wrapper.height), imageloadervars).load();
+			image_wrapper.transform.colorTransform = Theme.image_color_transform;
+			
 		}
 		
 		private var background_infocus:Boolean = true;
@@ -512,7 +516,11 @@ package imree.pages
 			
 		}
 		public function current_module():module {
-			return modules[current_module_i];
+			if(modules.length > 0) {
+				return modules[current_module_i];
+			} else {
+				return null;
+			}
 		}
 		public function update_navigator(e:*= null):void {
 			if (navigator !== null) {

@@ -5,7 +5,7 @@
 	
 	public class fonts_import_wrapper extends MovieClip {
 		
-		[Embed(source = "../fonts/AbrahamLincoln.ttf", fontName = 'AbrahamLincoln')] static public var AbrahamLincolnFont:Class;
+		[Embed(source = "../fonts/AbrahamLincoln.ttf", fontName = 'AbrahamLincoln', embedAsCFF = "true")] static public var AbrahamLincolnFont:Class;
 		[Embed(source = "../fonts/Lobster.ttf", fontName = 'Lobster')] static public var LobsterFont:Class;
 		[Embed(source = "../fonts/Lora-Bold.ttf", fontName = 'LoraBold')] static public var LoraBoldFont:Class;
 		[Embed(source = "../fonts/Lora-BoldItalic.ttf", fontName = 'LoraBoldItalic')] static public var LoraBoldItalicFont:Class;

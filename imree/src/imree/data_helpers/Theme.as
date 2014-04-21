@@ -1,6 +1,7 @@
 package imree.data_helpers {
 	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
+	import flash.geom.ColorTransform;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
 	import flash.utils.getDefinitionByName;
@@ -25,9 +26,27 @@ package imree.data_helpers {
 		static public var background_color_primary:uint;
 		static public var background_color_secondary:uint;
 		
+		static public var image_color_transform:ColorTransform;
 		
 		public var styles:Vector.<textFont>;
 		
+		
+		[Embed(source = "../../../fonts/AbrahamLincoln.ttf", fontName = 'AbrahamLincoln', embedAsCFF = "true")] static public var AbrahamLincolnFont:Class;
+		[Embed(source = "../../../fonts/Lobster.ttf", fontName = 'Lobster', embedAsCFF = "true")] static public var LobsterFont:Class;
+		[Embed(source = "../../../fonts/Lora-Bold.ttf", fontName = 'LoraBold', embedAsCFF = "true")] static public var LoraBoldFont:Class;
+		[Embed(source = "../../../fonts/Lora-BoldItalic.ttf", fontName = 'LoraBoldItalic', embedAsCFF = "true")] static public var LoraBoldItalicFont:Class;
+		[Embed(source = "../../../fonts/Lora-Italic.ttf", fontName = 'LoraItalic', embedAsCFF = "true")] static public var LoraItalicFont:Class;
+		[Embed(source = "../../../fonts/Lora-Regular.ttf", fontName = 'Lora', embedAsCFF = "true")] static public var LoraFont:Class;
+		[Embed(source = "../../../fonts/OpenSans-Bold.ttf", fontName = 'OpenSansBold', embedAsCFF = "true")] static public var OpenSansBoldFont:Class;
+		[Embed(source = "../../../fonts/OpenSans-BoldItalic.ttf", fontName = 'OpenSansBoldItalic', embedAsCFF = "true")] static public var OpenSansBoldItalicFont:Class;
+		[Embed(source = "../../../fonts/OpenSans-ExtraBold.ttf", fontName = 'OpenSansExtraBold', embedAsCFF = "true")] static public var OpenSansExtraBoldFont:Class;
+		[Embed(source = "../../../fonts/OpenSans-ExtraBoldItalic.ttf", fontName = 'OpenSansExtraBoldItalic', embedAsCFF = "true")] static public var OpenSansExtraBoldItalicFont:Class;
+		[Embed(source = "../../../fonts/OpenSans-Italic.ttf", fontName = 'OpenSansItalic', embedAsCFF = "true")] static public var OpenSansItalicFont:Class;
+		[Embed(source = "../../../fonts/OpenSans-Light.ttf", fontName = 'OpenSansLight', embedAsCFF = "true")] static public var OpenSansLightFont:Class;
+		[Embed(source = "../../../fonts/OpenSans-LightItalic.ttf", fontName = 'OpenSansLightItalic', embedAsCFF = "true")] static public var OpenSansLightItalicFont:Class;
+		[Embed(source = "../../../fonts/OpenSans-Regular.ttf", fontName = 'OpenSans', embedAsCFF = "true")] static public var OpenSansFont:Class;
+		[Embed(source = "../../../fonts/OpenSans-Semibold.ttf", fontName = 'OpenSansSemibold', embedAsCFF = "true")] static public var OpenSansSemiboldFont:Class;
+		[Embed(source = "../../../fonts/OpenSans-SemiboldItalic.ttf", fontName = 'OpenSansSemiboldItalic', embedAsCFF = "true")] static public var OpenSansSemiboldItalicFont:Class;
 		
 		public function Theme() {
 			
@@ -51,7 +70,6 @@ package imree.data_helpers {
 					
 					if (target.getLineText(0).search("title") === 0) {
 						Theme.font_style_title = txtFont;
-						trace("Case " + Theme.font_style_title);
 					} else if (target.getLineText(0).search("sub_title") === 0) {
 						Theme.font_style_sub_title = txtFont
 					}else if (target.getLineText(0).search("heading1") === 0) {
@@ -69,13 +87,12 @@ package imree.data_helpers {
 					}else if (target.getLineText(0).search("background_color_secondary") === 0) {
 						Theme.background_color_secondary = txtFont.color;
 					}  else {
-						//
+						// Is not a textfield we're tracking
 					}
-				} else {
-					trace("Is not important: " + theme.getChildAt(i));
+				} else if(theme.getChildAt(i)  is MovieClip) {
+					Theme.image_color_transform = MovieClip(theme.getChildAt(i)).transform.colorTransform;
 				}
 			}
-			trace ("OMG HERE: " + Theme.font_style_title);
 			return null;
 		}
 		

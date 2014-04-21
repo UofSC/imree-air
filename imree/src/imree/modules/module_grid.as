@@ -21,6 +21,7 @@ package imree.modules
 	import imree.data_helpers.data_value_pair;
 	import imree.data_helpers.permission;
 	import imree.data_helpers.position_data;
+	import imree.data_helpers.Theme;
 	import imree.display_helpers.modal;
 	import imree.display_helpers.search;
 	import imree.display_helpers.smart_button;
@@ -48,7 +49,7 @@ package imree.modules
 		}
 		override public function draw_thumb(_w:int = 200, _h:int = 200, Return:Boolean = false):* {
 			thumb_wrapper = new Sprite();
-			var thumb_back:box = new box(_w-5, _h-15, 0xEDEDED,1);
+			var thumb_back:box = new box(_w-5, _h-15, Theme.background_color_primary,1);
 			thumb_wrapper.addChild(thumb_back);
 			var block:position_data = new position_data(Math.floor((_w-5) / 3) - 5, Math.floor((_h-15) / 3) - 5);
 			var original_positions:Vector.<position_data> = new Vector.<position_data>();
@@ -118,7 +119,7 @@ package imree.modules
 				}
 			}
 			if (items.length === 0) {
-				wrapper.addChild(new text("Empty Block", 150, new textFont( '_sans', 24)));
+				wrapper.addChild(new text("Empty Block", 150, Theme.font_style_h1));
 			}
 			
 		}

@@ -1,5 +1,6 @@
 package imree.modules 
 {
+	import imree.data_helpers.Theme;
 	import fl.controls.Button;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -29,9 +30,7 @@ package imree.modules
 			super(_main, _Exhibit, _items);
 		}
 		override public function draw_thumb(_w:int = 200, _h:int = 200, Return:Boolean = false):* {
-			var coverfont:textFont = new textFont( '_sans', 28);
-			coverfont.align = TextAlign.CENTER;
-			var covertext:text = new text(module_name, _w * .5, coverfont, _h * .5);
+			var covertext:text = new text(module_name, _w * .5, Theme.font_style_title, _h * .5);
 			covertext.x = (_w * .5) / 2 - covertext.width / 2;
 			covertext.y = (_h * .5) / 2 - covertext.height / 2;
 			var wrapper:Sprite = new Sprite();
@@ -49,9 +48,7 @@ package imree.modules
 			phase_feature = true;
 		}
 		override public function draw_feature(_w:int, _h:int):void {
-			var coverfont:textFont = new textFont( '_sans', 28);
-			coverfont.align = TextAlign.CENTER;
-			var covertext:text = new text(module_name, _w * .5, coverfont, _h * .5);
+			var covertext:text = new text(module_name, _w * .5, Theme.font_style_title, _h * .5);
 			covertext.x = (_w * .5) / 2 - covertext.width / 2;
 			covertext.y = (_h * .5) / 2 - covertext.height / 2;
 			addChild(covertext);

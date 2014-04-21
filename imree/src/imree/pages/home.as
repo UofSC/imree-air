@@ -7,6 +7,7 @@ package imree.pages
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import imree.data_helpers.position_data;
+	import imree.data_helpers.Theme;
 	import imree.serverConnect;
 	import flash.display.*;
 	import flash.filters.DropShadowFilter;
@@ -46,27 +47,14 @@ package imree.pages
 		
 			
 			var midstrip:Sprite = new Sprite;
-			midstrip.graphics.lineStyle(2, 0x000000);
-			midstrip.graphics.beginFill(0xFFFFFF, 1);
+			midstrip.graphics.lineStyle(2, 0x00FF00);
+			midstrip.graphics.beginFill(0x0000FF, 1);
 			midstrip.graphics.drawRect (0,stage.stageHeight * .15, stage.stageWidth, stage.stageHeight * .70);
 			midstrip.graphics.endFill();
 			
 			addChild(midstrip);
 			
-					
-			/*var UniBox:Sprite = new Sprite;
-			UniBox.graphics.lineStyle(0, 0x000000);
-			UniBox.graphics.beginFill(0x000000, 0);
-			UniBox.graphics.drawRect(stage.stageWidth * .4,0, stage.stageWidth * .5, stage.stageHeight * .1);
-			UniBox.graphics.endFill();				
-			addChild(UniBox);*/
-			
-			var Uni_format:textFont = new textFont();
-			Uni_format.color = 0xFFFFFF;
-			Uni_format.padding = 10;
-			Uni_format.size = 50;
-			Uni_format.align = "center";
-			addChild(new text ("University of South Carolina Libraries", stage.stageWidth * 1, Uni_format));
+			addChild(new text ("University of South Carolina Libraries", stage.stageWidth * 1, Theme.font_style_title));
 			
 			//Need a Symbol instead of TextFont/Field, etc. 
 			
@@ -77,7 +65,7 @@ package imree.pages
 				scroller.y = stage.stageHeight * .2;
 				scroller.setSize(stage.stageWidth * .9, stage.stageHeight * .6);
 				scroller.scrollDrag = true;	
-				scroller.opaqueBackground = 0xFFFFFF;
+				scroller.opaqueBackground = 0xFF0000;
 				scroller.useHandCursor = true;
 				
 				
@@ -98,31 +86,13 @@ package imree.pages
 				exhibit_cover_wrapper.mouseChildren = false;
 				exhibit_cover_wrapper.addEventListener(MouseEvent.CLICK, exhibit_selected);
 				
-				var shadow:DropShadowFilter = new DropShadowFilter();
-				shadow.distance = 10;
-				shadow.angle = 45;
-				shadow.strength = .5;
-				
-				exhibit_cover_wrapper.filters = [shadow];
-				
 				exhibit_cover_wrapper.x = current_x + 15;
 				current_x += exhibit_cover_wrapper.width +15;
 				exhibit_cover_wrapper.y = 50;
-				wrapper.addChild(exhibit_cover_wrapper);	
-				
-				
-				
-				
+				wrapper.addChild(exhibit_cover_wrapper);
 				
 				var img_loader_vars:ImageLoaderVars = main.img_loader_vars(exhibit_cover_wrapper);
-				/**
-				 * the single line above does the same thing as the following 5; 
-				img_loader_vars.container(exhibit_cover_wrapper);
-				img_loader_vars.scaleMode(ScaleMode.PROPORTIONAL_OUTSIDE);
-				img_loader_vars.crop(true);
-				img_loader_vars.width(exhibit_cover_wrapper.width);
-				img_loader_vars.height(exhibit_cover_wrapper.height);
-				*/
+				
 				
 				if (main.image_is_resizeable(item.exhibit_cover_image_url)) {
 					item.exhibit_cover_image_url += "?size=" + String(exhibit_cover_wrapper.height);
@@ -130,17 +100,12 @@ package imree.pages
 				new ImageLoader(item.exhibit_cover_image_url, img_loader_vars).load();
 				
 				var txtBox:Sprite = new Sprite;
-				txtBox.graphics.beginFill(0x000000, 0);
+				txtBox.graphics.beginFill(0x00FFFF, 1);
 				txtBox.graphics.drawRect(0, 0, stage.stageWidth * .3, stage.stageHeight * .2);
 				txtBox.graphics.endFill();
 				exhibit_cover_wrapper.addChild(txtBox);
 				
-				var exhibit_txt_format:textFont = new textFont();
-				exhibit_txt_format.color = 0x000000;
-				exhibit_txt_format.padding = 10;
-				exhibit_txt_format.size = 30;
-				
-				txtBox.addChild(new text (item.exhibit_name, exhibit_cover_wrapper.width * .6,exhibit_txt_format));
+				txtBox.addChild(new text (item.exhibit_name, exhibit_cover_wrapper.width * .6,Theme.font_style_h1));
 				
 				
 			}			

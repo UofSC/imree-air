@@ -71,12 +71,21 @@ package imree
 			f.fontStyle = posture;
 			f.textAlign = this.align;
 			
-			if (main !== null && main.Imree !== null && main.Imree.Device !== null) {
-				var DPI:Number = Capabilities.screenDPI;
-				f.fontSize = ((2 / 9) *  DPI) * (f.fontSize / 12);
-			}
+			f.fontSize = adjusted_fontSize(f.fontSize);
 			
 			return f;
+		}
+		public function adjusted_fontSize(size:Number):Number {
+			var result:Number = size;
+			if (main !== null && main.Imree !== null && main.Imree.Device !== null) {
+				var DPI:Number = Capabilities.screenDPI;
+				result= ((1 / 20) *  Math.max(DPI/72, 1)) * (size / 12) + size;
+			}
+			return result;
+		}
+		
+		public function toString():String {
+			return "Font: " + name + " @ " + size.toString();
 		}
 		
 	}

@@ -19,6 +19,7 @@ package imree.modules {
 	import flash.events.MouseEvent;
 	import flash.geom.PerspectiveProjection;
 	import flash.geom.Point;
+	import imree.data_helpers.Theme;
 	import imree.display_helpers.modal;
 	import imree.display_helpers.smart_button;
 	import imree.forms.f_data;
@@ -77,8 +78,8 @@ package imree.modules {
 			if (main.Imree.Device.box_size * 4 < _w && items.length > 1) {
 				var pages_holder:box = new box(_w, _h);
 				feature_wrapper.addChild(pages_holder);
-				var page1:box = new box(_w / 2 , _h, 0x123456, 0);
-				var page2:box = new box(_w / 2, _h, 0x098765, 0);
+				var page1:box = new box(_w / 2 , _h, Theme.background_color_primary, 0);
+				var page2:box = new box(_w / 2, _h, Theme.background_color_primary, 0);
 				pages_holder.addChild(page1);
 				pages_holder.addChild(page2);
 				page2.x = page1.width;
@@ -91,8 +92,8 @@ package imree.modules {
 				var pg2_cache:Sprite;
 				var direction:String = "right";
 				
-				var content1:box = new box(page1.width, page1.height, 0x009900, 0);
-				var content2:box = new box(page2.width, page2.height, 0x000099, 0);
+				var content1:box = new box(page1.width, page1.height, Theme.background_color_primary, 0);
+				var content2:box = new box(page2.width, page2.height, Theme.background_color_primary, 0);
 				page1.addChild(content1);
 				page2.addChild(content2);
 				content1.name = "one";
@@ -316,7 +317,7 @@ package imree.modules {
 			
 			var objects:Vector.<DisplayObjectContainer> = new Vector.<DisplayObjectContainer>();
 			for each (var i:module_asset in items) {Exhibit.overlay_remove();
-				var prox:box = new box(main.Imree.Device.box_size, main.Imree.Device.box_size, 0xEDEDED, 1);
+				var prox:box = new box(main.Imree.Device.box_size, main.Imree.Device.box_size, Theme.background_color_primary, 1);
 				var img_wrap:box = new box(main.Imree.Device.box_size, main.Imree.Device.box_size * .7);
 				var url:String = i.asset_url;
 				if (i.can_resize) {

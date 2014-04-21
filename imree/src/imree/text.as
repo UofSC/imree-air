@@ -36,7 +36,7 @@ package imree
 			var config:Configuration = new Configuration();
 			config.textFlowInitialFormat = Format.describe();
             
-            if (flashx.textLayout.conversion.TextConverter.importToFlow(str, TextConverter.TEXT_LAYOUT_FORMAT, config) == null) {
+			if (flashx.textLayout.conversion.TextConverter.importToFlow(str, TextConverter.TEXT_LAYOUT_FORMAT, config) == null) {
 				str = '<?xml version="1.0" encoding="utf-8"?><flow:TextFlow whiteSpaceCollapse="preserve" xmlns:flow="http://ns.adobe.com/textLayout/2008"><flow:p><flow:span>' + str + '</flow:span></flow:p></flow:TextFlow>';
 			}
 			var textFlow:TextFlow = TextConverter.importToFlow(str, TextConverter.TEXT_LAYOUT_FORMAT, config);
@@ -47,7 +47,7 @@ package imree
 			var controller:ContainerController = new ContainerController(this, 500, 200);
 			controller.setCompositionSize(width,height);
 			textFlow.flowComposer.addController(controller);
-            textFlow.flowComposer.updateAllControllers();
+			textFlow.flowComposer.updateAllControllers();
 			
 		}
 		public function center_x(target:DisplayObject=null):void {

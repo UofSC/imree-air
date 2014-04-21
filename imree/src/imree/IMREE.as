@@ -6,6 +6,8 @@ package imree
 	import com.sbhave.nativeExtensions.zbar.Scanner;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.system.System;
+	import imree.data_helpers.Theme;
 	import imree.display_helpers.modal;
 	import imree.forms.super_admin;
 	import imree.modules.module;
@@ -46,6 +48,7 @@ package imree
 		public var Menu:menu
 		public var Home:home;
 		public var Exhibit:exhibit_display;
+		public var theme:Theme;
 		public var page_admin_exhibit:modal;
 		public var pages:Vector.<DisplayObject>;
 		public var menu_items:Vector.<DisplayObject>;
@@ -71,9 +74,13 @@ package imree
 			
 			/**
 			//Turn off main IMREE display
-			Home.visible = false;
-			main.preloader.hide();
 			*/
+			
+			
+			
+			
+			theme = new Theme();
+			theme.get_theme(1);
 			
 			
 			Home = new home(main.stage.stageWidth, main.stage.stageHeight, main.connection, main);

@@ -32,6 +32,9 @@ package imree.display_helpers {
 			this.removeEventListener(Event.ADDED_TO_STAGE, added2stage);
 			this.addEventListener(Event.REMOVED_FROM_STAGE, removed_from_stage);
 			
+			var big_butt_sample:button_navigator_primary_module = new button_navigator_primary_module();
+			var small_butt_sample:button_navigator_secondary_module = new button_navigator_secondary_module();
+			
 			butts = new Vector.<smart_button>();
 			for each(var mod:module in exhibit.modules) {
 				var butt_ui:button_navigator_primary_module = new button_navigator_primary_module();
@@ -50,20 +53,22 @@ package imree.display_helpers {
 			
 			
 			if (portrait) {
-				wrapper = new box(main.stage.stageWidth, main.Imree.Device.box_size / 2, 0xFFFFFF, 1);
+				wrapper = new box(main.stage.stageWidth, big_butt_sample.height + 20, 0xFFFFFF, 1);
 				wrapper.y = main.stage.stageHeight - wrapper.height;
+				var butt_x:int = 10;
 				for each(butt in butts) {
 					wrapper.addChild(butt);
-					butt.y = 5;
-					butt.x = butt.width* butts.indexOf(butt);
+					butt.y = big_butt_sample.height/2 - butt.height /2 + 10;
+					butt.x = butt_x;
+					butt_x += butt.width + 10;
 				}
 			} else {
-				wrapper  = new box(main.Imree.Device.box_size / 2, main.stage.stageHeight, 0xFFFFFF, 1);
+				wrapper  = new box(big_butt_sample.width + 20, main.stage.stageHeight, 0xFFFFFF, 1);
 				wrapper.x = main.stage.stageWidth - wrapper.width;
-				var butt_y:int = 0;
+				var butt_y:int = 10;
 				for each(butt in butts) {
 					wrapper.addChild(butt);
-					butt.x = 5;
+					butt.x = big_butt_sample.width/2 - butt.width /2 + 10;
 					butt.y = butt_y;
 					butt_y += butt.height + 10;
 				}

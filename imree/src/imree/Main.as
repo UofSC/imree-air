@@ -28,8 +28,9 @@ package imree
 	import flash.display.StageScaleMode;
 	import flash.display.Stage;
 	import flash.events.MouseEvent;
-	import flash.events.StageOrientationEvent;
+	import flash.events.*;
 	import flash.geom.Rectangle;
+	import flash.system.Capabilities;
 	import flash.text.TextFormat;
 	import flash.ui.Multitouch;
 	import flash.ui.MultitouchInputMode;
@@ -70,13 +71,21 @@ package imree
 			t = this;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
-			stage.autoOrients = true;
-			stage.addEventListener(Event.RESIZE, resizedstage);
+			
+			
+			
+			
 			stage.addEventListener(Event.DEACTIVATE, deactivate);
 			//Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
 			Multitouch.inputMode = MultitouchInputMode.GESTURE;
 			textFont.main = this;
 			stage.addChild(this);
+			if(Stage.supportsOrientationChange) {
+				stage.autoOrients = true;
+				stage.addEventListener(Event.RESIZE, resizedstage);
+			} else {
+				resizedstage();
+			}
 			
 			function resizedstage(e:*= null):void {
 				stage.removeEventListener(Event.RESIZE, resizedstage);
@@ -119,7 +128,11 @@ package imree
 						connection.session_key = xml.result.key;
 						trace("Based on our IP, this device has been instructed to be IMREE");
 						t.load_imree();
-						stage.addEventListener(StageOrientationEvent.ORIENTATION_CHANGE, orientation_update);
+						
+						if (Stage.supportsOrientationChange) {
+							stage.addEventListener(StageOrientationEvent.ORIENTATION_CHANGE, orientation_update);
+						}
+						
 					}
 				}
 				
@@ -130,7 +143,7 @@ package imree
 			}				
 		}
 		
-		public  function orientation_update(e:StageOrientationEvent=null):void {
+		public  function orientation_update(e:*=null):void {
 			var cache_data:BitmapData = new BitmapData(stage.stageWidth, stage.stageHeight, false);
 			cache_data.draw(stage);
 			var start_at_exhibit:int = -1;
@@ -204,7 +217,7 @@ package imree
 		private function deactivate(e:Event):void 
 		{
 			// make sure the app behaves well (or exits) when in background
-			NativeApplication.nativeApplication.exit();
+			//NativeApplication.nativeApplication.exit();
 		}
 		public function randomize ( a : *, b : * ) : int {
 			return ( Math.random() > .5 ) ? 1 : -1;

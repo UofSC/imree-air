@@ -65,7 +65,6 @@ package imree
 			f.kerning = Kerning.ON;
 			f.fontLookup = FontLookup.EMBEDDED_CFF;
 			f.fontFamily = this.name.replace(" ", "");
-			trace(f.fontFamily);
 			f.color = this.color;
 			f.lineHeight = this.size + leading;
 			f.fontSize = this.size;

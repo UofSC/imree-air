@@ -1,6 +1,7 @@
 package imree.display_helpers 
 {
 	import flash.desktop.NativeApplication;
+	import flash.display.Stage;
 	import flash.system.Capabilities;
 	import imree.Main;
 	/**
@@ -19,8 +20,14 @@ package imree.display_helpers
 		public var supports_qr:Boolean;
 		public function device(main:Main) 
 		{
-			screen_inches_wide = main.stage.fullScreenWidth / Capabilities.screenDPI;
-			screen_inches_tall = main.stage.fullScreenHeight / Capabilities.screenDPI;
+			if (Stage.supportsOrientationChange) {
+				screen_inches_wide = main.stage.fullScreenWidth / Capabilities.screenDPI;
+				screen_inches_tall = main.stage.fullScreenHeight / Capabilities.screenDPI;
+			} else {
+				screen_inches_wide = main.stage.stageWidth / Capabilities.screenDPI;
+				screen_inches_tall = main.stage.stageHeight / Capabilities.screenDPI;
+			}
+			
 			screen_square_inches = screen_inches_tall * screen_inches_wide;
 			main.log("Device: square_inches = " + screen_inches_wide + " x " + screen_inches_tall + " = " + screen_square_inches);
 			
@@ -33,8 +40,6 @@ package imree.display_helpers
 				orientation = "landscape";
 				box_size = Math.round(main.stage.stageWidth / 8 + 100);
 			}
-			
-			
 			
 			
 			

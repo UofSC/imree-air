@@ -43,7 +43,7 @@
     <fullScreen>true</fullScreen>
     <!--<autoOrients>false</autoOrients>-->
     <!--<aspectRatio>landscape</aspectRatio>-->
-    <renderMode>gpu</renderMode>
+    <renderMode>direct</renderMode>
     <!--<depthAndStencil>true</depthAndStencil>-->
     <!-- required for 3D -->
     <systemChrome>standard</systemChrome>

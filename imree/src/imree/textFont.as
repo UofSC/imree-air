@@ -66,7 +66,7 @@ package imree
 			f.fontLookup = FontLookup.EMBEDDED_CFF;
 			f.fontFamily = this.name.replace(" ", "");
 			f.color = this.color;
-			f.lineHeight = this.size + leading;
+			f.lineHeight =adjusted_fontSize(this.size)+ leading;
 			f.fontSize = this.size;
 			f.fontStyle = posture;
 			f.textAlign = this.align;
@@ -79,7 +79,7 @@ package imree
 			var result:Number = size;
 			if (main !== null && main.Imree !== null && main.Imree.Device !== null) {
 				var DPI:Number = Capabilities.screenDPI;
-				result= ((1 / 20) *  Math.max(DPI/72, 1)) * (size / 12) + size;
+				result= ((9 / 2) *  Math.max(DPI/72, 1)) * (size / 12) + size;
 			}
 			return result;
 		}

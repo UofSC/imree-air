@@ -94,20 +94,37 @@ package imree.modules
 				overflow_from_direction = "left";
 			}
 			
+			var wrapper:Sprite = new Sprite();
+			
+			var y_offest:Number = 0;
+			if (module_display_name) {
+				var name_label:text = new text(module_name + module_sub_name, _w, Theme.font_style_h2);
+				wrapper.addChild(name_label);
+				y_offest = name_label.height;
+			}
+			
 			var raw_positions:Vector.<position_data> = new Vector.<position_data>();
 			for each(var i:module in items) {
 				raw_positions.push(new position_data(main.Imree.Device.box_size * i.thumb_display_columns, main.Imree.Device.box_size * i.thumb_display_rows));
 			}
 			
-			var positions:Vector.<position_data> = new layout().abstract_box_solver(raw_positions, _w, _h, 5, overflow_from_direction, true);
-			
-			var wrapper:Sprite = new Sprite();
+			var positions:Vector.<position_data> = new layout().abstract_box_solver(raw_positions, _w, _h - y_offest, 5, overflow_from_direction, true);
 			
 			for (var j:int = 0; j < items.length; j++) {
 				items[j].draw_thumb(positions[j].width, positions[j].height);
 				wrapper.addChild(items[j]);
 				items[j].x = positions[j].x;
-				items[j].y = positions[j].y;
+				items[j].y = positions[j].y + y_offest;
+				
+				if (module_display_child_names && items[j].module_name.length > 0) {
+					var child_label:text = new text(items[j].module_name, positions[j].width -10, Theme.font_style_description);
+					var label_background:box = new box(positions[j].width, child_label.height + 10, Theme.background_color_secondary, .6);
+					items[j].addChild(label_background);
+					label_background.y = positions[j].height - label_background.height;
+					label_background.addChild(child_label);
+					child_label.x = 5;
+					child_label.y = 5;
+				}				
 				items[j].addEventListener(MouseEvent.CLICK, item_selected);
 			}
 			addChild(wrapper);

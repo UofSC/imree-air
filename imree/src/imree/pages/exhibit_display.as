@@ -223,6 +223,8 @@ package imree.pages
 				mod.module_type = xml.module_type;
 				mod.thumb_display_columns = xml.thumb_display_columns;
 				mod.thumb_display_rows = xml.thumb_display_rows;
+				mod.module_display_name = (xml.module_display_name == '1');
+				mod.module_display_child_names = xml.module_display_child_names == '1';
 				return mod;
 			}
 		

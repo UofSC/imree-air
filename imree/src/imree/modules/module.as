@@ -53,6 +53,8 @@ package imree.modules
 		public var thumb_display_columns:int;
 		public var thumb_display_rows:int;
 		public var module_is_visible:Boolean;
+		public var module_display_name:Boolean;
+		public var module_display_child_names:Boolean;
 		public var onSelect:Function;
 		public var draw_feature_on_object:DisplayObjectContainer;
 		public var t:module;

@@ -72,6 +72,9 @@ package imree.pages
 			t = this;
 			wrapper = new Sprite();
 			var bk:box = new box(w * 1.3, h * 1.3, Theme.background_color_primary, 1);
+			if (Theme.background_pattern_primary !== null) {
+				bk.bitmapFill(Theme.background_pattern_primary);
+			}
 			wrapper.addChild(bk);
 			wrapper.x -= w * .15;
 			wrapper.y -= h * .15;
@@ -230,6 +233,9 @@ package imree.pages
 			asset_wrapper = new Sprite();
 			
 			var asset_underlay:box = new box(w, h, Theme.background_color_primary, .5);
+			if (Theme.background_pattern_primary !== null) {
+				asset_underlay.bitmapFill(Theme.background_pattern_primary);
+			}
 			asset_wrapper.addChild(asset_underlay);
 			TweenLite.from(asset_underlay, 1, {alpha: 0});
 			asset_underlay.addEventListener(MouseEvent.CLICK, remove_asset_wrapper);
@@ -242,6 +248,9 @@ package imree.pages
 			
 			if (main.Imree.Device.orientation == 'portrait')	{
 				asset_background = new box(w, h * .9, Theme.background_color_secondary, 1);
+				if (Theme.background_pattern_secondary !== null) {
+					asset_background.bitmapFill(Theme.background_pattern_secondary);
+				}
 				asset_wrapper.addChild(asset_background);
 				asset_background.y = h * .1;
 				if (e.description !== null && e.description.length > 0)	{
@@ -265,6 +274,9 @@ package imree.pages
 				}
 			} else	{
 				asset_background = new box(w * .9, h, Theme.background_color_secondary, 1);
+				if (Theme.background_pattern_secondary !== null) {
+					asset_background.bitmapFill(Theme.background_pattern_secondary);
+				}
 				asset_wrapper.addChild(asset_background);
 				asset_background.x = w * .1;
 				if (e.description !== null && e.description.length > 0)	{

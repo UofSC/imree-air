@@ -1,6 +1,11 @@
 package imree.data_helpers {
+	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
+	import flash.display.GraphicsBitmapFill;
+	import flash.display.IGraphicsData;
 	import flash.display.MovieClip;
+	import flash.display.Shape;
+	import flash.display.Sprite;
 	import flash.geom.ColorTransform;
 	import flash.text.TextField;
 	import flash.text.TextFormat;
@@ -26,8 +31,12 @@ package imree.data_helpers {
 		static public var background_color_primary:uint;
 		static public var background_color_secondary:uint;
 		
+		static public var background_pattern_primary:BitmapData;
+		static public var background_pattern_secondary:BitmapData;
+		
 		static public var image_color_transform:ColorTransform;
 		
+		static private var primary_fields_processed:Boolean = false;
 		public var styles:Vector.<textFont>;
 		
 		
@@ -91,9 +100,11 @@ package imree.data_helpers {
 					}
 				} else if(theme.getChildAt(i)  is MovieClip) {
 					Theme.image_color_transform = MovieClip(theme.getChildAt(i)).transform.colorTransform;
+				} else if (theme.getChildAt(i) is Shape) {
+					
 				}
 			}
-			return null;
+			return;
 		}
 		
 	}

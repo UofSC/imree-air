@@ -1,5 +1,7 @@
 package imree.shortcuts
 {
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
 	
@@ -50,6 +52,15 @@ package imree.shortcuts
 			} else {
 				this.y = target.height / 2 - this.height / 2 ;
 			}
+		}
+		
+		public function bitmapFill(data:BitmapData):void {
+			var overlay:Sprite = new Sprite();
+			overlay.graphics.beginBitmapFill(data);
+			overlay.graphics.drawRect(0, 0, width, height);
+			trace(width, height, "hi");
+			overlay.graphics.endFill();
+			addChild(overlay);
 		}
 		
 		public var stroke:Sprite;

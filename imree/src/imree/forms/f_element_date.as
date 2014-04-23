@@ -65,72 +65,72 @@ package imree.forms
 			txtyr.minimum = -9999;
 			txtyr.maximum = 9999;
 			txtyr.value = 1883;
-			ui.addChild(txtyr);
+			ui.addChild(txtyr);			
 			
-			
-			
-			txtmo= new NumericStepper();
-			txtmo.setSize(stepper_width, stepper_height);
-			txtmo.x = txtyr.x + stepper_width + internal_padding +20;//moving out of the way
-			txtmo.minimum = 1;
-			txtmo.maximum = 12;
-			txtmo.stepSize = 1;
 			
 			var txtmo_lab:text = new text("Month");
 			ui.addChild(txtmo_lab);
-			ui.addChild(txtmo);
+			txtmo_lab.x = txtyr.x + txtyr_lab.width + 10;			
 			
-			
-			txtdate = new NumericStepper();
-			txtdate.setSize(stepper_width, stepper_height);
-			txtdate.x = txtmo.x + stepper_width + internal_padding;
-			txtdate.minimum = 1;
-			txtdate.maximum = 31;
-			txtdate.stepSize = 1;
+			txtmo= new NumericStepper();
+			txtmo.setSize(stepper_width, stepper_height);
+			txtmo.x = txtmo_lab.x + txtmo_lab.width + 5;
+			txtmo.minimum = 1;
+			txtmo.maximum = 12;
+			ui.addChild(txtmo);		
 			
 			
 			var txtdate_lab:text = new text("Day");
-			ui.addChild(txtdate_lab);
+			txtdate_lab.x = txtmo.x +txtmo_lab.width + 10;
+			ui.addChild(txtdate_lab);			
+		
+			txtdate = new NumericStepper();
+			txtdate.setSize(stepper_width, stepper_height);
+			txtdate.x = txtdate_lab.x + txtdate_lab.width + 5;
+			txtdate.minimum = 1;
+			txtdate.maximum = 31;
 			ui.addChild(txtdate);
 			
 			
+			var txthr_lab:text = new text("Hour(s)");
+			ui.addChild(txthr_lab);
+			txthr_lab.x = label_width + 10;			
+			
 			txthr = new NumericStepper();
 			txthr.setSize(stepper_width, stepper_height);
-			txthr.x = label_width + padding;
+			txthr.x = txthr_lab.x + txthr_lab.width + 5;
 			txthr.y = stepper_height + internal_padding;
 			txthr.minimum = 1;
 			txthr.maximum = 24;
-			txthr.stepSize = 1;
-			
-			var txthr_lab:text = new text("Hour(s)");
-			ui.addChild(txthr_lab);
 			ui.addChild(txthr);
 			
 			
+			var txtmin_lab:text = new text("Minute(s)");
+			ui.addChild(txtmin_lab);
+			txtmin_lab.x = txthr.x + txthr_lab.width + 10;	
+			
 			txtmin = new NumericStepper();
 			txtmin.setSize(stepper_width, stepper_height);
-			txtmin.x = txthr.x + stepper_width + internal_padding;
+			txtmin.x = txtmin_lab.x + txtmin_lab.width + 5;
 			txtmin.y = stepper_height + internal_padding;
 			txtmin.minimum = 0;
 			txtmin.maximum = 59;
-			txtmin.stepSize = 1;
-			
-			var txtmin_lab:text = new text("Minute(s)");
-			ui.addChild(txtmin_lab);
 			ui.addChild(txtmin);
 			
 			
+			var txtsec_lab:text = new text("Second(s)");
+			ui.addChild(txtsec_lab);
+			txtsec_lab.x = txtmin.x +txtmin_lab.width + 10;
+						
 			txtsec = new NumericStepper();
 			txtsec.setSize(stepper_width, stepper_height);
-			txtsec.x = txtmin.x + stepper_width + internal_padding;
+			txtsec.x = txtsec_lab.x + txtsec_lab.width + 5;
 			txtsec.y = stepper_height + internal_padding;
 			txtsec.minimum = 0;
 			txtsec.maximum = 59;
 			txtsec.stepSize = 1;
-			
-			var txtsec_lab:text = new text("Second(s)");
-			ui.addChild(txtsec_lab);
 			ui.addChild(txtsec);
+			
 			
 			
 			/**
@@ -169,15 +169,46 @@ package imree.forms
 			var new_date:Date = date_parser.string_to_date(String(e));
 			trace(new_date);
 			txtyr.value = new_date.fullYear;
+			txtmo.value = new_date.month;
+			txtdate.value = new_date.date;
+			txthr.value = new_date.hours;
+			txtmin.value = new_date.minutes;
+			txtsec.value = new_date.seconds;
 			
 			super.set_value(e);
 		}
 		override public function set_disable():void {
+			
+			txtyr:NumericStepper().enabled = false;
+			txtyr.enabled = false;
+			
+			txtmo:NumericStepper().enabled = false;
+			txtmo.enabled = false;
+			
+			txtdate:NumericStepper().enabled = false;
+			txtdate.enabled = false;
+			
+			txthr:NumericStepper().enabled = false;
+			txthr.enabled = false;
+			
+			txtmin:NumericStepper().enabled = false;
+			txtmin.enabled = false;
+			
+			txtsec:NumericStepper().enabled = false;
+			txtsec.enabled = false;		
+			
 			//set each numberic stepper to: stepper:NumericStepper().enabled = false;
 			//stepper_year.enabled = false;
 		}
 		override public function set_enabled():void {
 			//stepper_year.enabled = true;
+			
+			txtyr.enabled = true;
+			txtmo.enabled = true;
+			txtdate.enabled = true;
+			txthr.enabled = true;
+			txtmin.enabled = true;
+			txtsec.enabled = true;
 		}
 	}
 

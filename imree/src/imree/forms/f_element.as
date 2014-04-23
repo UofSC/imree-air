@@ -29,7 +29,7 @@ package imree.forms
 		public var loader_x:int;
 		public var enabled:Boolean;
 		public var onChange:Function;
-		private var t:f_element;
+		public var t:f_element;
 		
 		public function f_element() {
 			label_textFont = new textFont();

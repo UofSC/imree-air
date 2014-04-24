@@ -2,6 +2,7 @@ package imree.modules
 {
 			
 	
+	import com.demonsters.debugger.MonsterDebugger;
 	import com.greensock.loading.*;
 	import com.greensock.loading.data.VideoLoaderVars;
 	import com.greensock.loading.display.*;
@@ -147,10 +148,10 @@ package imree.modules
 				//draw_feature_on_object.addChild(loading_indicator);
 				loading_indicator.x = _w/ 2 - 128/2;
 				loading_indicator.y = _h / 2 - 128 / 2;
-				
 				player.addEventListener(Event.REMOVED_FROM_STAGE, player_is_removed);
 				function player_is_removed(asdf:Event):void {
 					player.stop();
+					player.load(null);
 				}
 				
 			} else {
@@ -172,7 +173,6 @@ package imree.modules
 				
 			}
 			phase_feature = true;
-			
 		
 		}
 		

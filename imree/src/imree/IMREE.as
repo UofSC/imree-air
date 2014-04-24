@@ -6,6 +6,8 @@ package imree
 	import com.sbhave.nativeExtensions.zbar.Scanner;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.display.LoaderInfo;
+	import flash.net.navigateToURL;
 	import flash.system.System;
 	import imree.data_helpers.Theme;
 	import imree.display_helpers.modal;
@@ -54,39 +56,37 @@ package imree
 		public var menu_items:Vector.<DisplayObject>;
 		public var current_page:DisplayObject;
 		public var staging_area:box;
-		public var padding:int;
-		public var sample_button:button_home;
 		public function IMREE(_main:Main, start_at_exhibit:int = -1, start_at_module:int = 0, start_at_sub_module:int = 0) 
 		{
 			main = _main;
 			Device = new device(main);
-			padding = 10;
 			
-			sample_button = new button_home();
-			UI_size(sample_button);
-			if (main.stage.stageWidth > main.stage.stageHeight) {
-				staging_area = new box(main.stage.stageWidth - sample_button.width - padding,main.stage.stageHeight);
-				staging_area.x = sample_button.width + padding;
-			} else {
-				staging_area = new box(main.stage.stageWidth, main.stage.stageHeight - sample_button.height - padding);
-				staging_area.y = sample_button.height + padding;
+			var menu_can_hide:Boolean = true;
+			var context_vars:Object = LoaderInfo(main.root.loaderInfo).parameters;
+			if (context_vars.start_at !== null && int(context_vars.start_at) > 0 && start_at_exhibit === -1) {
+				start_at_exhibit = int(context_vars.start_at);
 			}
-			
-			/**
-			//Turn off main IMREE display
-			*/
-			
-			
-			
+			if (context_vars.web !== null && context_vars.web == "web") {
+				staging_area = new box(main.stage.stageWidth, main.stage.stageHeight - Device.dpi * 1);
+				staging_area.y = Device.dpi * 1;
+			} else {
+				//staging_area = new box(main.stage.stageWidth, main.stage.stageHeight);
+				
+				staging_area = new box(main.stage.stageWidth, main.stage.stageHeight - Device.dpi * 1);
+				staging_area.y = Device.dpi * 1;
+				web_bar(Device.dpi * 1);
+				menu_can_hide = false;
+				
+			}
 			
 			theme = new Theme();
 			theme.get_theme(1);
 			
-			
-			Home = new home(main.stage.stageWidth, main.stage.stageHeight, main.connection, main);
+			Home = new home(staging_area.width, staging_area.height, main);
 			Home.onSelect = load_exhibit;
 			pages = new Vector.<DisplayObject>();
 			addChild(Home);
+			Home.y = staging_area.y;
 			current_page = Home;
 			
 			//menu is added last so it is on top of display list
@@ -95,7 +95,7 @@ package imree
 			if (!main.connection.password_is_set()) {
 				menu_items.push(new smart_button(new button_login(), show_authentication));
 			}
-			Menu = new menu(menu_items,main,this);
+			Menu = new menu(menu_items,main,this,menu_can_hide);
 			addChild(Menu);
 			
 			pages.push(Home);
@@ -125,6 +125,8 @@ package imree
 			if (start_at_exhibit > -1) {
 				load_exhibit(start_at_exhibit, start_at_module, start_at_sub_module);
 			}
+			
+			addEventListener(Event.RESIZE, stage_resized);
 		}
 		
 		public var UI_min_size:Number = 32;
@@ -132,16 +134,8 @@ package imree
 		public var UI_linear_slop:Number = 1 / 16;
 		public var UI_linear_offset:Number = 8;
 		public function UI_size(obj:DisplayObject):Number {
-			var o:Rectangle = new Rectangle(0, 0, main.stage.stageWidth, main.stage.stageHeight);
-			var new_width:Number;
-			var new_height:Number;
-			if (o.width >= o.height) {
-				new_width = Math.max(Math.min(o.width * UI_linear_slop + UI_linear_offset, UI_max_size), UI_min_size); //brains
-				new_height = (new_width * obj.height) / obj.width;
-			} else {
-				new_height = Math.max(Math.min(o.height * UI_linear_slop + UI_linear_offset, UI_max_size), UI_min_size); //brains
-				new_width = (obj.width / obj.height) * new_height
-			}
+			var new_width:Number = Device.dpi;
+			var new_height:Number = (obj.height / obj.width) * Device.dpi;
 			obj.scaleX = new_width / obj.width;
 			obj.scaleY = new_height / obj.height;
 			return new_width / obj.width; //the scale factor (e.g. 0.5 = shrunk the size of obj in half)
@@ -199,17 +193,14 @@ package imree
 		}
 		
 		public function show_super_admin():void {
-			var mod:modal = new modal(main.stage.stageWidth, main.stage.stageHeight, null, new super_admin(main.stage.stageWidth, main.stage.stageHeight,main),null,0xFFFFFF);
+			var mod:modal = new modal(staging_area.width, staging_area.height, null, new super_admin(staging_area.width, staging_area.height, main),null,0xFFFFFF);
 			addChild(mod);
 			main.animator.on_stage(mod);
 		}
 		
 		public function show_exhibit_admin(id:int):void {
 			var pg:admin_exhibit = new admin_exhibit(staging_area.width, staging_area.height, main);
-			pg.draw(id);
-			var mod:modal = new modal(main.stage.stageWidth, main.stage.stageHeight, null, pg);
-			addChild(mod);
-			main.animator.on_stage(mod);
+			pg.draw();
 		}
 		
 		public function show(page:DisplayObject):void {
@@ -243,7 +234,8 @@ package imree
 				}
 				Exhibit = null;
 			}
-			Exhibit = new exhibit_display(int(exhibit_id), main.stage.stageWidth, main.stage.stageHeight, main);
+			Exhibit = new exhibit_display(int(exhibit_id), staging_area.width, staging_area.height, main);
+			Exhibit.y = staging_area.y;
 			Exhibit.load(start_at, focus_on_sub_module);
 			pages.push(Exhibit);
 			
@@ -252,9 +244,36 @@ package imree
 				TweenLite.to(freeze_obj, 1, { alpha:0, delay:1 } );
 			}
 			addChild(Exhibit);
+			web_bar()
 			addChildAt(Menu, numChildren);
 			current_page = Exhibit;
-			
+		}
+		
+		private var web_bar_wrapper:box;
+		static private var web_bar_height:int;
+		public function web_bar(bar_height:int = 0):void {
+			if (web_bar_wrapper !== null) {
+				if (contains(web_bar_wrapper)) {
+					removeChild(web_bar_wrapper);
+				}
+				web_bar_wrapper = null;
+			}
+			if (bar_height > 0) {
+				web_bar_height = bar_height;
+			}
+			web_bar_wrapper = new box(main.stage.stageWidth, web_bar_height, 0x73000a, 1);
+			addChild(web_bar_wrapper);
+			var sample_button:button_menu = new button_menu();
+			UI_size(sample_button);
+			var institute:text = new text("University of South Carolina", main.stage.stageWidth - sample_button.width - 10, new textFont("AbrahamLincoln", 24));
+			institute.y = web_bar_height / 2 - institute.height / 2;
+			web_bar_wrapper.addChild(institute);
+			institute.x = sample_button.width + 20;
+		}
+		private function stage_resized(e:Event):void {
+			web_bar();
+			Menu.update();
+			addChildAt(Menu, numChildren);
 		}
 		
 		

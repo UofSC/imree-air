@@ -71,7 +71,7 @@ package imree.modules
 				edit_button.addEventListener(MouseEvent.CLICK, draw_edit_UI);
 			}		
 		}
-		override public function draw_edit_UI(e:* = null, animate:Boolean = true):void {
+		override public function draw_edit_UI(e:* = null, animate:Boolean = true, start_at_position:int =0):void {
 			var buttons:Vector.<smart_button> = new Vector.<smart_button>();
 			var cancel_butt_ui:Button = new Button();
 			cancel_butt_ui.label = "Cancel";
@@ -86,7 +86,7 @@ package imree.modules
 			form.connect(main.connection, int(module_id), 'modules', 'module_id');
 			form.onSave = close_dialog;
 			form.draw();
-			var dialog:modal = new modal(main.stage.stageWidth, main.stage.stageHeight, buttons, form);
+			var dialog:modal = new modal(main.Imree.staging_area.width, main.Imree.staging_area.height, buttons, form);
 			
 			main.Imree.Exhibit.overlay_add(dialog);
 			main.animator.on_stage(dialog);

@@ -5,11 +5,11 @@
     <movie outputType="Application" />
     <movie input="" />
     <movie path="bin\imree.swf" />
-    <movie fps="60" />
+    <movie fps="40" />
     <movie width="480" />
     <movie height="786" />
     <movie version="3" />
-    <movie minorVersion="9" />
+    <movie minorVersion="6" />
     <movie platform="AIR Mobile" />
     <movie background="#800000" />
   </output>
@@ -55,6 +55,8 @@
   <libraryPaths>
     <element path="src\userinterface_components.swc" />
     <element path="lib\com.sbhave.nativeExtensions.zbar.ane" />
+    <element path="src\MonsterDebugger.swc" />
+    <element path="src\MonsterDebuggerMobile.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>

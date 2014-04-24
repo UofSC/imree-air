@@ -74,6 +74,9 @@ package imree
 			
 			function getxmldata(e:LoaderEvent):void {
 				if (onCompleteFunction !== null) {
+					if (XML(XMLLoader(e.target).content).success != "true") {
+						main.log(say_loader_event(e) + " Errored because " + XML(XMLLoader(e.target).content).error);
+					}
 					onCompleteFunction(e);
 				}
 			}

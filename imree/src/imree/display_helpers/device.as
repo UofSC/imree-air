@@ -1,6 +1,6 @@
 package imree.display_helpers 
 {
-	import flash.desktop.NativeApplication;
+	import flash.desktop.*;
 	import flash.display.Stage;
 	import flash.system.Capabilities;
 	import imree.Main;
@@ -15,6 +15,7 @@ package imree.display_helpers
 		public var screen_square_inches:Number;
 		public var screen_inches_wide:Number;
 		public var screen_inches_tall:Number;
+		public var dpi:Number;
 		public var orientation:String;
 		public var box_size:int;
 		public var supports_qr:Boolean;
@@ -31,17 +32,29 @@ package imree.display_helpers
 			screen_square_inches = screen_inches_tall * screen_inches_wide;
 			main.log("Device: square_inches = " + screen_inches_wide + " x " + screen_inches_tall + " = " + screen_square_inches);
 			
-			//y = mx + b
-			//block_size = screenwidth/8 + 100;
+			
+			dpi = Capabilities.screenDPI;
+			box_size = dpi * 1.5;
+			var max_dimension:int;
 			if (screen_inches_tall > screen_inches_wide) {
 				orientation = "portrait";
-				box_size = Math.round(main.stage.stageHeight / 8 + 100);
+				max_dimension = main.stage.stageHeight;
 			} else {
 				orientation = "landscape";
-				box_size = Math.round(main.stage.stageWidth / 8 + 100);
+				max_dimension = main.stage.stageWidth;
 			}
 			
+			trace(max_dimension, box_size);
 			
+			if (max_dimension / box_size > 6) {
+				box_size *= 2;
+			}
+			if (max_dimension / box_size > 8) {
+				box_size *= 2;
+			}
+			if (max_dimension / box_size > 15) {
+				box_size *= 2;
+			}
 			
 			//determine device type with http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/desktop/NativeApplication.html features
 		}

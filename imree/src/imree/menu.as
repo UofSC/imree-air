@@ -24,9 +24,10 @@ package imree
 	public class menu extends Sprite
 	{
 		public var contents:Vector.<DisplayObject>;
-		private var menu_toggle_button:button_menu;
+		public var menu_toggle_button:button_menu;
 		private var main:Main;
 		private var Imree:IMREE;
+		public var allow_hide:Boolean;
 		private var animator:animate;
 		private var on:Boolean;
 		private var body:Sprite;
@@ -35,11 +36,12 @@ package imree
 		private var edit_current_mod:Button;
 		private var edit_current_exhibit:Button;
 		private var super_admin:button_SuperAdmin;
-		public function menu(_contents:Vector.<DisplayObject>, _main:Main, _imree:IMREE) 
+		public function menu(_contents:Vector.<DisplayObject>, _main:Main, _imree:IMREE, _allow_hide:Boolean = true) 
 		{
 			contents = _contents;
 			main = _main;
 			Imree = _imree;
+			allow_hide = _allow_hide;
 			on = false;
 			size_percentage = .3;
 			animator = new animate(main);
@@ -120,7 +122,7 @@ package imree
 			}
 			if (main.Imree !== null && main.Imree.current_page is exhibit_display) {
 				var current_top_module:module = exhibit_display(main.Imree.current_page).current_module();
-				if (current_top_module.user_can_edit) {
+				if (current_top_module !== null && current_top_module.user_can_edit) {
 					edit_current_mod = new Button();
 					edit_current_mod.setSize(128, 128);
 					edit_current_mod.label = "Edit Module: \n" + current_top_module.module_name;
@@ -234,7 +236,7 @@ package imree
 			function tick(te:TimerEvent):void {
 				tim.removeEventListener(TimerEvent.TIMER, tick);
 				tim = null;
-				if (on === false) {
+				if (on === false && allow_hide) {
 					if(main.stage.stageWidth > main.stage.stageHeight) {
 						TweenLite.to(menu_toggle_button, 1, { ease:Cubic.easeInOut, x: 0 -  menu_toggle_button.width * .6 } );
 					} else {

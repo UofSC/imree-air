@@ -3,6 +3,7 @@ package imree.display_helpers {
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.geom.Point;
 	import imree.data_helpers.position_data;
 	import imree.layout;
 	import imree.shortcuts.box;
@@ -120,6 +121,13 @@ package imree.display_helpers {
 		private function okay_event(e:*= null):void  {
 			t.parent.removeChild(t);
 			t = null;
+		}
+		public function scroll_to(_x:int, _y:int):void {
+			scroller.horizontalScrollPosition = _x;
+			scroller.verticalScrollPosition = _y;
+		}
+		public function get_scoll_point():Point {
+			return new Point(scroller.horizontalScrollPosition, scroller.verticalScrollPosition);
 		}
 		
 	}

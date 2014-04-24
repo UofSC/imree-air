@@ -161,8 +161,8 @@ package imree.modules
 				var original_width:int = draw_feature_on_object.width;
 				var original_height:int = draw_feature_on_object.height;
 				var play_button:button_right = new button_right();
-				play_button.x = stage.stageWidth * .25;
-				play_button.y = stage.stageHeight * .4;
+				play_button.x = main.Imree.staging_area.width / 2 - play_button.width / 2;
+				play_button.y = main.Imree.staging_area.height / 2 - play_button.height / 2;
 				var pause_button:button_menu = new button_menu();
 				pause_button.x = play_button.x;
 				pause_button.y = play_button.y;

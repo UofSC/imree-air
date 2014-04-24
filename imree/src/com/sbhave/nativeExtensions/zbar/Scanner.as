@@ -4,7 +4,7 @@ package com.sbhave.nativeExtensions.zbar
 	import flash.events.EventDispatcher;
 	import flash.events.StatusEvent;
 	import flash.events.TimerEvent;
-	import flash.external.ExtensionContext;
+	import flash.external.*;
 	import flash.utils.Timer;
 	
 	import org.osmf.events.TimeEvent;

@@ -83,7 +83,7 @@ package imree.display_helpers {
 			if (allow_modules) {
 				var selector:ComboBox = new ComboBox();
 				selector.prompt = "Add new module";
-				var datas:Array = [{label:"Grid/Gallery",data:"grid"}, {label:"Title", data:"title"}];
+				var datas:Array = [{label:"Title", data:"title"}, {label:"Linear/Narrative",data:"narrative"}, {label:"Grid/Gallery",data:"grid"}];
 				selector.dataProvider = new DataProvider(datas);
 				selector.addEventListener(Event.CHANGE, add_module_by_name);
 				search_ui_wrapper.addChild(selector);
@@ -91,8 +91,8 @@ package imree.display_helpers {
 				selector.y = search_ui_wrapper.height;
 			}
 			function add_module_by_name(s:Event):void {
-				var obj:Object = {'table':'modules', 'columns':{'module_order':'9999','module_name':'new module','module_parent_id':String(Module.module_id),'module_type':String(selector.selectedItem.data)} };
-				main.connection.server_command("insert", obj, add_module_by_name_done, true);
+				var obj:Object = {'module_order':'9999','module_name':'new module','module_parent_id':String(Module.module_id),'module_type':String(selector.selectedItem.data)};
+				main.connection.server_command("new_module", obj, add_module_by_name_done, true);
 			}
 			function add_module_by_name_done(s:Event):void {
 				onDestroy();
@@ -240,7 +240,7 @@ package imree.display_helpers {
 				}
 			}
 			
-			var search_modal:modal = new modal(stage.stageWidth, stage.stageHeight, top_buttons);
+			var search_modal:modal = new modal(w, h, top_buttons);
 			search_modal.add_displayObjects_as_grid(boxes, 20);
 			addChild(search_modal);
 			
@@ -322,7 +322,7 @@ package imree.display_helpers {
 				
 				var  c_buttons:Vector.<smart_button> = new Vector.<smart_button>();
 				c_buttons.push(c_butt_close, c_butt_confirm, c_butt_all);
-				var c_modal:modal = new modal(stage.stageWidth, stage.stageHeight, c_buttons);
+				var c_modal:modal = new modal(w, h, c_buttons);
 				c_modal.add_displayObjects_as_grid(child_boxes);
 				addChild(c_modal);
 			}

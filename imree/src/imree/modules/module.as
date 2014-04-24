@@ -10,6 +10,7 @@ package imree.modules
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.ColorTransform;
+	import imree.forms.f_element_date;
 	import imree.Main;
 	import imree.pages.exhibit_display;
 	import imree.shortcuts.box;		
@@ -46,6 +47,7 @@ package imree.modules
 		public var module_sub_name:String;
 		public var module_type:String;
 		public var module_order:int;
+		public var original_order:int;
 		public var main:Main;
 		public var parent_module:module;
 		public var Exhibit:exhibit_display;
@@ -176,7 +178,7 @@ package imree.modules
 			}
 		}
 		
-		public function draw_edit_UI(e:*=null, animate:Boolean = true):void {
+		public function draw_edit_UI(e:*=null, animate:Boolean = true, start_at_position:int =0):void {
 			trace("This module has no edit UI");
 		}
 		
@@ -208,22 +210,31 @@ package imree.modules
 		}
 		private var pending_save:int = 0;
 		public function save_new_mod_order():void {
+			pending_save = 0;
 			for each(var m:module in items) {
-				if (m is module_asset) {
-					pending_save++;
-					var data:Object = { 'table':'module_assets', 'where':" module_asset_id = '" + module_asset(m).module_asset_id + "' ", 'columns': { "module_asset_order":String(items.indexOf(m)) } };
-					main.connection.server_command("update", data, reload, true);
-				} else {
-					pending_save++;
-					var dat:Object = { 'table':'modules', 'where':" module_id = '" + m.module_id + "' ", 'columns': { "module_order":String(items.indexOf(m)) } };
-					main.connection.server_command("update", dat, reload, true);
+				if(m.original_order != items.indexOf(m)) {
+					if (m is module_asset && module_asset(m).module_asset_id !== null) {
+						pending_save++;
+						var data:Object = { 
+							'module_asset_id':String(module_asset(m).module_asset_id),
+							'module_asset_order':String(items.indexOf(m)) 
+						}; 
+						main.connection.server_command("change_module_asset_order", data, reload, true);
+					} else if(module(m).module_id !== null) {
+						pending_save++;
+						var data2:Object = { 
+							'module_id':String(module(m).module_id),
+							'module_order':String(items.indexOf(m)) 
+						}; 
+						main.connection.server_command("change_module_order", data2, reload, true);
+					}
 				}
 			}
 		}
 		public function reload(e:*=null):void {
-			main.log("Save Pending: " + String(pending_save));
 			pending_save--;
-			if (pending_save === 0) {
+			main.log("Save Pending: " + String(pending_save));
+			if (pending_save <=1 ) {
 				Exhibit.reload_current_page();
 			}
 		}
@@ -237,7 +248,7 @@ package imree.modules
 			return module_name + " " + module_type;
 		}
 		
-		public function standard_edit_UI(e:* = null, animate:Boolean = true):void {	
+		public function standard_edit_UI(e:* = null, animate:Boolean = true, start_at_position:int =0):void {	
 			var buttons:Vector.<smart_button> = new Vector.<smart_button>();
 			var cancel_btn:Button = new Button();
 			cancel_btn.setSize(75, 75);
@@ -264,6 +275,9 @@ package imree.modules
 			var elements:Vector.<f_element> = new Vector.<f_element>(); 
 			elements.push(new f_element_text('name', 'module_name'));
 			elements.push(new f_element_select('Show Name', 'module_display_name', truefalse));
+			elements.push(new f_element_date("Date Start", "module_display_date_start"));
+			elements.push(new f_element_date("Date End", "module_display_date_end"));
+			
 			var form:f_data = new f_data(elements);
 			form.connect(main.connection, int(module_id), 'modules', 'module_id');
 			form.get_dynamic_data_for_all();
@@ -273,21 +287,21 @@ package imree.modules
 			form.x = main.Imree.Device.box_size /4;
 			form.y = main.Imree.Device.box_size / 4;
 			
-			var proxies:Vector.<DisplayObjectContainer> = make_proxies(main.stage.stageWidth, main.stage.stageHeight);
+			var proxies:Vector.<DisplayObjectContainer> = make_proxies(main.Imree.staging_area.width, main.Imree.staging_area.height);
 			for (var i:int = 0; i < proxies.length; i++ ) {
 				proxies[i].addEventListener(MouseEvent.MOUSE_DOWN, proxy_mouseDown);
 			}
 			
 			
-			var dialog:modal = new modal(main.stage.stageWidth, main.stage.stageHeight, buttons, form_wrapper, proxies, 0x000000, 1, "left");
+			var dialog:modal = new modal(main.Imree.staging_area.width, main.Imree.staging_area.height, buttons, form_wrapper, proxies, 0x000000, 1, "left");
 			main.Imree.Exhibit.overlay_add(dialog);
 			
 			
 			var current_proxy_focus:Sprite;
 			var proxy_cursor:box;
 			var trash:icon_trashcan = new icon_trashcan();
-			trash.x = main.stage.stageWidth - trash.width;
-			trash.y = main.stage.stageHeight - trash.height;
+			trash.x = main.Imree.staging_area.width - trash.width;
+			trash.y = main.Imree.staging_area.height- trash.height;
 			dialog.addChild(trash);
 			trash.visible = false;
 			function proxy_mouseDown(evt:MouseEvent):void {
@@ -310,24 +324,24 @@ package imree.modules
 					proxy_cursor = null;
 					var target:box = test_proxies_for_mouse_position();
 					if (target !== null) {
+						var start_at_position_target:int = dialog.get_scoll_point().x;
 						change_mod_order(box(current_proxy_focus).data.mod, target.data.index);
 						dump_edit_UI();
-						draw_edit_UI(null, false );
+						draw_edit_UI(null, false, start_at_position_target );
 					} 
 					if (trash.hitTestPoint(main.stage.mouseX, main.stage.mouseY)) {
 						var tar:box = box(current_proxy_focus);
+						var data:Object;
 						if (tar.data.mod is module_asset) {
-							pending_save++;
-							var data:Object = { 'table':'module_assets', 'where':" module_asset_id = '" + module_asset(tar.data.mod).module_asset_id + "' " };
-							main.connection.server_command("delete", data, reload, true);
+							data = { "module_asset_id":module_asset(tar.data.mod).module_asset_id };
 						} else {
-							pending_save++;
-							var dat:Object = { 'table':'modules', 'where':" module_id = '" + module(tar.data.mod).module_id + "' " };
-							main.connection.server_command("delete", dat, reload, true);
+							data = { "module_id": module(tar.data.mod).module_id};
 						}
+						main.connection.server_command("remove_module", data, null, true);
 						items.splice(items.indexOf(box(current_proxy_focus)), 1);
+						var start_at_position_target2:int = dialog.get_scoll_point().x;
 						dump_edit_UI();
-						draw_edit_UI();
+						draw_edit_UI(e,animate,start_at_position_target2);
 					}
 				}
 				function proxy_mouseMove(stage_event:MouseEvent):void {
@@ -338,7 +352,7 @@ package imree.modules
 			}
 			function dump_edit_UI():void {
 				for each(var poo:box in proxies) {
-					poo.addEventListener(MouseEvent.MOUSE_DOWN, proxy_mouseDown);
+					poo.removeEventListener(MouseEvent.MOUSE_DOWN, proxy_mouseDown);
 					poo.parent.removeChild(poo);
 					poo = null;
 				}
@@ -360,14 +374,18 @@ package imree.modules
 				return hero;
 			}
 			
+			if (start_at_position > 0) {
+				dialog.scroll_to(start_at_position, 0);
+			}
+			
 		}
 		
 		public function draw_search(e:*= null):void  {
-			var Search:search = new search(new_assets_ingested, main, this, destroy_search, stage.stageWidth, stage.stageHeight);
+			var Search:search = new search(new_assets_ingested, main, this, destroy_search, main.Imree.staging_area.width, main.Imree.staging_area.height);
 			Search.allow_modules = true;
 			var search_wrapper:Sprite = new Sprite();
 			Exhibit.overlay_add(search_wrapper);
-			search_wrapper.addChild(new box(main.stage.stageWidth, main.stage.stageHeight, 0xFFFFFF, 1));
+			search_wrapper.addChild(new box(main.Imree.staging_area.width, main.Imree.staging_area.height, 0xFFFFFF, 1));
 			Search.draw_search_box();
 			search_wrapper.addChild(Search);
 			function destroy_search(e:*= null):void {

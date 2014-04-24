@@ -284,7 +284,7 @@ package imree.modules {
 			}
 		}
 		
-		override public function draw_edit_UI(e:* = null, animate:Boolean = true):void {
+		override public function draw_edit_UI(e:* = null, animate:Boolean = true, start_at_position:int =0):void {
 			Exhibit.overlay_remove();
 			var buttons:Vector.<smart_button> = new Vector.<smart_button>();
 			
@@ -336,7 +336,7 @@ package imree.modules {
 				objects.push(prox);
 			}
 			
-			var edit_ui:modal = new modal(main.stage.stageWidth, main.stage.stageHeight, buttons, form_wrapper, objects,0x000000,1,"left");
+			var edit_ui:modal = new modal(main.Imree.staging_area.width, main.Imree.staging_area.height, buttons, form_wrapper, objects,0x000000,1,"left");
 			Exhibit.overlay_add(edit_ui);
 			
 			

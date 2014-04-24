@@ -17,11 +17,12 @@ package imree
 	import com.greensock.loading.VideoLoader;
 	import com.greensock.TimelineLite;
 	import com.greensock.TweenLite;
-	import flash.desktop.NativeApplication;
+	import flash.desktop.*;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
+	import flash.display.LoaderInfo;
 	import flash.events.Event;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
@@ -45,6 +46,8 @@ package imree
 	import imree.shortcuts.box;
 	import imree.keycommander;
 	import imree.signage.signage_stack;
+	import com.demonsters.debugger.MonsterDebugger;
+	
 	
 	
 	
@@ -65,6 +68,7 @@ package imree
 		public var image_loader_que:LoaderMax;
 		public var aud_loader_queue:LoaderMax;
 		public var preloader:Preloader;
+		
 		public var t:Main;
 		public function Main():void 
 		{
@@ -72,8 +76,7 @@ package imree
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
 			
-			
-			
+			MonsterDebugger.initialize(this);
 			
 			stage.addEventListener(Event.DEACTIVATE, deactivate);
 			//Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;

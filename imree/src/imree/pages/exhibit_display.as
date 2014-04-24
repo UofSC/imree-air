@@ -89,27 +89,19 @@ package imree.pages
 		public function load(start_at:int = 0, focus_on_sub_module:int =0):void
 		{
 			main.connection.server_command("exhibit_data", id, data_loaded);
-			function data_loaded(e:LoaderEvent):void
-			{
+			function data_loaded(e:LoaderEvent):void {
 				wrapper.removeChild(spinner);
 				spinner = null;
 				var xml:XML = XML(e.target.content);
 				modules = new Vector.<module>();
-				if (xml.result.modules !== undefined)
-				{
-					for (var i:int = 0; i < xml.result.modules.children().length(); i++)
-					{
+				if (xml.result.modules !== undefined) {
+					for (var i:int = 0; i < xml.result.modules.children().length(); i++) {
 						modules.push(build_module(xml.result.modules.children()[i], i + 1 !== xml.result.modules.children().length()));
 					}
 				}
-				else
-				{
-					//@todo: prompt curator to add some modules
-				}
 				
 				trace("\n\nEXHIBIT DATA XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-				for each (var j:module in modules)
-				{
+				for each (var j:module in modules)  {
 					trace(j.module_name + " [" + j.module_type + "] " + "{" + j.trace_heirarchy(j, 1) + "\n}");
 				}
 				
@@ -141,13 +133,7 @@ package imree.pages
 					result.push(build_module(i, false));
 				}
 			}
-			if (xml.child_assets !== undefined)
-			{
-				for each (var j:XML in xml.child_assets.children())
-				{
-					result.push(build_module(j, false));
-				}
-			}
+			
 			if (has_next)
 			{
 				var next_button_module:module_next = new module_next(main, t, null);
@@ -183,6 +169,7 @@ package imree.pages
 				asset.source_credit = xml.source_credit_statement;
 				asset.source_url = xml.source_url;
 				asset.source_common_name = xml.source_common_name;
+				asset.original_order = xml.original_order;
 				if (xml.asset_resizeable == '1')
 				{
 					asset.can_resize = true;
@@ -225,6 +212,7 @@ package imree.pages
 				mod.thumb_display_rows = xml.thumb_display_rows;
 				mod.module_display_name = (xml.module_display_name == '1');
 				mod.module_display_child_names = xml.module_display_child_names == '1';
+				mod.original_order = xml.original_order;
 				return mod;
 			}
 		
@@ -320,11 +308,11 @@ package imree.pages
 			
 			var snuggly:box;
 			if (main.Imree.Device.orientation === "portrait") {
-				snuggly = new box(main.stage.stageWidth, main.stage.stageHeight * .9, Theme.background_color_primary, 1);
-				snuggly.y = main.stage.stageHeight * .1;
+				snuggly = new box(main.Imree.staging_area.width, main.Imree.staging_area.height * .9, Theme.background_color_primary, 1);
+				snuggly.y = main.Imree.staging_area.height * .1;
 			} else {
-				snuggly = new box(main.stage.stageWidth * .9, main.stage.stageHeight, Theme.background_color_primary, 1);
-				snuggly.x = main.stage.stageWidth * .1;
+				snuggly = new box(main.Imree.staging_area.width * .9, main.Imree.staging_area.height, Theme.background_color_primary, 1);
+				snuggly.x = main.Imree.staging_area.width * .1;
 			}
 			asset_wrapper.addChild(snuggly);
 			e.draw_feature_on_object = snuggly;
@@ -395,8 +383,8 @@ package imree.pages
 		
 		public function reorder_items_in_module(mod:module, saveFunction:Function):void
 		{
-			var reorder_wrapper:box = new box(main.stage.stageWidth, main.stage.stageHeight);
-			var reorder_background:box = new box(main.stage.stageWidth, main.stage.stageHeight, 0x000000, .8);
+			var reorder_wrapper:box = new box(main.Imree.staging_area.width, main.Imree.staging_area.height);
+			var reorder_background:box = new box(main.Imree.staging_area.width, main.Imree.staging_area.height, 0x000000, .8);
 			reorder_wrapper.addChild(reorder_background);
 			TweenLite.from(reorder_background, .5, {alpha: 0});
 			overlay_add(reorder_wrapper);
@@ -530,7 +518,7 @@ package imree.pages
 			
 		}
 		public function current_module():module {
-			if(modules.length > 0) {
+			if(modules !== null && modules.length > 0) {
 				return modules[current_module_i];
 			} else {
 				return null;

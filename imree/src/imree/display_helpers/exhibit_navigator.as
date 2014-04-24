@@ -53,7 +53,7 @@ package imree.display_helpers {
 			
 			
 			if (portrait) {
-				wrapper = new box(main.stage.stageWidth, big_butt_sample.height + 20, 0xFFFFFF, 1);
+				wrapper = new box(main.Imree.staging_area.width, big_butt_sample.height + 20, 0xFFFFFF, 1);
 				wrapper.y = main.stage.stageHeight - wrapper.height;
 				var butt_x:int = 10;
 				for each(butt in butts) {
@@ -63,7 +63,7 @@ package imree.display_helpers {
 					butt_x += butt.width + 10;
 				}
 			} else {
-				wrapper  = new box(big_butt_sample.width + 20, main.stage.stageHeight, 0xFFFFFF, 1);
+				wrapper  = new box(big_butt_sample.width + 20, main.Imree.staging_area.height, 0xFFFFFF, 1);
 				wrapper.x = main.stage.stageWidth - wrapper.width;
 				var butt_y:int = 10;
 				for each(butt in butts) {

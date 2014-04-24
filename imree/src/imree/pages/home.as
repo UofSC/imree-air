@@ -32,12 +32,15 @@ package imree.pages
 		public var xml:XML;
 		public var onSelect:Function;
 		public var main:Main;
-		public function home(_w:int, _h:int, _conn:serverConnect, _main:Main) 
+		public var w:int;
+		public var h:int;
+		public function home(_w:int, _h:int, _main:Main) 
 		{
-			conn = _conn;
+			conn = _main.connection;
 			conn.server_command("exhibits", "", exhibits_data_receieved);
 			main = _main;
-			
+			w = _w;
+			h = _h;
 		}
 		
 		
@@ -50,16 +53,16 @@ package imree.pages
 			
 			var header_font:textFont = new textFont("AbrahamLincoln", 48);
 			header_font.align = TextFormatAlign.CENTER;
-			var header:text = new text ("University of South Carolina Libraries", stage.stageWidth * 0.90, header_font);
-			header.x = stage.stageWidth * .05;
+			var header:text = new text ("University of South Carolina Libraries", w * 0.90, header_font);
+			header.x = w * .05;
 			addChild(header);
-			header.y = stage.stageHeight * .10 - header.height * .50;
+			header.y =  h * .10 - header.height * .50;
 			
 			//Need a Symbol instead of TextFont/Field, etc. 
 			
 			var scroller:scrollPaneFancy = new scrollPaneFancy();
-			scroller.setSize(stage.stageWidth, stage.stageHeight * .8);
-			scroller.y = stage.stageHeight * .2;
+			scroller.setSize(w, h * .8);
+			scroller.y = h * .2;
 			if (main.Imree.Device.orientation === "portrait") {
 				scroller.drag_enable("top");
 			} else {
@@ -76,12 +79,12 @@ package imree.pages
 				
 				var exhibit_cover_wrapper:box;
 				if (main.Imree.Device.orientation === "portrait") {
-					exhibit_cover_wrapper = new box(stage.stageWidth * .90, stage.stageHeight * .5, 0x000000,.5, 1);
-					exhibit_cover_wrapper.x = stage.stageWidth * .05;
+					exhibit_cover_wrapper = new box(w * .90, h * .5, 0x000000,.5, 1);
+					exhibit_cover_wrapper.x = w * .05;
 					exhibit_cover_wrapper.y = current_x + 15;
 					current_x += exhibit_cover_wrapper.height +15;
 				} else {
-					exhibit_cover_wrapper = new box(stage.stageWidth * .5, stage.stageHeight * .7, 0x000000,.5, 1);
+					exhibit_cover_wrapper = new box(w * .5, h * .7, 0x000000,.5, 1);
 					exhibit_cover_wrapper.x = current_x + 15;
 					current_x += exhibit_cover_wrapper.width +15;
 				}

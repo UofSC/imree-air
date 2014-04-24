@@ -153,8 +153,8 @@ package imree.modules
 			phase_feature = grid_feature_drawn;
 			super.draw_edit_button();
 		}
-		override public function draw_edit_UI(e:* = null, animate:Boolean = true):void {
-			standard_edit_UI(e, animate);
+		override public function draw_edit_UI(e:* = null, animate:Boolean = true, start_at_position:int =0):void {
+			standard_edit_UI(e, animate, start_at_position);
 		}
 		
 		

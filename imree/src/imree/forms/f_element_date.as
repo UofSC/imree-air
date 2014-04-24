@@ -178,37 +178,27 @@ package imree.forms
 			super.set_value(e);
 		}
 		override public function set_disable():void {
-			
-			txtyr:NumericStepper().enabled = false;
-			txtyr.enabled = false;
-			
-			txtmo:NumericStepper().enabled = false;
-			txtmo.enabled = false;
-			
-			txtdate:NumericStepper().enabled = false;
-			txtdate.enabled = false;
-			
-			txthr:NumericStepper().enabled = false;
-			txthr.enabled = false;
-			
-			txtmin:NumericStepper().enabled = false;
-			txtmin.enabled = false;
-			
-			txtsec:NumericStepper().enabled = false;
-			txtsec.enabled = false;		
-			
+			if(txtyr !== null) {
+				txtyr.enabled = false;
+				txtmo.enabled = false;
+				txtdate.enabled = false;
+				txthr.enabled = false;
+				txtmin.enabled = false;
+				txtsec.enabled = false;		
+			}			
 			//set each numberic stepper to: stepper:NumericStepper().enabled = false;
 			//stepper_year.enabled = false;
 		}
 		override public function set_enabled():void {
 			//stepper_year.enabled = true;
-			
-			txtyr.enabled = true;
-			txtmo.enabled = true;
-			txtdate.enabled = true;
-			txthr.enabled = true;
-			txtmin.enabled = true;
-			txtsec.enabled = true;
+			if(txtyr !== null) {
+				txtyr.enabled = true;
+				txtmo.enabled = true;
+				txtdate.enabled = true;
+				txthr.enabled = true;
+				txtmin.enabled = true;
+				txtsec.enabled = true;
+			}
 		}
 	}
 

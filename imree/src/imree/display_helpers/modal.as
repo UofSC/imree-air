@@ -60,7 +60,7 @@ package imree.display_helpers {
 			top_UI_wrapper.y = h - 80;
 			addChild(top_UI_wrapper);
 			addEventListener(Event.REMOVED_FROM_STAGE, close);
-			var current_x:int = top_UI_wrapper.width;
+			
 			
 			buttons = _buttons;
 			if (_buttons === null) {
@@ -71,12 +71,7 @@ package imree.display_helpers {
 				buttons.push(new smart_button(butt_ok, okay_event));
 			}
 			
-			for each(var butt:smart_button in buttons) {
-				top_UI_wrapper.addChild(butt);
-				current_x -= butt.width - 5;
-				butt.x = current_x;
-				butt.y = 5;
-			}
+			new_buttons(buttons);
 			
 			if (objects !== null) {
 				add_displayObjects_as_grid(objects);
@@ -93,6 +88,36 @@ package imree.display_helpers {
 		public function update():void {
 			scroller.update();
 		}
+		public function new_buttons(butts:Vector.<smart_button>):void {
+			for (var i:int = 0; i < top_UI_wrapper.numChildren; i++) {
+				if (top_UI_wrapper.getChildAt(i) is smart_button) {
+					top_UI_wrapper.removeChildAt(i);
+					i--;
+				}
+			}
+			
+			buttons = butts;
+			var current_x:int = top_UI_wrapper.width;
+			for each(var butt:smart_button in buttons) {
+				top_UI_wrapper.addChild(butt);
+				current_x -= butt.width - 5;
+				butt.x = current_x;
+				butt.y = 5;
+			}
+		}
+		public function remove_button(butt:smart_button):void {
+			if (buttons.indexOf(butt) > -1) {
+				buttons.splice(buttons.indexOf(butt), 1);
+				new_buttons(buttons);
+			}
+		}
+		public function add_button(butt:smart_button):void {
+			if (buttons.indexOf(butt) == -1) {
+				buttons.push(butt);
+				new_buttons(buttons);
+			}
+		}
+		
 		public function add_displayObjects_as_grid(items:Vector.<DisplayObjectContainer>, padding:int = 10 ):void {
 			var proxies:Vector.<position_data> = new Vector.<position_data>();
 			for each(var obj:DisplayObjectContainer in items) {

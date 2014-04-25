@@ -1,6 +1,8 @@
 package imree.modules 
 {
 	import com.greensock.easing.Cubic;
+	import com.greensock.events.LoaderEvent;
+	import com.greensock.loading.XMLLoader;
 	import com.greensock.TimelineLite;
 	import com.greensock.TweenLite;
 	import fl.controls.Button;
@@ -295,6 +297,42 @@ package imree.modules
 			
 			var dialog:modal = new modal(main.Imree.staging_area.width, main.Imree.staging_area.height, buttons, form_wrapper, proxies, 0x000000, 1, "left");
 			main.Imree.Exhibit.overlay_add(dialog);
+			
+			var location_mark_ui:Button = new Button();
+			location_mark_ui.setSize(75, 75);
+			location_mark_ui.label = "Mark Location";
+			var location_mark:smart_button = new smart_button(location_mark_ui, location_mark_click);
+			var location_unmark_ui:Button = new Button();
+			location_unmark_ui.setSize(75, 75);
+			location_unmark_ui.label = "Unmark Location";
+			var location_unmark:smart_button = new smart_button(location_unmark_ui, location_unmark_click);
+			main.connection.server_command("module_location_id", module_id, location_response);
+			function location_response(L:LoaderEvent):void {
+				if (XML(XMLLoader(L.target).content).result == '0') {
+					dialog.add_button(location_mark);
+				} else {
+					dialog.add_button(location_unmark);
+				}
+			}
+			function location_mark_click(L:*= null):void {
+				main.connection.server_command("device_mark_location", { 'module_id':module_id, 'location_name':module_name }, location_mark_response, true);
+				dialog.remove_button(location_mark);
+			}
+			function location_mark_response(L:LoaderEvent):void {
+				if (XML(XMLLoader(L.target).content).success == 'true') {
+					main.Logger.add("Loaded Location");
+				} else {
+					main.Logger.add("Request to add location failed: " + XML(XMLLoader(L.target).content).error);
+				}
+				dialog.add_button(location_unmark);
+			}
+			function location_unmark_click(L:*= null):void {
+				main.connection.server_command("device_unmark_location", { 'module_id':module_id }, device_unmark_location, true);
+				dialog.remove_button(location_unmark);
+			}
+			function device_unmark_location(L:LoaderEvent):void {
+				dialog.add_button(location_mark);
+			}
 			
 			
 			var current_proxy_focus:Sprite;

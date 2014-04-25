@@ -35,6 +35,7 @@ package imree
 	import flash.text.TextFormat;
 	import flash.ui.Multitouch;
 	import flash.ui.MultitouchInputMode;
+	import flash.utils.Timer;
 	import imree.data_helpers.data_value_pair;
 	import imree.data_helpers.position_data;
 	import imree.data_helpers.user;
@@ -119,10 +120,10 @@ package imree
 				
 				
 				connection = new serverConnect("http://imree.tcl.sc.edu/imree-php/api/", t);
-				connection.server_command("signage_mode", '', sign_mode_loader);
+				connection.server_command("mode", '', sign_mode_loader);
 				function sign_mode_loader(evt:LoaderEvent):void {
 					var xml:XML = XML(evt.currentTarget.content);
-					if (xml.result.signage_mode == 'signage') {
+					if (xml.result.mode == 'signage') {
 						connection.session_key = xml.result.key;
 						trace("Based on our IP, this device has been instructed to be digital signage, but I'm overriding that");
 						load_imree();
@@ -135,7 +136,11 @@ package imree
 						if (Stage.supportsOrientationChange) {
 							stage.addEventListener(StageOrientationEvent.ORIENTATION_CHANGE, orientation_update);
 						}
-						
+						if (xml.result.mode == 'tablet') {
+							Imree.location_aware(); 
+						} else {
+							toast("Not Tablet");
+						}
 					}
 				}
 				
@@ -203,12 +208,42 @@ package imree
 			addChild(Imree);
 		}
 		
+		private var toast_wrapper:box;
+		private var toast_timer:Timer;
+		public function toast(str:String):void {
+			toast_clear();
+			toast_timer= new Timer(5000, 1);
+			toast_timer.addEventListener(TimerEvent.TIMER, toast_clear);
+			var txt:text = new text(str, 300);
+			toast_wrapper = new box(txt.width + 10, txt.height + 10, 0xFFFFFF, 1, 1, 0x000000);
+			toast_wrapper.addChild(txt);
+			txt.x = 5;
+			txt.y = 5;
+			addChild(toast_wrapper);
+			toast_wrapper.x = stage.stageWidth / 2 - toast_wrapper.width / 2;
+			toast_wrapper.y = (stage.stageHeight * 7) / 8 - toast_wrapper.height / 2;
+			toast_timer.start();
+		}
+		private function toast_clear(e:*=null):void {
+			if(toast_timer !== null) {
+				toast_timer.stop();
+				toast_timer.removeEventListener(TimerEvent.TIMER, toast_clear);
+				toast_timer = null;
+			}
+			if (toast_wrapper !== null && contains(toast_wrapper)) {
+				removeChild(toast_wrapper);
+			}
+		}
+		
 		public function log(str:*, IO_data:String=null):void {
 			if (IO_data !== null) {
 				Logger_IO.add(String(str) + "\n"+ IO_data + "\n");
 			}
 			Logger.add(str + " SEE IO log for more");
 			trace(str);
+		}
+		public function log_to_server(str:*):void {
+			connection.server_command("error_log", str);
 		}
 		public function general_io_error(e:LoaderEvent):void {
 			LoaderCore(e.target).load(true);

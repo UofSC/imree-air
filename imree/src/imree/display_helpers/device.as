@@ -16,6 +16,7 @@ package imree.display_helpers
 		public var screen_inches_wide:Number;
 		public var screen_inches_tall:Number;
 		public var dpi:Number;
+		public var is_web_player:Boolean;
 		public var orientation:String;
 		public var box_size:int;
 		public var supports_qr:Boolean;

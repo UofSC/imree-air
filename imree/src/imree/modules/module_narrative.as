@@ -163,11 +163,13 @@ package imree.modules
 					scroller.horizontalScrollPosition -= e.delta * 20;
 				}
 				update_items_visible_in_scroller();
+				scroller.update();
 			}
 			
 			scroller.addEventListener(ScrollEvent.SCROLL, dragging);
 			function dragging(e:ScrollEvent):void {
 				update_items_visible_in_scroller();
+				scroller.update();
 			}
 			
 			function update_items_visible_in_scroller():void {

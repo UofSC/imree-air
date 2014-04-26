@@ -1,5 +1,6 @@
 package imree.modules 
 {
+	import com.demonsters.debugger.MonsterDebugger;
 	import com.greensock.easing.Cubic;
 	import com.greensock.events.LoaderEvent;
 	import com.greensock.loading.XMLLoader;
@@ -293,7 +294,6 @@ package imree.modules
 			for (var i:int = 0; i < proxies.length; i++ ) {
 				proxies[i].addEventListener(MouseEvent.MOUSE_DOWN, proxy_mouseDown);
 			}
-			
 			
 			var dialog:modal = new modal(main.Imree.staging_area.width, main.Imree.staging_area.height, buttons, form_wrapper, proxies, 0x000000, 1, "left");
 			main.Imree.Exhibit.overlay_add(dialog);

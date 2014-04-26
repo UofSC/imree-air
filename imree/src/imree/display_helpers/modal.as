@@ -1,4 +1,5 @@
 package imree.display_helpers {
+	import com.demonsters.debugger.MonsterDebugger;
 	import fl.controls.Button;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
@@ -121,10 +122,14 @@ package imree.display_helpers {
 		public function add_displayObjects_as_grid(items:Vector.<DisplayObjectContainer>, padding:int = 10 ):void {
 			var proxies:Vector.<position_data> = new Vector.<position_data>();
 			for each(var obj:DisplayObjectContainer in items) {
-				proxies.push(new position_data(obj.width, obj.height));
+				var position_info:position_data = new position_data(Math.round(obj.width), Math.round(obj.height));
+				trace(position_info);
+				proxies.push(position_info);
+				
 			}
 			var mason:layout = new layout();
 			var positions:Vector.<position_data> = mason.abstract_box_solver(proxies, w, h, padding,dir);
+			
 			var objs_wrapper:Sprite = new Sprite();
 			
 			for (var i:int = 0; i < items.length; i++) {

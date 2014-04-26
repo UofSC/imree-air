@@ -13,6 +13,10 @@ package imree.pages
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
+	import flash.filters.BitmapFilterQuality;
+	import flash.filters.BlurFilter;
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	import flash.utils.Timer;
 	import imree.data_helpers.permission;
 	import imree.data_helpers.position_data;
@@ -345,9 +349,17 @@ package imree.pages
 		private var background_infocus:Boolean = true;
 		public function background_defocus(e:* = null):void
 		{
+			
 			if (background_infocus)
 			{
-				TweenMax.to(wrapper, 2, {blurFilter: {blurX: 10, blurY: 10, quality: 1}, scaleX: .9, scaleY: .9, x: wrapper.x + wrapper.width * .05, y: wrapper.y + wrapper.height * .05, ease: Cubic.easeInOut});
+				//TweenMax.to(wrapper, 2, {blurFilter: {blurX: 10, blurY: 10, quality: 1}, scaleX: .9, scaleY: .9, x: wrapper.x + wrapper.width * .05, y: wrapper.y + wrapper.height * .05, ease: Cubic.easeInOut});
+				var wrapper_cache_data:BitmapData = new BitmapData(wrapper.width, wrapper.height, false);
+				wrapper_cache_data.draw(wrapper);
+				wrapper_cache_data.applyFilter(wrapper_cache_data, new Rectangle(0,0,wrapper.width, wrapper.height), new Point(), new BlurFilter(10, 10, BitmapFilterQuality.MEDIUM));
+				var wrapper_cache:Bitmap = new Bitmap(wrapper_cache_data);
+				wrapper.addChild(wrapper_cache);
+				TweenLite.from(wrapper_cache, 2, { alpha:0 } );
+				
 				background_infocus = false;
 			}
 		}

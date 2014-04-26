@@ -16,7 +16,11 @@ package imree.display_helpers {
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.MediaEvent;
 	import flash.events.MouseEvent;
+	import flash.filesystem.File;
+	import flash.media.*;
+	import flash.utils.IDataInput;
 	import imree.data_helpers.data_value_pair;
 	import imree.data_helpers.position_data;
 	import imree.forms.f_element_text;
@@ -97,6 +101,31 @@ package imree.display_helpers {
 			function add_module_by_name_done(s:Event):void {
 				onDestroy();
 			}
+			
+			if (main.Imree.Device.is_web_player === false && CameraUI.isSupported) {				
+				var take_picture_UI:Button = new Button();
+					take_picture_UI.setSize(80, 70);
+					take_picture_UI.label = "Snap Photo";
+				var take_picture_butt:smart_button = new smart_button(take_picture_UI, take_picture_click);
+				search_ui_wrapper.addChild(take_picture_butt);
+				take_picture_butt.x = search_ui_wrapper.width / 2 - take_picture_butt.width / 2;
+				take_picture_butt.y = search_ui_wrapper.height + 15;
+				var cam:CameraUI;
+			}
+			function take_picture_click(me:*= null):void {
+				cam = new CameraUI();
+				cam.addEventListener(MediaEvent.COMPLETE, take_picture_result);
+				cam.launch(MediaType.IMAGE);
+			}
+			function take_picture_result(me:MediaEvent):void {
+				cam.removeEventListener(MediaEvent.COMPLETE, take_picture_result);
+				var mp:MediaPromise = MediaPromise(me.data);
+				var file:File = File(mp.file);
+				main.connection.server_upload({"module_id":String(Module.module_id)}, file, take_picture_uploaded);
+			}
+			function take_picture_uploaded(me:*= null):void {
+				
+			}
 		}
 		
 		
@@ -123,7 +152,7 @@ package imree.display_helpers {
 			
 			var scroller_contents:Sprite = new Sprite();
 			if (xml.result.children.children().length() == 0) {
-				trace("no results"); //@todo add visual message to results pane
+				main.toast("No Results");
 			}
 			
 			var boxes:Vector.<DisplayObjectContainer> = new Vector.<DisplayObjectContainer>();
@@ -142,10 +171,10 @@ package imree.display_helpers {
 				thumb_loader_vars.height(image_portion_of_bk.height);
 				new ImageLoader(String(xml.result.children.children()[i].thumbnail_url), thumb_loader_vars).load();
 				
-				var txt:text = new text(String(xml.result.children.children()[i].title), main.Imree.Device.box_size - 10, new textFont('_sans', 14));
+				var txt:text = new text(String(xml.result.children.children()[i].title), main.Imree.Device.box_size - 10, new textFont('_sans', 14),main.Imree.Device.box_size -image_portion_of_bk.height - 10);
 				txt.y = image_portion_of_bk.height + 5;
 				txt.x = 6;
-				bk.addChild(txt);
+				//bk.addChild(txt);
 				bk.mouseChildren = false;
 				bk.mouseEnabled = true;
 				boxes.push(bk);
@@ -208,6 +237,7 @@ package imree.display_helpers {
 			var top_buttons:Vector.<smart_button> = new Vector.<smart_button>();
 			top_buttons.push(btn_cancel, btn_confirm);
 			
+			
 			function cancel(me:*= null):void {
 				for each (var bk:box in boxes) {
 					bk.removeEventListener(MouseEvent.CLICK, item_selected);
@@ -240,10 +270,6 @@ package imree.display_helpers {
 				}
 			}
 			
-			var search_modal:modal = new modal(w, h, top_buttons);
-			search_modal.add_displayObjects_as_grid(boxes, 20);
-			addChild(search_modal);
-			
 			for (var b:int = 0; b < boxes.length; b++) {
 				i = String(b);
 				if (xml.result.children.children()[i].children.children().length() > 0) {
@@ -252,11 +278,13 @@ package imree.display_helpers {
 					var book_indicator:Icon_book_background = new Icon_book_background();
 					book_indicator.width = bk.width + 5;
 					book_indicator.height = bk.height + 15;
-					boxes[i].addChild(book_indicator);
+					//boxes[i].addChild(book_indicator);
 				} else {
 					boxes[i].addEventListener(MouseEvent.CLICK, item_selected);
 				}
 			}
+			var search_modal:modal = new modal(w, h, top_buttons, null, boxes);
+			addChild(search_modal);
 			
 			function complex_object_selected(me:MouseEvent):void {
 				var target:box = box(me.currentTarget);

@@ -65,6 +65,7 @@ package imree
 		{
 			main = _main;
 			Device = new device(main);
+			UI_width = Device.box_size / 3;
 			
 			var menu_can_hide:Boolean = true;
 			var context_vars:Object = LoaderInfo(main.root.loaderInfo).parameters;
@@ -72,14 +73,16 @@ package imree
 				start_at_exhibit = int(context_vars.start_at);
 			}
 			if (context_vars.web !== null && context_vars.web == "web") {
-				staging_area = new box(main.stage.stageWidth, main.stage.stageHeight - Device.dpi * 1);
-				staging_area.y = Device.dpi * 1;
+				staging_area = new box(main.stage.stageWidth, main.stage.stageHeight - UI_width);
+				staging_area.y = UI_width;
+				Device.is_web_player = true;
 			} else {
+				Device.is_web_player = false;
 				//staging_area = new box(main.stage.stageWidth, main.stage.stageHeight);
 				
-				staging_area = new box(main.stage.stageWidth, main.stage.stageHeight - Device.dpi * 1);
-				staging_area.y = Device.dpi * 1;
-				web_bar(Device.dpi * 1);
+				staging_area = new box(main.stage.stageWidth, main.stage.stageHeight - UI_width);
+				staging_area.y = UI_width;
+				web_bar(UI_width);
 				menu_can_hide = false;
 				
 			}
@@ -196,13 +199,10 @@ package imree
 			
 		}
 		
-		public var UI_min_size:Number = 32;
-		public var UI_max_size:Number = 128;
-		public var UI_linear_slop:Number = 1 / 16;
-		public var UI_linear_offset:Number = 8;
+		public static var UI_width:int;
 		public function UI_size(obj:DisplayObject):Number {
-			var new_width:Number = Device.dpi;
-			var new_height:Number = (obj.height / obj.width) * Device.dpi;
+			var new_width:Number = UI_width;
+			var new_height:Number = (obj.height / obj.width) * new_width;
 			obj.scaleX = new_width / obj.width;
 			obj.scaleY = new_height / obj.height;
 			return new_width / obj.width; //the scale factor (e.g. 0.5 = shrunk the size of obj in half)

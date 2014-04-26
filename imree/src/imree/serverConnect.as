@@ -4,6 +4,10 @@ package imree
 	import com.greensock.events.*;
 	import com.greensock.loading.*;
 	import com.greensock.loading.data.*;
+	import flash.events.DataEvent;
+	import flash.events.IOErrorEvent;
+	import flash.events.SecurityErrorEvent;
+	import flash.filesystem.File;
 	import flash.net.*;
 	
 	
@@ -38,25 +42,12 @@ package imree
 				trace("No connection uri set. Use   ... = new serverConnect('http://site.com/imree/api/'); ... ");
 			}
 			
-			if (typeof(command_parameter) === "object") {
-				var j:JSONEncoder = new JSONEncoder(command_parameter);
-				command_parameter = j.getString();
-				trace(command_parameter);
-			}
+			var request:URLRequest = get_url_vars(command, command_parameter, elevatedPrivileges);
 			
 			var post_data:URLVariables = new URLVariables();
 				post_data.command = command;
 				post_data.command_parameter = command_parameter;
 				post_data.session_key = session_key;
-				
-			if (elevatedPrivileges && username.length > 0 && password.length > 0) {
-				post_data.username = username;
-				post_data.password = password;
-			}
-			
-			var request:URLRequest = new URLRequest(this.uri);
-				request.method = URLRequestMethod.POST;
-				request.data = post_data;				
 			
 			var xmlloadervars:XMLLoaderVars = new XMLLoaderVars();
 				xmlloadervars.noCache(true);
@@ -105,6 +96,49 @@ package imree
 		public function say_loader_event(e:LoaderEvent):String {
 			var vars:Object = DataLoader(e.currentTarget).vars.properties;
 			return "[#" + vars.index + "] \t[" + vars.command + "] \t[" + vars.parameter + "]";
+		}
+		
+		public function server_upload(command_parameter:*, file:File, onComplete:Function = null):void {
+			var request:URLRequest = get_url_vars("upload", command_parameter, true);
+			file.addEventListener(DataEvent.UPLOAD_COMPLETE_DATA, upload_complete);
+			file.addEventListener(IOErrorEvent.IO_ERROR, upload_error);
+			file.addEventListener(SecurityErrorEvent.SECURITY_ERROR, upload_error);
+			function upload_complete(e:DataEvent):void {
+				if (onComplete !== null) {
+					onComplete();
+					main.toast("Upload complete");
+				}
+			}
+			function upload_error(e:*):void {
+				main.log_to_server("Upload Failed " + e);
+				main.toast("Upload Failed: " + e);
+				
+			}
+			file.upload(request);
+			
+		}
+		
+		private function get_url_vars(command:String, command_parameter:*, elevatedPrivileges:Boolean = false):URLRequest {
+			if (typeof(command_parameter) === "object") {
+				var j:JSONEncoder = new JSONEncoder(command_parameter);
+				command_parameter = j.getString();
+			}
+			
+			var post_data:URLVariables = new URLVariables();
+				post_data.command = command;
+				post_data.command_parameter = command_parameter;
+				post_data.session_key = session_key;
+				
+			if (elevatedPrivileges && username.length > 0 && password.length > 0) {
+				post_data.username = username;
+				post_data.password = password;
+			}
+			
+			var request:URLRequest = new URLRequest(this.uri);
+				request.method = URLRequestMethod.POST;
+				request.data = post_data;		
+			
+			return request;
 		}
 	}
 	

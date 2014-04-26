@@ -13,10 +13,13 @@ package imree.modules
 	import flash.display.BlendMode;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.events.TransformGestureEvent;
 	import flash.net.URLRequest;
 	import flash.net.URLRequestMethod;
 	import flash.net.URLVariables;
+	import flash.system.Capabilities;
 	import imree.images.loading_spinner_sprite;
 	import imree.Main;
 	import imree.pages.exhibit_display;
@@ -160,6 +163,27 @@ package imree.modules
 					wrapper.stopDrag();
 					wrapper.removeEventListener(MouseEvent.MOUSE_OUT, stop_feature_drag);
 					wrapper.removeEventListener(MouseEvent.MOUSE_UP, stop_feature_drag);
+				}
+				
+				if (Capabilities.touchscreenType != "none") {
+					wrapper.addEventListener(TransformGestureEvent.GESTURE_ZOOM, gesture_zoom_start);
+				}
+				function gesture_zoom_start(fingers:TransformGestureEvent):void {
+					var scale_factor:Number = Math.min(fingers.scaleX, fingers.scaleY);
+					if ((fingers.scaleX + fingers.scaleY) / 2 > 0) {
+						scale_factor = Math.max(fingers.scaleX, fingers.scaleY);
+					} 
+					
+					wrapper.scaleX *= scale_factor;
+					wrapper.scaleY *= scale_factor;
+					
+				}
+				
+				addEventListener(Event.REMOVED_FROM_STAGE, clear_image_listeners);
+				function clear_image_listeners(event:Event):void {
+					wrapper.removeEventListener(MouseEvent.MOUSE_WHEEL, scroll_wheel_on_image);
+					wrapper.removeEventListener(TransformGestureEvent.GESTURE_ZOOM, gesture_zoom_start);
+					wrapper.removeEventListener(MouseEvent.MOUSE_DOWN, start_feature_drag);
 				}
 			}
 			phase_feature = true;

@@ -43,7 +43,6 @@ package imree.modules
 	{
 		public var thumbnail_url:String;
 		
-		public var loading_indicator:loading_spinner_sprite;
 		
 		public function module_asset_audio(_main:Main, _Exhibit:exhibit_display, _items:Vector.<module> = null)
 		{
@@ -120,79 +119,52 @@ package imree.modules
 		
 		override public function draw_feature(_w:int, _h:int):void
 		{
-			var wrapper:box = new box(draw_feature_on_object.width, draw_feature_on_object.height);
 			phase_feature = true;
-			if (draw_feature_on_object !== null)
-			{
-				main.log('Loading module.module_asset_image [id:' + module_id + '] [name: ' + module_name + '] ' + asset_url);
-				
-				var vars:MP3LoaderVars = new MP3LoaderVars();
-				vars.noCache(true);
-				vars.onComplete(aud_downloaded);
-				vars.autoPlay(true);
-				
-				sound = new MP3Loader(asset_url, vars);
-				
-				sound.load();
-				
-				loading_indicator = new loading_spinner_sprite();
-				loading_indicator.blendMode = BlendMode.SCREEN;
-				draw_feature_on_object.addChild(loading_indicator);
-				loading_indicator.x = _w / 2 - 128 / 2;
-				loading_indicator.y = _h / 2 - 128 / 2;
-			}
-			else
-			{
-				main.log('you need to have set the draw_feature_on_object from outside the module before calling draw_feature()');
+			main.log('Loading module.module_asset_image [id:' + module_id + '] [name: ' + module_name + '] ' + asset_url);
+			
+			prepare_asset_window(_w, _h);
+			
+			sound = new MP3Loader(asset_url, {autoPlay:true, noCache:true});
+			sound.load();
+			asset_content_wrapper.removeChild(loading_indicator);
+			loading_indicator = null;
+			
+			var play_button:button_right = new button_right();
+			play_button.x = asset_content_wrapper.width / 2 - play_button.width / 2;
+			play_button.y = asset_content_wrapper.height / 2 - play_button.height / 2;
+			asset_content_wrapper.addChild(play_button);
+			var pause_button:button_menu = new button_menu();
+			pause_button.x = play_button.x;
+			pause_button.y = play_button.y;
+			asset_content_wrapper.addChild(pause_button);
+			
+			play_button.addEventListener(MouseEvent.CLICK, play_button_clicked);
+			pause_button.addEventListener(MouseEvent.CLICK, pause_button_clicked);
+			
+			function play_button_clicked(a_variable_that_dont_matter:MouseEvent):void {
+				TweenLite.to(sound, 1, {volume: 1, onComplete: onCompletePause});
+				play_button.visible = false;
+				pause_button.visible = true;
 			}
 			
-			wrapper.addEventListener(Event.REMOVED_FROM_STAGE, stop_playing_the_damn_sound);
-			function stop_playing_the_damn_sound(dummy_var:Event):void
-			{
+			function onCompletePause(e:* = null):void {
+				sound.paused = !sound.paused;
+			}
+			
+			function pause_button_clicked(a_variable_that_dont_matter:MouseEvent):void {
+				TweenLite.to(sound, 1, {volume: 0, onComplete: onCompletePause});
+				play_button.visible = true;
+				pause_button.visible = false;
+				
+			}
+			
+			asset_content_wrapper.addEventListener(Event.REMOVED_FROM_STAGE, stop_playing_the_damn_sound);
+			function stop_playing_the_damn_sound(dummy_var:Event):void {
 				sound.pause();
 				sound.dispose();
 			}
 			
-			function aud_downloaded(e:LoaderEvent):void
-			{
-				
-				draw_feature_on_object.removeChild(loading_indicator);
-				loading_indicator = null;
-				var original_width:int = draw_feature_on_object.width;
-				var original_height:int = draw_feature_on_object.height;
-				var play_button:button_right = new button_right();
-				play_button.x = main.Imree.staging_area.width / 2 - play_button.width / 2;
-				play_button.y = main.Imree.staging_area.height / 2 - play_button.height / 2;
-				var pause_button:button_menu = new button_menu();
-				pause_button.x = play_button.x;
-				pause_button.y = play_button.y;
-				
-				play_button.addEventListener(MouseEvent.CLICK, play_button_clicked);
-				pause_button.addEventListener(MouseEvent.CLICK, pause_button_clicked);
-				
-				function play_button_clicked(a_variable_that_dont_matter:MouseEvent):void
-				{
-					TweenLite.to(sound, 3, {volume: 0, onComplete: onCompletePause});
-					play_button.visible = false;
-					pause_button.visible = true;
-				}
-				
-				function onCompletePause(e:* = null):void
-				{
-					sound.paused = !sound.paused;
-				}
-				
-				function pause_button_clicked(a_variable_that_dont_matter:MouseEvent):void
-				{
-					TweenLite.to(sound, 3, {volume: 1, onComplete: onCompletePause});
-					play_button.visible = true;
-					pause_button.visible = false;
-				}
-				
-				wrapper.addChild(pause_button);
-				wrapper.addChild(play_button);
-				draw_feature_on_object.addChild(wrapper);
-			}
+			
 		}
 	
 	}

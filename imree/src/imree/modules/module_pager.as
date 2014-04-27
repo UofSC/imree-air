@@ -45,24 +45,33 @@ package imree.modules {
 	
 		}
 		override public function draw_thumb(_w:int = 200, _h:int = 200, Return:Boolean = false):* {
-			var bk:box = new box(_w-5, _h-15);
-			if (items[0] is module_asset_image) {
-				var url:String = module_asset_image(items[0]).asset_url;
-				if (module_asset_image(items[0]).can_resize) {
-					url += "?size=" + String(_h-15);
+			var bk:box = new box(_w - 5, _h - 15);
+			;
+			
+			if(items.length > 0) {
+				if (items[0] is module_asset_image) {
+					var url:String = module_asset_image(items[0]).asset_url;
+					if (module_asset_image(items[0]).can_resize) {
+						url += "?size=" + String(_h-15);
+					}
+					new ImageLoader(url, main.img_loader_vars(bk)).load();
 				}
-				new ImageLoader(url, main.img_loader_vars(bk)).load();
+			} else {
+				bk.addChild(new text("Empty Book", _w));
 			}
+			
 			var icon:Icon_book_background = new Icon_book_background();
 			icon.width = _w;
 			icon.height = _h;
 			bk.addChild(icon);
+			
 			if (Return) {
 				return bk;
 			} else {
 				addChild(bk);
 			}
 		}
+		
 		override public function draw_feature(_w:int, _h:int):void {
 			if (draw_feature_on_object === null) {
 				trace("Must set draw-feature-on-object-first");
@@ -261,8 +270,17 @@ package imree.modules {
 						} 
 					}
 				}
-			} else {
+			} else if(items.length === 1) {
 				pages_up = 1;
+				if (items[0] is module_asset_image) {
+					new ImageLoader(module_asset_image(items[0]).asset_url, main.img_loader_vars(feature_wrapper)).load();
+				} else {
+					feature_wrapper.addChild(new text("Can't display item"));
+				}
+				
+			} else {
+				pages_up = 0;
+				feature_wrapper.addChild(new text("This pager contains no material. If you're the curator, log in and hit the edit button."));
 			}
 			draw_feature_on_object.addChild(feature_wrapper);
 			if (can_edit) {
@@ -285,6 +303,13 @@ package imree.modules {
 		}
 		
 		override public function draw_edit_UI(e:* = null, animate:Boolean = true, start_at_position:int =0):void {
+			
+			standard_edit_UI(e, animate, start_at_position);
+			
+			
+			/**
+			 * 
+			
 			Exhibit.overlay_remove();
 			var buttons:Vector.<smart_button> = new Vector.<smart_button>();
 			
@@ -390,7 +415,9 @@ package imree.modules {
 				}
 				return null;
 			}
+			*/
 		}
+		
 	}
 
 }

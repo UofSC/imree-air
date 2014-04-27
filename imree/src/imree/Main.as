@@ -79,6 +79,7 @@ package imree
 			
 			MonsterDebugger.initialize(this);
 			
+			
 			stage.addEventListener(Event.DEACTIVATE, deactivate);
 			//Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
 			Multitouch.inputMode = MultitouchInputMode.GESTURE;

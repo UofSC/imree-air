@@ -46,6 +46,21 @@ package imree.modules
 		{
 			t = this;
 			super(_main, _Exhibit, _items);
+			
+			var assets:Vector.<module_asset> = new Vector.<module_asset>();
+			for (var i:int = 0; i < items.length; i++) {
+				if (items[i] is module_asset) {
+					assets.push(module_asset(items[i]));
+				}
+			}
+			for (i = 0; i < assets.length; i++) {
+				if (i > 0) {
+					assets[i].asset_previous = assets[i - 1];
+				}
+				if (i + 1 < assets.length) {
+					assets[i].asset_next = assets[i + 1];
+				}
+			}
 		}
 		override public function draw_thumb(_w:int = 200, _h:int = 200, Return:Boolean = false):* {
 			thumb_wrapper = new Sprite();
@@ -129,8 +144,8 @@ package imree.modules
 			}
 			addChild(wrapper);
 			function item_selected(e:MouseEvent):void {
-				if(e.currentTarget is module_asset) {
-					Exhibit.bring_asset_to_front(module_asset(e.currentTarget));
+				if (e.currentTarget is module_asset) {
+					module(e.currentTarget).draw_feature(main.Imree.staging_area.width, main.Imree.staging_area.height);
 				} else if (e.currentTarget is module_pager) {
 					Exhibit.bring_pager_to_front(module_pager(e.currentTarget));
 				}

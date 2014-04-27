@@ -13,6 +13,12 @@ package imree.modules
 	import fl.video.FLVPlayback;
 	import fl.video.flvplayback_internal;
 	import fl.video.SkinErrorEvent;
+	import fl.video.VideoEvent;
+	import fl.video.VideoPlayer;
+	import fl.video.VideoScaleMode;
+	import flash.system.Capabilities;
+	import flash.system.TouchscreenType;
+	import imree.data_helpers.Theme;
 			
 	import com.greensock.BlitMask;
 	import com.greensock.easing.Cubic;
@@ -55,7 +61,6 @@ package imree.modules
 		public var thumbnail_url:String;
 		
 		
-		public var loading_indicator:loading_spinner_sprite;
 		public function module_asset_video(_main:Main, _Exhibit:exhibit_display,_items:Vector.<module>=null) 
 		{
 			this.asset_url;
@@ -121,55 +126,49 @@ package imree.modules
 		}
 		
 		override public function draw_feature(_w:int, _h:int):void {
-			var wrapper:box = new box(draw_feature_on_object.width, draw_feature_on_object.height);
-			if (draw_feature_on_object !== null) {
-				main.log('Loading module.module_asset_image [id:' + module_id + '] [name: ' + module_name + '] ' + asset_url);
-				
-				/**
-				 * 
-				var vars:VideoLoaderVars = main.vid_loader_vars(draw_feature_on_object);
-				vars.noCache(true);
-					vars.scaleMode(ScaleMode.PROPORTIONAL_INSIDE);
-					vars.onComplete(vid_downloaded);
-					vars.crop(false);
-					vars.autoPlay(true);
-				new VideoLoader(asset_url, vars).load();
-				*/
-				var player:FLVPlayback = new FLVPlayback();
-				player.setSize(draw_feature_on_object.width, draw_feature_on_object.height);
-				player.load(asset_url);
-				player.skin = "SkinOverAllNoFullscreen.swf";
-				player.skinBackgroundColor = 0x808080;
-				player.skinAutoHide = true;
-				player.autoPlay = true;
-				draw_feature_on_object.addChild(player);
-				loading_indicator = new loading_spinner_sprite();
-				loading_indicator.blendMode = BlendMode.SCREEN;
-				//draw_feature_on_object.addChild(loading_indicator);
-				loading_indicator.x = _w/ 2 - 128/2;
-				loading_indicator.y = _h / 2 - 128 / 2;
-				player.addEventListener(Event.REMOVED_FROM_STAGE, player_is_removed);
-				function player_is_removed(asdf:Event):void {
-					player.stop();
-					player.load(null);
-				}
-				
-			} else {
-				main.log('you need to have set the draw_feature_on_object from outside the module before calling draw_feature()');
+			main.log('Loading module.module_asset_image [id:' + module_id + '] [name: ' + module_name + '] ' + asset_url);
+			prepare_asset_window(_w, _h);
+			
+			asset_content_wrapper.removeChild(asset_content_wrapper.mask);
+			asset_content_wrapper.mask = null;
+			
+			var player:FLVPlayback = new FLVPlayback();
+			player.addEventListener(VideoEvent.SKIN_LOADED, add_player);
+			player.addEventListener(SkinErrorEvent.SKIN_ERROR, skin_error);
+			player.skin = "SkinOverAllNoFullscreen.swf";
+			
+			asset_content_wrapper.removeChild(loading_indicator);
+			loading_indicator = null;
+			
+			player.addEventListener(Event.REMOVED_FROM_STAGE, player_is_removed);
+			function player_is_removed(asdf:Event):void {
+				player.stop();
+				player.load(null);
 			}
 			
-			function vid_downloaded(e:LoaderEvent):void {
-				draw_feature_on_object.removeChild(loading_indicator);
-				loading_indicator = null;
+			function skin_error(e:SkinErrorEvent):void {
+				main.toast("Skin Error");
+				add_player();
+			}
+			function add_player(e:*=null):void {
+				player.removeEventListener(VideoEvent.SKIN_LOADED, add_player);
+				player.removeEventListener(SkinErrorEvent.SKIN_ERROR, skin_error);
 				
+				player.skinBackgroundColor = Theme.background_color_secondary;
+				if(Capabilities.touchscreenType === TouchscreenType.NONE) {
+					player.skinAutoHide = true; //only mouse input
+				}
 				
+				player.load(asset_url);
+				player.scaleMode = VideoScaleMode.MAINTAIN_ASPECT_RATIO;
+				player.setSize(asset_content_wrapper.width, asset_content_wrapper.height);
+				player.width = asset_content_wrapper.width;
+				player.height = asset_content_wrapper.height;
+				player.x = 0;
+				player.y = 0;
+				player.playWhenEnoughDownloaded();
 				
-				var original_width:int = draw_feature_on_object.width;
-				var original_height:int = draw_feature_on_object.height;
-				
-				
-				draw_feature_on_object.addChild(wrapper);
-				
+				asset_content_wrapper.addChild(player);
 				
 			}
 			phase_feature = true;

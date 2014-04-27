@@ -95,10 +95,13 @@ package imree.pages
 				
 				var img_loader_vars:ImageLoaderVars = main.img_loader_vars(exhibit_cover_wrapper);
 				
-				if (main.image_is_resizeable(item.exhibit_cover_image_url)) {
-					item.exhibit_cover_image_url += "?size=" + String(exhibit_cover_wrapper.height);
+				var temp_url:String = item.exhibit_cover_image_url;
+				
+				if (main.image_is_resizeable(temp_url)) {
+					temp_url += "?size=" + String(Math.ceil(exhibit_cover_wrapper.height));
 				}
-				new ImageLoader(item.exhibit_cover_image_url, img_loader_vars).load();
+				trace(temp_url);
+				new ImageLoader(temp_url, img_loader_vars).load();
 				
 				var label_font:textFont = new textFont("AbrahamLincoln", 28);
 				label_font.align = TextFormatAlign.CENTER;

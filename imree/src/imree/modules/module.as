@@ -80,6 +80,7 @@ package imree.modules
 			phase_feature = false;
 			module_is_visible = true;
 			addEventListener(Event.REMOVED_FROM_STAGE, dump);
+			
 		}
 		public function draw_thumb(_w:int = 200, _h:int = 200, Return:Boolean = false):* {
 			return null;
@@ -449,7 +450,7 @@ package imree.modules
 					//ignore
 				} else if ( i is module_asset_image ) {
 					bk = new box(i.width, i.height);
-					var bits:BitmapData = new BitmapData(i.width, i.height);
+					var bits:BitmapData = new BitmapData(i.width, i.height, true, 0);
 					bits.draw(i);
 					bk.addChild(new Bitmap(bits));
 					proxies.push(bk);

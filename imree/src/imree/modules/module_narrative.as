@@ -151,7 +151,7 @@ package imree.modules
 				scroller.drag_direction = "left";
 			}
 			
-			TweenLite.to(slidder, 2, { y:0, x:0, ease:Cubic.easeInOut, onComplete:Exhibit.background_defocus} );
+			TweenLite.to(slidder, 2, { y:0, x:0, ease:Cubic.easeInOut} );
 			scroller.update();
 			update_items_visible_in_scroller();
 			

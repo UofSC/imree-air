@@ -87,7 +87,7 @@ package imree.display_helpers {
 			if (allow_modules) {
 				var selector:ComboBox = new ComboBox();
 				selector.prompt = "Add new module";
-				var datas:Array = [{label:"Title", data:"title"}, {label:"Linear/Narrative",data:"narrative"}, {label:"Grid/Gallery",data:"grid"}];
+				var datas:Array = [{label:"Title", data:"title"}, {label:"Linear/Narrative",data:"narrative"}, {label:"Grid/Gallery",data:"grid"}, {label:'Book/Pagination',data:'pager'} ];
 				selector.dataProvider = new DataProvider(datas);
 				selector.addEventListener(Event.CHANGE, add_module_by_name);
 				search_ui_wrapper.addChild(selector);

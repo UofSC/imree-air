@@ -1,5 +1,6 @@
 package imree.pages
 {
+	import com.demonsters.debugger.MonsterDebugger;
 	import com.greensock.easing.Cubic;
 	import com.greensock.events.LoaderEvent;
 	import com.greensock.layout.ScaleMode;
@@ -224,8 +225,10 @@ package imree.pages
 		
 		public function bring_asset_to_front(e:module_asset):void
 		{
+			/**
+			 * Obsolete? 
+			 * 
 			asset_wrapper = new Sprite();
-			
 			var asset_underlay:box = new box(w, h, Theme.background_color_primary, .5);
 			if (Theme.background_pattern_primary !== null) {
 				asset_underlay.bitmapFill(Theme.background_pattern_primary);
@@ -249,23 +252,17 @@ package imree.pages
 				asset_background.y = h * .1;
 				if (e.description !== null && e.description.length > 0)	{
 					string = e.description;
-					if (e.source_credit !== null && e.source_credit.length > 0) {
-						string += " source: " + e.source_credit;
-					}
-					asset_description = new text(string, asset_background.width - 20, Theme.font_style_description, asset_background.height * .3);
-					asset_feature_wrapper = new box(asset_background.width, asset_background.height * .65);
-					asset_description.x = 10;
-					asset_description.y = asset_background.height * .68;
-				} else	{
-					asset_feature_wrapper = new box(asset_background.width, asset_background.height);
-					if (e.source_credit !== null && e.source_credit.length > 0) {
-						string = " source: " + e.source_credit;
-					}
-					asset_description = new text(string, 300, Theme.font_style_description);
-					asset_description.x = 30;
-					asset_description.y = asset_wrapper.height - asset_description.height - 30;
-					
+				} else {
+					string = "";
 				}
+				if (e.source_credit !== null && e.source_credit.length > 0) {
+					string += " source: " + e.source_credit;
+				}
+				asset_description = new text(string, asset_background.width - 20, Theme.font_style_description, asset_background.height * .3);
+				asset_feature_wrapper = new box(asset_background.width, asset_background.height * .65);
+				asset_description.x = 10;
+				asset_description.y = asset_background.height * .68;
+				
 			} else	{
 				asset_background = new box(w * .9, h, Theme.background_color_secondary, 1);
 				if (Theme.background_pattern_secondary !== null) {
@@ -275,22 +272,16 @@ package imree.pages
 				asset_background.x = w * .1;
 				if (e.description !== null && e.description.length > 0)	{
 					string = e.description;
-					if (e.source_credit !== null && e.source_credit.length > 0) {
-						string += " source: " + e.source_credit;
-					}
-					asset_description = new text(string, asset_background.width * .3, Theme.font_style_description, asset_background.height - 20);
-					asset_feature_wrapper = new box(asset_background.width * .65, asset_background.height, Theme.background_color_primary, .5);
-					asset_description.x = asset_background.width * .68;
-					asset_description.y = 10;
 				} else {
-					asset_feature_wrapper = new box(asset_background.width, asset_background.height);
-					if (e.source_credit !== null && e.source_credit.length > 0) {
-						string = " source: " + e.source_credit;
-					}
-					asset_description = new text(string, 500,Theme.font_style_description);
-					asset_description.x = 30;
-					asset_description.y = asset_wrapper.height - asset_description.height - 30;
+					string = "";
 				}
+				if (e.source_credit !== null && e.source_credit.length > 0) {
+					string += " source: " + e.source_credit;
+				}
+				asset_description = new text(string, asset_background.width * .3, Theme.font_style_description, asset_background.height - 20);
+				asset_feature_wrapper = new box(asset_background.width * .65, asset_background.height, Theme.background_color_primary, .5);
+				asset_description.x = asset_background.width * .68;
+				asset_description.y = 10;
 			}
 			
 			main.animator.on_stage(asset_background);
@@ -301,6 +292,8 @@ package imree.pages
 			}
 			e.draw_feature_on_object = asset_feature_wrapper;
 			e.draw_feature(asset_feature_wrapper.width, asset_feature_wrapper.height);
+			*/
+			
 		}
 		public function bring_pager_to_front(e:module_pager):void {
 			asset_wrapper = new Sprite();
@@ -334,35 +327,31 @@ package imree.pages
 		public function draw_background(url:String):void
 		{
 			var image_wrapper:box = new box(wrapper.width, wrapper.height);
-			wrapper.addChild(image_wrapper);
+			
 			var imageloadervars:ImageLoaderVars = new ImageLoaderVars();
 				imageloadervars.container(image_wrapper);
 				imageloadervars.crop(true);
 				imageloadervars.width(image_wrapper.width);
 				imageloadervars.height(image_wrapper.height);
 				imageloadervars.scaleMode(ScaleMode.PROPORTIONAL_OUTSIDE);
-			new ImageLoader(url + "?size=" + String(image_wrapper.height), imageloadervars).load();
-			image_wrapper.transform.colorTransform = Theme.image_color_transform;
+				imageloadervars.onComplete(background_defocus);
+			new ImageLoader(url + "?size=" + String(image_wrapper.height), imageloadervars).load(true)
+			//image_wrapper.transform.colorTransform = Theme.image_color_transform;
+			
+			
+			function background_defocus(e:LoaderEvent):void {				
+				var wrapper_cache_data:BitmapData = new BitmapData(wrapper.width, wrapper.height, false);
+				wrapper_cache_data.draw(image_wrapper);
+				wrapper_cache_data.applyFilter(wrapper_cache_data, new Rectangle(0,0,wrapper.width, wrapper.height), new Point(), new BlurFilter(10, 10, BitmapFilterQuality.MEDIUM));
+				var wrapper_cache:Bitmap = new Bitmap(wrapper_cache_data);
+				wrapper_cache.transform.colorTransform = Theme.image_color_transform;
+				wrapper.addChild(wrapper_cache);
+				
+				TweenLite.from(wrapper_cache, 2, { alpha:0 } );
+			}
 			
 		}
 		
-		private var background_infocus:Boolean = true;
-		public function background_defocus(e:* = null):void
-		{
-			
-			if (background_infocus)
-			{
-				//TweenMax.to(wrapper, 2, {blurFilter: {blurX: 10, blurY: 10, quality: 1}, scaleX: .9, scaleY: .9, x: wrapper.x + wrapper.width * .05, y: wrapper.y + wrapper.height * .05, ease: Cubic.easeInOut});
-				var wrapper_cache_data:BitmapData = new BitmapData(wrapper.width, wrapper.height, false);
-				wrapper_cache_data.draw(wrapper);
-				wrapper_cache_data.applyFilter(wrapper_cache_data, new Rectangle(0,0,wrapper.width, wrapper.height), new Point(), new BlurFilter(10, 10, BitmapFilterQuality.MEDIUM));
-				var wrapper_cache:Bitmap = new Bitmap(wrapper_cache_data);
-				wrapper.addChild(wrapper_cache);
-				TweenLite.from(wrapper_cache, 2, { alpha:0 } );
-				
-				background_infocus = false;
-			}
-		}
 		
 		public function draw_next(e:* = null):void
 		{
@@ -376,6 +365,7 @@ package imree.pages
 			draw(target_i);
 			main.Imree.Menu.update();
 		}
+		
 		
 		public function draw(id:int, focus_on_sub_module:int =0):void
 		{

@@ -20,6 +20,8 @@ package imree.modules
 	import flash.net.URLRequestMethod;
 	import flash.net.URLVariables;
 	import flash.system.Capabilities;
+	import imree.display_helpers.modal;
+	import imree.display_helpers.window;
 	import imree.images.loading_spinner_sprite;
 	import imree.Main;
 	import imree.pages.exhibit_display;
@@ -35,7 +37,7 @@ package imree.modules
 	public class module_asset_image extends module_asset
 	{
 		
-		public var loading_indicator:loading_spinner_sprite;
+		
 		public function module_asset_image(_main:Main, _Exhibit:exhibit_display,_items:Vector.<module>=null)
 		{
 			t = this;
@@ -89,101 +91,113 @@ package imree.modules
 			super.drop_thumb();
 		}
 		override public function draw_feature(_w:int, _h:int):void {
-			if (draw_feature_on_object !== null) {
-				main.log('Loading module.module_asset_image [id:' + module_id + '] [name: ' + module_name + '] ' + asset_url);
-				var vars:ImageLoaderVars = main.img_loader_vars(draw_feature_on_object);
-					vars.noCache(true);
-					vars.scaleMode(ScaleMode.PROPORTIONAL_INSIDE);
-					vars.onComplete(image_downloaded);
-					vars.crop(false);
-					vars.container(null);
-				new ImageLoader(asset_url, vars).load();
-				loading_indicator = new loading_spinner_sprite();
-				loading_indicator.blendMode = BlendMode.SCREEN;
-				draw_feature_on_object.addChild(loading_indicator);
-				loading_indicator.x = _w/ 2 - 128/2;
-				loading_indicator.y = _h/ 2 - 128/2;
-			} else {
-				main.log('you need to have set the draw_feature_on_object from outside the module before calling draw_feature()');
-			}
+			
+			main.log('Loading [id:' + module_id + '] [name: ' + module_name + '] ' + asset_url);
+			
+			prepare_asset_window(_w, _h);
+			
+			var vars:ImageLoaderVars = main.img_loader_vars(asset_content_wrapper);
+				vars.noCache(true);
+				vars.onComplete(image_downloaded);
+				vars.crop(false);
+				vars.container(null);
+				vars.scaleMode(ScaleMode.PROPORTIONAL_INSIDE);
+			new ImageLoader(asset_url, vars).load();
 			
 			function image_downloaded(e:LoaderEvent):void {
-				draw_feature_on_object.removeChild(loading_indicator);
+				asset_content_wrapper.removeChild(loading_indicator);
 				loading_indicator = null;
 				var actual_image:ContentDisplay = ImageLoader(e.target).content;
 				var bitmap:Bitmap = actual_image.rawContent;
 				
-				var original_width:int = draw_feature_on_object.width;
-				var original_height:int = draw_feature_on_object.height;
+				asset_content_wrapper.mouseChildren = false;
+				asset_content_wrapper.mouseEnabled = true;
 				
-				var wrapper:box = new box(draw_feature_on_object.width, draw_feature_on_object.height);
-				draw_feature_on_object.addChild(wrapper);
-				wrapper.addEventListener(MouseEvent.MOUSE_WHEEL, scroll_wheel_on_image);
-				wrapper.addChild(bitmap);
+				/**
+				 * Add bitmap and change scale
+				 */
+				var original_width:int = asset_content_wrapper.width;
+				var original_height:int = asset_content_wrapper.height;
+				var image_wrapper:box = new box(original_width, original_height);
+				image_wrapper.mouseEnabled = false;
+				asset_content_wrapper.addChild(image_wrapper);
+				image_wrapper.addChild(bitmap);
 				bitmap.scaleX = Math.min(1, bitmap.scaleX);
 				bitmap.scaleY = Math.min(1, bitmap.scaleY);
-				bitmap.x = 0 - bitmap.width /2;
-				bitmap.y = 0 - bitmap.height / 2;
-				wrapper.x = (original_width/2) ;
-				wrapper.y = (original_height/ 2);
-				
-				var blitmask:BlitMask = new BlitMask(wrapper, 0, 0,original_width, original_height);
-				blitmask.bitmapMode = false;
 				var max_scale:Number = Math.min(1 / bitmap.scaleX, 1 / bitmap.scaleY);
 				
+				/**
+				 * Offset the registration point of bitmap to be visual center
+				 */
+				bitmap.x = 0 - bitmap.width /2;
+				bitmap.y = 0 - bitmap.height / 2;
+				image_wrapper.x = (original_width / 2);
+				image_wrapper.y = (original_height/ 2);
+				
+				/**
+				 * Handle Mouse scroll wheel interactions
+				 */
+				asset_content_wrapper.addEventListener(MouseEvent.MOUSE_WHEEL, scroll_wheel_on_image);
 				function scroll_wheel_on_image(m:MouseEvent):void {
 					var factor:Number = m.delta *.1;
 					if (main.Imree.Device.orientation === 'portrait') {
 						factor *= 5;
 					}
-					TweenLite.to(wrapper, .2, { 
-						scaleX:Math.max(wrapper.scaleX + factor, .5),
-						scaleY:Math.max(wrapper.scaleY + factor, .5),
+					TweenLite.to(image_wrapper, .2, { 
+						scaleX:Math.max(image_wrapper.scaleX + factor, .5),
+						scaleY:Math.max(image_wrapper.scaleY + factor, .5),
 						ease:Cubic.easeInOut,
 						onComplete:check_resize
 					} ); 
 				}
 				function check_resize(m:*= null):void {
-					if(wrapper.scaleX > max_scale || wrapper.scaleY > max_scale) {
-						TweenLite.to(wrapper, .6, { 
-							scaleX:Math.max(Math.min(max_scale, wrapper.scaleX), .5),
-							scaleY:Math.max(Math.min(max_scale, wrapper.scaleY), .5),
+					if(image_wrapper.scaleX > max_scale || image_wrapper.scaleY > max_scale) {
+						TweenLite.to(image_wrapper, .6, { 
+							scaleX:Math.max(Math.min(max_scale, image_wrapper.scaleX), .5),
+							scaleY:Math.max(Math.min(max_scale, image_wrapper.scaleY), .5),
 							ease:Elastic.easeOut
 						} ); 
 					}
 				}
 				
-				wrapper.addEventListener(MouseEvent.MOUSE_DOWN, start_feature_drag);
+				/**
+				 * Handle mouse/finger drag interactions
+				 */
+				asset_content_wrapper.addEventListener(MouseEvent.MOUSE_DOWN, start_feature_drag);
 				function start_feature_drag(m:MouseEvent):void {
-					wrapper.startDrag();
-					wrapper.addEventListener(MouseEvent.MOUSE_OUT, stop_feature_drag);
-					wrapper.addEventListener(MouseEvent.MOUSE_UP, stop_feature_drag);
+					image_wrapper.startDrag();
+					asset_content_wrapper.addEventListener(MouseEvent.MOUSE_OUT, stop_feature_drag);
+					asset_content_wrapper.addEventListener(MouseEvent.MOUSE_UP, stop_feature_drag);
 				}
 				function stop_feature_drag(m:MouseEvent):void {
-					wrapper.stopDrag();
-					wrapper.removeEventListener(MouseEvent.MOUSE_OUT, stop_feature_drag);
-					wrapper.removeEventListener(MouseEvent.MOUSE_UP, stop_feature_drag);
+					image_wrapper.stopDrag();
+					asset_content_wrapper.removeEventListener(MouseEvent.MOUSE_OUT, stop_feature_drag);
+					asset_content_wrapper.removeEventListener(MouseEvent.MOUSE_UP, stop_feature_drag);
 				}
 				
+				/**
+				 * Handle pinch-zoom interactions
+				 */
 				if (Capabilities.touchscreenType != "none") {
-					wrapper.addEventListener(TransformGestureEvent.GESTURE_ZOOM, gesture_zoom_start);
+					asset_content_wrapper.addEventListener(TransformGestureEvent.GESTURE_ZOOM, gesture_zoom_start);
 				}
 				function gesture_zoom_start(fingers:TransformGestureEvent):void {
 					var scale_factor:Number = Math.min(fingers.scaleX, fingers.scaleY);
 					if ((fingers.scaleX + fingers.scaleY) / 2 > 0) {
 						scale_factor = Math.max(fingers.scaleX, fingers.scaleY);
 					} 
-					
-					wrapper.scaleX *= scale_factor;
-					wrapper.scaleY *= scale_factor;
-					
+					image_wrapper.scaleX *= scale_factor;
+					image_wrapper.scaleY *= scale_factor;
 				}
 				
+				/**
+				 * prepare for garbage collection
+				 */
 				addEventListener(Event.REMOVED_FROM_STAGE, clear_image_listeners);
 				function clear_image_listeners(event:Event):void {
-					wrapper.removeEventListener(MouseEvent.MOUSE_WHEEL, scroll_wheel_on_image);
-					wrapper.removeEventListener(TransformGestureEvent.GESTURE_ZOOM, gesture_zoom_start);
-					wrapper.removeEventListener(MouseEvent.MOUSE_DOWN, start_feature_drag);
+					image_wrapper.removeEventListener(MouseEvent.MOUSE_WHEEL, scroll_wheel_on_image);
+					image_wrapper.removeEventListener(TransformGestureEvent.GESTURE_ZOOM, gesture_zoom_start);
+					image_wrapper.removeEventListener(MouseEvent.MOUSE_DOWN, start_feature_drag);
 				}
 			}
 			phase_feature = true;

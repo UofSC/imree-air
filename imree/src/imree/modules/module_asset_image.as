@@ -9,6 +9,7 @@ package imree.modules
 	import com.greensock.loading.display.ContentDisplay;
 	import com.greensock.loading.ImageLoader;
 	import com.greensock.TweenLite;
+	import fl.controls.Button;
 	import flash.display.Bitmap;
 	import flash.display.BlendMode;
 	import flash.display.DisplayObjectContainer;
@@ -91,10 +92,16 @@ package imree.modules
 			super.drop_thumb();
 		}
 		override public function draw_feature(_w:int, _h:int):void {
-			
-			main.log('Loading [id:' + module_id + '] [name: ' + module_name + '] ' + asset_url);
-			
 			prepare_asset_window(_w, _h);
+			draw_feature_content();
+			phase_feature = true;
+		}
+		
+		override public function draw_edit_button():void {
+			super.draw_edit_button();
+		}
+		
+		override public function draw_feature_content():void {
 			
 			var vars:ImageLoaderVars = main.img_loader_vars(asset_content_wrapper);
 				vars.noCache(true);
@@ -105,8 +112,10 @@ package imree.modules
 			new ImageLoader(asset_url, vars).load();
 			
 			function image_downloaded(e:LoaderEvent):void {
-				asset_content_wrapper.removeChild(loading_indicator);
-				loading_indicator = null;
+				if(loading_indicator !== null && asset_content_wrapper.contains(loading_indicator)) {
+					asset_content_wrapper.removeChild(loading_indicator);
+					loading_indicator = null;
+				}
 				var actual_image:ContentDisplay = ImageLoader(e.target).content;
 				var bitmap:Bitmap = actual_image.rawContent;
 				
@@ -200,10 +209,9 @@ package imree.modules
 					image_wrapper.removeEventListener(MouseEvent.MOUSE_DOWN, start_feature_drag);
 				}
 			}
-			phase_feature = true;
+			
+			super.draw_feature_content();
 		}
 		
-		
 	}
-
 }

@@ -166,6 +166,7 @@ package imree.pages
 				asset.caption = xml.caption;
 				asset.module_asset_id = xml.module_asset_id;
 				asset.description = xml.description;
+				asset.description_textflow = xml.description_textflow;
 				asset.filename = xml.asset_data_name;
 				asset.module_type = xml.module_type;
 				asset.module_id = null; //redundant, but a reminder
@@ -181,6 +182,14 @@ package imree.pages
 				}
 				asset.thumb_display_columns = xml.thumb_display_columns;
 				asset.thumb_display_rows = xml.thumb_display_rows;
+				
+				asset.asset_relations = new Vector.<module_asset>();
+				for each(var relation:XML in xml.relations.children()) {
+					var asset_relation:module_asset = module_asset(build_module(relation, false));
+					asset_relation.asset_relates_to_node_as = relation.relation;
+					asset.asset_relations.push(asset_relation);
+				}
+				
 				return asset;
 				
 			}

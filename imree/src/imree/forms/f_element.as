@@ -75,7 +75,9 @@ package imree.forms
 			set_disable();
 		}
 		public function indicate_ready():void {
-			removeChild(loader);
+			if (loader !== null) {
+				removeChild(loader);
+			}
 			loader = null;
 			set_enabled();
 		}

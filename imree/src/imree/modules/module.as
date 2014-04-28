@@ -130,6 +130,11 @@ package imree.modules
 				} else {
 					str += "\n" + tabs[tab] + i.module_name + " [" + i.module_type + "]";
 				}
+				if (i is module_asset) {
+					for each(var asset:module_asset in module_asset(i).asset_relations) {
+						str += " [Relates to: " + asset.module_type + " " + asset.module_asset_id + " as " + asset.asset_relates_to_node_as + "]";
+					}
+				}
 			}
 			return str;
 		}
@@ -183,7 +188,7 @@ package imree.modules
 		}
 		
 		public function draw_edit_UI(e:*=null, animate:Boolean = true, start_at_position:int =0):void {
-			trace("This module has no edit UI");
+			main.toast("This module has no edit UI");
 		}
 		
 		public function focus_on_sub_module(mod:module, focused:Function = null):void {
@@ -449,10 +454,15 @@ package imree.modules
 				if (i is module_next) {
 					//ignore
 				} else if ( i is module_asset_image ) {
-					bk = new box(i.width, i.height);
-					var bits:BitmapData = new BitmapData(i.width, i.height, true, 0);
-					bits.draw(i);
-					bk.addChild(new Bitmap(bits));
+					if (i.width + i.height < 1) {
+						main.toast("The page editor will look weird because all the pages haven't loaded yet");
+						bk = new box(main.Imree.Device.box_size, main.Imree.Device.box_size);
+					} else {
+						bk = new box(i.width, i.height);
+						var bits:BitmapData = new BitmapData(i.width, i.height, true, 0);
+						bits.draw(i);
+						bk.addChild(new Bitmap(bits));
+					}
 					proxies.push(bk);
 					originals.push(new position_data(i.width, i.height));
 				} else {

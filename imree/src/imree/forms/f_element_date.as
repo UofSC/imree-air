@@ -6,6 +6,7 @@ package imree.forms
 	 */
 	
 	import fl.controls.NumericStepper;
+	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import flash.events.DRMCustomProperties;
 	import flash.events.Event;
@@ -52,109 +53,57 @@ package imree.forms
 			
 			var internal_padding:int = Math.round(padding / 2);
 			var stepper_width:int = 80;
-			var stepper_height:int = 20;
-			
+			var stepper_height:int = 40;
 			
 			var txtyr_lab:text = new text("Year");
-			ui.addChild(txtyr_lab);			
-			txtyr_lab.x = label_width + 10;
-			
 			txtyr = new NumericStepper();
-			txtyr.setSize(stepper_width, stepper_height);
-			txtyr.x = txtyr_lab.x + txtyr_lab.width + 5;
 			txtyr.minimum = -9999;
 			txtyr.maximum = 9999;
 			txtyr.value = 1883;
-			ui.addChild(txtyr);			
-			
-			
+				
 			var txtmo_lab:text = new text("Month");
-			ui.addChild(txtmo_lab);
-			txtmo_lab.x = txtyr.x + txtyr_lab.width + 10;			
-			
 			txtmo= new NumericStepper();
-			txtmo.setSize(stepper_width, stepper_height);
-			txtmo.x = txtmo_lab.x + txtmo_lab.width + 5;
 			txtmo.minimum = 1;
 			txtmo.maximum = 12;
-			ui.addChild(txtmo);		
-			
+			txtmo.value = 1;
 			
 			var txtdate_lab:text = new text("Day");
-			txtdate_lab.x = txtmo.x +txtmo_lab.width + 10;
-			ui.addChild(txtdate_lab);			
-		
 			txtdate = new NumericStepper();
-			txtdate.setSize(stepper_width, stepper_height);
-			txtdate.x = txtdate_lab.x + txtdate_lab.width + 5;
 			txtdate.minimum = 1;
 			txtdate.maximum = 31;
-			ui.addChild(txtdate);
-			
+			txtdate.value = 1;
 			
 			var txthr_lab:text = new text("Hour(s)");
-			ui.addChild(txthr_lab);
-			txthr_lab.x = label_width + 10;			
-			
 			txthr = new NumericStepper();
-			txthr.setSize(stepper_width, stepper_height);
-			txthr.x = txthr_lab.x + txthr_lab.width + 5;
-			txthr.y = stepper_height + internal_padding;
 			txthr.minimum = 1;
 			txthr.maximum = 24;
-			ui.addChild(txthr);
-			
+			txthr.value = 1;
 			
 			var txtmin_lab:text = new text("Minute(s)");
-			ui.addChild(txtmin_lab);
-			txtmin_lab.x = txthr.x + txthr_lab.width + 10;	
-			
 			txtmin = new NumericStepper();
-			txtmin.setSize(stepper_width, stepper_height);
-			txtmin.x = txtmin_lab.x + txtmin_lab.width + 5;
-			txtmin.y = stepper_height + internal_padding;
 			txtmin.minimum = 0;
 			txtmin.maximum = 59;
-			ui.addChild(txtmin);
-			
+			txtmin.value = 0;
 			
 			var txtsec_lab:text = new text("Second(s)");
-			ui.addChild(txtsec_lab);
-			txtsec_lab.x = txtmin.x +txtmin_lab.width + 10;
-						
 			txtsec = new NumericStepper();
-			txtsec.setSize(stepper_width, stepper_height);
-			txtsec.x = txtsec_lab.x + txtsec_lab.width + 5;
-			txtsec.y = stepper_height + internal_padding;
 			txtsec.minimum = 0;
 			txtsec.maximum = 59;
-			txtsec.stepSize = 1;
-			ui.addChild(txtsec);
+			txtsec.value = 0;
 			
+			var labels:Vector.<DisplayObject> = new Vector.<DisplayObject>();
+			labels.push(txtyr_lab, txtmo_lab, txtdate_lab, txthr_lab, txtmin_lab, txtsec_lab);
+			var inputs:Vector.<NumericStepper> = new Vector.<NumericStepper>();
+			inputs.push(txtyr, txtmo, txtdate, txthr, txtmin, txtsec);
 			
-			
-			/**
-			stepper_year.addChild (txtyr);
-			//stepper_year.addEventListener("change", txtyr);
-			
-			stepper_month.addChild(txtmo);
-			//stepper_month.addEventListener("change", txtmo);
-			
-			stepper_day.addChild(txtdate);			
-			//stepper_day.addEventListener("change", txtday);
-			
-			stepper_hours.addChild(txthr);
-			//stepper_hours.addEventListener("change", txthr);
-			
-			stepper_minutes.addChild(txtmin);
-			//stepper_minutes.addEventListener("change", txtmin);
-			
-			stepper_seconds.addChild(txtsec);
-			//stepper_seconds.addEventListener("change", txtsec);
-			
-			ui.addChild = (stepper_year + stepper_month + stepper_day + stepper_hours + stepper_minutes + stepper_seconds);
-			*/
-			
+			for (var i:int = 0; i < inputs.length; i++) {
+				inputs[i].setSize(stepper_width, stepper_height);
+				ui.addChild(labels[i]);
+				ui.addChild(inputs[i]);
+				labels[i].x = label_width + (i * (stepper_width + 10));
+				inputs[i].x = label_width + (i * (stepper_width + 10));
+				inputs[i].y = labels[i].height;
+			}
 			
 			super.draw(label_width, input_w, padding);
 		}

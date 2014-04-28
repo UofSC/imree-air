@@ -104,7 +104,11 @@ package imree.forms
 			}
 			
 			for each(var i:f_element in t.elements) {
-				i.draw();
+				if (i is f_element_WYSIWYG) {
+					i.draw(100, 400, 10);
+				} else {
+					i.draw();
+				}
 				i.x = 10;
 				i.y = j;
 				j += i.get_height() + 10;

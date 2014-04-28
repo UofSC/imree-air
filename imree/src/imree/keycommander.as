@@ -29,8 +29,9 @@ package imree
 		}
 		private function testkey(e:KeyboardEvent):void {
 			if (e.keyCode === KeyCode.SPACEBAR) {
-				main.orientation_update(null);
+				//main.orientation_update(null);
 			}
+			/**
 			if (e.keyCode === KeyCode.I) {
 				main.removeChild(main.Logger);
 				main.addChild(main.Logger);
@@ -42,6 +43,7 @@ package imree
 				main.addChild(main.Logger_IO);
 				main.Logger_IO.toggle();
 			}
+			*/
 		}
 	}		
 }

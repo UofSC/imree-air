@@ -94,9 +94,6 @@ package imree.modules
 				vid_thumb.width = result.width;
 				vid_thumb.height = result.height;
 				result.addChild(vid_thumb);
-				
-				
-				//url_request = new URLRequest("http://images3.alphacoders.com/377/3779.jpg"); //generic thumb
 			}
 			
 			
@@ -132,6 +129,9 @@ package imree.modules
 			asset_content_wrapper.removeChild(asset_content_wrapper.mask);
 			asset_content_wrapper.mask = null;
 			
+			var a_transparent_object:box = new box(100, 100);
+			asset_content_wrapper.addChild(a_transparent_object);
+			
 			var player:FLVPlayback = new FLVPlayback();
 			player.addEventListener(VideoEvent.SKIN_LOADED, add_player);
 			player.addEventListener(SkinErrorEvent.SKIN_ERROR, skin_error);
@@ -140,7 +140,7 @@ package imree.modules
 			asset_content_wrapper.removeChild(loading_indicator);
 			loading_indicator = null;
 			
-			player.addEventListener(Event.REMOVED_FROM_STAGE, player_is_removed);
+			asset_content_wrapper.addEventListener(Event.REMOVED_FROM_STAGE, player_is_removed);
 			function player_is_removed(asdf:Event):void {
 				player.stop();
 				player.load(null);

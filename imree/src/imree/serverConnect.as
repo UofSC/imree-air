@@ -7,7 +7,7 @@ package imree
 	import flash.events.DataEvent;
 	import flash.events.IOErrorEvent;
 	import flash.events.SecurityErrorEvent;
-	import flash.filesystem.File;
+	import flash.filesystem.*;
 	import flash.net.*;
 	
 	
@@ -98,23 +98,34 @@ package imree
 			return "[#" + vars.index + "] \t[" + vars.command + "] \t[" + vars.parameter + "]";
 		}
 		
-		public function server_upload(command_parameter:*, file:File, onComplete:Function = null):void {
+		public function server_upload(command_parameter:*, probably_file:*, onComplete:Function = null):void {
 			var request:URLRequest = get_url_vars("upload", command_parameter, true);
-			file.addEventListener(DataEvent.UPLOAD_COMPLETE_DATA, upload_complete);
-			file.addEventListener(IOErrorEvent.IO_ERROR, upload_error);
-			file.addEventListener(SecurityErrorEvent.SECURITY_ERROR, upload_error);
-			function upload_complete(e:DataEvent):void {
-				if (onComplete !== null) {
-					onComplete();
-					main.toast("Upload complete");
+			
+			try {
+				new File();
+				if (probably_file is File) {
+					var file:File = File(probably_file);
+					file.addEventListener(DataEvent.UPLOAD_COMPLETE_DATA, upload_complete);
+					file.addEventListener(IOErrorEvent.IO_ERROR, upload_error);
+					file.addEventListener(SecurityErrorEvent.SECURITY_ERROR, upload_error);
+					function upload_complete(e:DataEvent):void {
+						if (onComplete !== null) {
+							onComplete();
+							main.toast("Upload complete");
+						}
+					}
+					function upload_error(e:*):void {
+						main.log_to_server("Upload Failed " + e);
+						main.toast("Upload Failed: " + e);
+						
+					}
+					file.upload(request);
 				}
+			} catch (ve:VerifyError) {
+				main.toast("Cannot upload files from flash player");
 			}
-			function upload_error(e:*):void {
-				main.log_to_server("Upload Failed " + e);
-				main.toast("Upload Failed: " + e);
-				
-			}
-			file.upload(request);
+		
+			
 			
 		}
 		

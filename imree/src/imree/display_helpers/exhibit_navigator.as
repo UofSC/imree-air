@@ -76,31 +76,19 @@ package imree.display_helpers {
 			}
 			
 			
-			if (portrait) {
-				wrapper = new box(main.Imree.staging_area.width, max_width, 0xFFFFFF, 1);
-				wrapper.y = main.stage.stageHeight - wrapper.height;
-				off_x = 0;
-				off_y = 0 - wrapper.height;
-				var butt_x:int = 10;
-				for each(butt in butts) {
-					wrapper.addChild(butt);
-					butt.y = butt.height/2 - butt.height /2 + 10;
-					butt.x = butt_x;
-					butt_x += butt.width + 10;
-				}
-			} else {
-				wrapper  = new box(max_width, main.Imree.staging_area.height, Theme.background_color_secondary, 1);
-				wrapper.x = main.stage.stageWidth - wrapper.width;
-				off_x = 0;
-				off_y = 0 - wrapper.height;
-				var butt_y:int = 10;
-				for each(butt in butts) {
-					wrapper.addChild(butt);
-					butt.x = max_width/2 - butt.width /2 + 5;
-					butt.y = butt_y;
-					butt_y += butt.height + 5;
-				}
+			
+			wrapper  = new box(max_width, main.Imree.staging_area.height, Theme.background_color_secondary, 1);
+			wrapper.x = main.stage.stageWidth - wrapper.width;
+			off_x = 0;
+			off_y = 0 - wrapper.height;
+			var butt_y:int = 10;
+			for each(butt in butts) {
+				wrapper.addChild(butt);
+				butt.x = max_width/2 - butt.width /2 + 5;
+				butt.y = butt_y;
+				butt_y += butt.height + 5;
 			}
+			
 			addChild(wrapper);
 			
 			var toggle_b:Sprite = new Sprite();
@@ -111,9 +99,10 @@ package imree.display_helpers {
 			toggler= new smart_button(toggle_b, toggle);
 			
 			on = true;
-			main.Imree.web_bar();
 			
-			var tim:Timer = new Timer(4000, 1);
+			main.Imree.web_bar();
+			TweenLite.from(this, .6, { x:off_x, y:off_y, ease:Cubic.easeOut } );
+			var tim:Timer = new Timer(2500, 1);
 			tim.addEventListener(TimerEvent.TIMER, timer_ticked);
 			tim.start();
 			function timer_ticked(f:Event):void {
@@ -153,10 +142,12 @@ package imree.display_helpers {
 			removeChild(wrapper);
 			wrapper = null;
 		}
-		private function shortcut_clicked(probably_module:*=null):void {
+		private function shortcut_clicked(probably_module:*= null):void {
+			hide();
 			exhibit.dump_and_draw(exhibit.modules.indexOf(module(probably_module)));
 		}
 		private function small_shortcut_clicked(probably_module:* = null):void {
+			hide();
 			exhibit.current_module().focus_on_sub_module(module(probably_module));
 		}
 		

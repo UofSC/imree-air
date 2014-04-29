@@ -18,7 +18,7 @@ package imree.display_helpers {
 	import flash.events.Event;
 	import flash.events.MediaEvent;
 	import flash.events.MouseEvent;
-	import flash.filesystem.File;
+	import flash.filesystem.*;
 	import flash.media.*;
 	import flash.utils.IDataInput;
 	import imree.data_helpers.data_value_pair;

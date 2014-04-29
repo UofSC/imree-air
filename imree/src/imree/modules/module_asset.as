@@ -1,6 +1,8 @@
 package imree.modules 
 {
+	import fl.containers.ScrollPane;
 	import fl.controls.Button;
+	import fl.controls.ScrollPolicy;
 	import flash.display.BlendMode;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -8,6 +10,7 @@ package imree.modules
 	import imree.data_helpers.data_value_pair;
 	import imree.data_helpers.Theme;
 	import imree.display_helpers.modal;
+	import imree.display_helpers.scrollPaneFancy;
 	import imree.display_helpers.window;
 	import imree.forms.f_data;
 	import imree.forms.f_element;
@@ -102,26 +105,32 @@ package imree.modules
 				back.alpha = .3;
 			}
 			
-			
+			var scroller:scrollPaneFancy = new scrollPaneFancy();
+		
 			if (main.Imree.Device.orientation === "portrait") {
 				asset_content_wrapper = new box(asset_foreground.width, asset_foreground.height * .7);
-				asset_text_wrapper = new box(asset_foreground.width - 20, asset_foreground.height * .3 - 20 - next.height);
+				asset_text_wrapper = new box(asset_foreground.width - 20 - next.width - back.width, asset_foreground.height * .3);
 				asset_text_wrapper.y = asset_foreground.height * .7 + 10;
-				asset_text_wrapper.x = 10;
+				asset_text_wrapper.x = back.width + 5;
 				text_backgound = new box(asset_content_wrapper.width, asset_text_wrapper.height, Theme.background_color_secondary, 1); 
+				text_backgound.x = 0 - back.width - 10;
+				text_backgound.y = -10;
 				next.x = text_backgound.width - next.width ;
-				next.y = text_backgound.height - next.height;
-				back.y = text_backgound.height - next.height;
+				next.y = 5;
+				back.y = 5;
 			} else {
 				asset_content_wrapper = new box(asset_foreground.width * .7, asset_foreground.height);
 				asset_text_wrapper = new box(asset_foreground.width * .3 -20, asset_foreground.height - 20 - next.height);
 				asset_text_wrapper.x = asset_foreground.width * .7 + 10;
 				asset_text_wrapper.y = 10;
 				text_backgound = new box(asset_text_wrapper.width + 20, asset_content_wrapper.height + 20, Theme.background_color_secondary, 1);
+				text_backgound.x = -10;
+				text_backgound.y = -10;
 				next.x = text_backgound.width - next.width -10 ;
 				next.y = text_backgound.height - next.height -30;
 				back.x = text_backgound.x +10;
-				back.y = text_backgound.height - back.height-30;
+				back.y = text_backgound.height - back.height - 30;
+				
 			}
 			
 			text_backgound.addChild(next);
@@ -135,6 +144,9 @@ package imree.modules
 			
 			var title:text = new text(module_name, asset_text_wrapper.width, Theme.font_style_h3, asset_text_wrapper.height);
 			
+			scroller.horizontalScrollPolicy = ScrollPolicy.OFF;
+			scroller.verticalScrollPolicy = ScrollPolicy.AUTO;
+			scroller.setSize(asset_text_wrapper.width, asset_text_wrapper.height - title.height - 20);
 			var desc_string:String = "";
 			if (description_textflow !== null && description_textflow.length > 0) {
 				desc_string += description_textflow;
@@ -146,11 +158,19 @@ package imree.modules
 			var desc:text = new text(desc_string, asset_text_wrapper.width, Theme.font_style_description, asset_text_wrapper.height - title.height);
 			asset_text_wrapper.addChild(text_backgound);
 			asset_text_wrapper.addChild(title);
-			asset_text_wrapper.addChild(asset_text_description_wrapper);
 			asset_text_description_wrapper.addChild(desc);
-			text_backgound.x = -10;
-			text_backgound.y = -10;
-			asset_text_description_wrapper.y = title.height + 10;
+			var descript_bottom_pad:box = new box(100, 100);
+			descript_bottom_pad.y = asset_text_description_wrapper.height;
+			asset_text_description_wrapper.addChild(descript_bottom_pad);
+			
+			scroller.source = asset_text_description_wrapper;
+			asset_text_wrapper.addChild(scroller);
+			scroller.y = title.height + 10;
+			
+			scroller.update();
+			
+			
+			
 			
 			loading_indicator = new loading_spinner_sprite();
 			loading_indicator.blendMode = BlendMode.SCREEN;

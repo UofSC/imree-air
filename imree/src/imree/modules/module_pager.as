@@ -16,12 +16,14 @@ package imree.modules {
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
 	import flash.display.Stage3D;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.PerspectiveProjection;
 	import flash.geom.Point;
 	import imree.data_helpers.Theme;
 	import imree.display_helpers.modal;
 	import imree.display_helpers.smart_button;
+	import imree.display_helpers.window;
 	import imree.forms.f_data;
 	import imree.forms.f_element;
 	import imree.forms.f_element_text;
@@ -72,22 +74,21 @@ package imree.modules {
 		}
 		
 		override public function draw_feature(_w:int, _h:int):void {
-			if (draw_feature_on_object === null) {
-				trace("Must set draw-feature-on-object-first");
-			}
-			feature_wrapper = new box(_w, _h);
-			var arrow_right:button_right = new button_right();
-			var arrow_left:button_left = new button_left();
+			var frame:window = new window(_w, _h, main);
+			feature_wrapper = new box(frame.foreground.width, frame.foreground.height);
+			frame.foreground_content_wrapper.addChild(feature_wrapper);
+			var arrow_right:button_right_internal = new button_right_internal();
+			var arrow_left:button_left_internal = new button_left_internal();
 			
 			var waiting_on:int = 0;
 			main.Imree.UI_size(arrow_right);
 			main.Imree.UI_size(arrow_left);
 			
-			if (main.Imree.Device.box_size * 4 < _w && items.length > 1) {
-				var pages_holder:box = new box(_w, _h);
+			if (items.length > 1) {
+				var pages_holder:box = new box(feature_wrapper.width, feature_wrapper.height);
 				feature_wrapper.addChild(pages_holder);
-				var page1:box = new box(_w / 2 , _h, Theme.background_color_primary, 0);
-				var page2:box = new box(_w / 2, _h, Theme.background_color_primary, 0);
+				var page1:box = new box(pages_holder.width / 2 , pages_holder.height, Theme.background_color_primary, 0);
+				var page2:box = new box(pages_holder.width / 2, pages_holder.height, Theme.background_color_primary, 0);
 				pages_holder.addChild(page1);
 				pages_holder.addChild(page2);
 				page2.x = page1.width;
@@ -111,17 +112,16 @@ package imree.modules {
 				
 				feature_wrapper.addChild(arrow_right);
 				feature_wrapper.addChild(arrow_left);
-				arrow_right.x = _w - arrow_right.width+2;
+				arrow_right.x = feature_wrapper.width - arrow_right.width+2;
 				arrow_left.x = 0;
 				arrow_right.y = _h / 2 - arrow_right.height / 2;
 				arrow_left.y = _h / 2 - arrow_left.height / 2;
 				arrow_right.addEventListener(MouseEvent.CLICK, page_click);
 				arrow_left.addEventListener(MouseEvent.CLICK, page_click);
 				function page_click(e:MouseEvent = null):void {
-					
-					var pg1_bits:BitmapData = new BitmapData(page1.width, page1.height);
+					var pg1_bits:BitmapData = new BitmapData(page1.width, page2.height, true, 0);
 					pg1_bits.draw(page1);
-					var pg2_bits:BitmapData = new BitmapData(page2.width, page2.height);
+					var pg2_bits:BitmapData = new BitmapData(page2.width, page2.height, true, 0);
 					pg2_bits.draw(page2);
 					
 					pg1_cache = new Sprite();
@@ -235,14 +235,14 @@ package imree.modules {
 					if (waiting_on === 0) {	
 						if (direction === "right") {
 							page1.visible = true;
-							var pg1_bits:BitmapData = new BitmapData(page1.width, page1.height);
+							var pg1_bits:BitmapData = new BitmapData(page1.width, page1.height, true, 0);
 							pg1_bits.draw(page1);
 							page1.visible = false;
 							flipper.back = new Bitmap(pg1_bits);
 							TweenMax.to(flipper, 1, { rotationY:180, onComplete:animation_finished, ease:Cubic.easeInOut});
 						} else {
 							page2.visible = true;
-							var pg2_bits:BitmapData = new BitmapData(page2.width, page2.height);
+							var pg2_bits:BitmapData = new BitmapData(page2.width, page2.height, true, 0);
 							pg2_bits.draw(page2);
 							page2.visible = false;
 							flipper.front = new Bitmap(pg2_bits);
@@ -281,10 +281,13 @@ package imree.modules {
 				pages_up = 0;
 				feature_wrapper.addChild(new text("This pager contains no material. If you're the curator, log in and hit the edit button."));
 			}
-			draw_feature_on_object.addChild(feature_wrapper);
+			
 			if (can_edit) {
 				draw_edit_button();
 			}
+			
+			main.Imree.Exhibit.overlay_add(frame);
+			
 		}
 		
 		private var can_edit:Boolean = false;

@@ -144,6 +144,8 @@ package imree.modules
 			function player_is_removed(asdf:Event):void {
 				player.stop();
 				player.load(null);
+				player.removeEventListener(VideoEvent.SKIN_LOADED, add_player);
+				player.removeEventListener(SkinErrorEvent.SKIN_ERROR, skin_error);
 			}
 			
 			function skin_error(e:SkinErrorEvent):void {

@@ -53,8 +53,10 @@ package imree.display_helpers {
 			butts = new Vector.<smart_button>();
 			for each(var mod:module in exhibit.modules) {
 				var format:textFont = Theme.font_style_description;
+				var original_align:String = format.align;
 				format.align = TextFormatAlign.CENTER;
 				var butt_text:text = new text(mod.module_name, max_width - 20, format);
+				format.align = original_align;
 				var butt_ui:box = new box(max_width, butt_text.height + 10);
 				butt_ui.addChild(butt_text);
 				butt_text.x = 10; 
@@ -92,8 +94,11 @@ package imree.display_helpers {
 			addChild(wrapper);
 			
 			var toggle_b:Sprite = new Sprite();
-			toggle_b.addChild(new box(max_width, IMREE.web_bar_height, 0xBBBBBB, 1));
+			toggle_b.addChild(new box(max_width, IMREE.web_bar_height, 0x333333, 1));
+			var original_align2:String = format.align;
+			format.align = TextFormatAlign.CENTER;
 			var txt:text = new text(exhibit.current_module().module_name, max_width, format);
+			format.align = original_align2;
 			txt.y = toggle_b.height / 2 - txt.height / 2;
 			toggle_b.addChild(txt);
 			toggler= new smart_button(toggle_b, toggle);

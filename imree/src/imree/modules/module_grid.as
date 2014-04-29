@@ -147,7 +147,7 @@ package imree.modules
 				if (e.currentTarget is module_asset) {
 					module(e.currentTarget).draw_feature(main.Imree.staging_area.width, main.Imree.staging_area.height);
 				} else if (e.currentTarget is module_pager) {
-					Exhibit.bring_pager_to_front(module_pager(e.currentTarget));
+					module_pager(e.currentTarget).draw_feature(main.Imree.staging_area.width, main.Imree.staging_area.height);
 				}
 			}
 			if (items.length === 0) {

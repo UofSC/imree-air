@@ -5,10 +5,12 @@ package imree
 	import com.greensock.loading.*;
 	import com.greensock.loading.data.*;
 	import flash.events.DataEvent;
+	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.events.SecurityErrorEvent;
 	import flash.filesystem.*;
 	import flash.net.*;
+	import flash.utils.ByteArray;
 	
 	
 	/**
@@ -124,8 +126,24 @@ package imree
 			} catch (ve:VerifyError) {
 				main.toast("Cannot upload files from flash player");
 			}
+		}
 		
-			
+		public function server_upload_bytes(command_parameter:*, bytes:ByteArray, onComplete:Function = null):void {
+			var request:URLRequest = get_url_vars("upload_bytes", command_parameter, true);
+			request.data.bytesarray = bytes;
+			var sendLoader:URLLoader = new URLLoader();
+			sendLoader.addEventListener(Event.COMPLETE, loader_complete);
+			sendLoader.addEventListener(IOErrorEvent.IO_ERROR, loader_error);
+			sendLoader.load(request);
+			function loader_complete(e:*):void {
+				if (onComplete !== null) {
+					onComplete(e);
+				}
+				main.toast("Data Uploaded");
+			}
+			function loader_error(e:*):void {
+				main.toast("Error: " + String(e));
+			}
 			
 		}
 		

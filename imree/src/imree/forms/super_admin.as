@@ -1,5 +1,6 @@
 package imree.forms 
 {
+	import com.greensock.events.LoaderEvent;
 	import fl.containers.BaseScrollPane;
 	import flash.display.Sprite;
 	import imree.data_helpers.data_value_pair;
@@ -68,10 +69,11 @@ package imree.forms
 			addChild(new_user_form_label);
 			
 			function new_user_form_submited(obj:Object):void {
-				main.connection.server_command("add_user", obj, null, true);
+				main.connection.server_command("add_user", obj, new_user_form_response, true);
 			}
-			
-			
+			function new_user_form_response(data:LoaderEvent):void {
+				main.toast("User Created");
+			}
 			
 			
 			var edit_user_elements:Vector.<f_element> = new Vector.<f_element>();
@@ -85,13 +87,21 @@ package imree.forms
 			
 			var edit_user_form:f_data = new f_data(edit_user_elements);
 			edit_user_form.onSubmit = edit_user_form_submited;
+			edit_user_form.edit_siblings_allowed = true;
+			edit_user_form.conn = main.connection;
+			edit_user_form.f_table = "people";
+			edit_user_form.f_table_key_column_name = "person_id";
+			edit_user_form.f_table_label_column_name = "person_name_last";
 			edit_user_form.draw();
 			addChild(edit_user_form);
 			var edit_user_form_label:text = new text("Edit Users", 400, textf);
 			addChild(edit_user_form_label);
 			
 			function edit_user_form_submited(obj:Object):void {
-				main.connection.server_command("edit_user", obj,null, true);
+				main.connection.server_command("edit_user", obj, edit_user_form_response, true);
+			}
+			function edit_user_form_response(data:LoaderEvent):void {
+				main.toast("User Edited");
 			}
 			
 			

@@ -2,6 +2,7 @@ package imree.modules
 {
 			
 	
+	import com.adobe.images.JPGEncoder;
 	import com.demonsters.debugger.MonsterDebugger;
 	import com.greensock.loading.*;
 	import com.greensock.loading.data.VideoLoaderVars;
@@ -10,15 +11,22 @@ package imree.modules
 	import com.greensock.loading.core.LoaderItem;
 	import com.greensock.*;
 	import com.greensock.TweenLite;	
+	import fl.controls.Button;
 	import fl.video.FLVPlayback;
 	import fl.video.flvplayback_internal;
 	import fl.video.SkinErrorEvent;
 	import fl.video.VideoEvent;
 	import fl.video.VideoPlayer;
 	import fl.video.VideoScaleMode;
+	import flash.display.BitmapData;
+	import flash.net.NetStream;
 	import flash.system.Capabilities;
 	import flash.system.TouchscreenType;
+	import flash.utils.ByteArray;
 	import imree.data_helpers.Theme;
+	import imree.display_helpers.modal;
+	import imree.forms.f_data;
+	import imree.forms.f_element;
 			
 	import com.greensock.BlitMask;
 	import com.greensock.easing.Cubic;
@@ -122,6 +130,7 @@ package imree.modules
 			super.drop_thumb();
 		}
 		
+		public var player:FLVPlayback;
 		override public function draw_feature(_w:int, _h:int):void {
 			main.log('Loading module.module_asset_image [id:' + module_id + '] [name: ' + module_name + '] ' + asset_url);
 			prepare_asset_window(_w, _h);
@@ -132,7 +141,7 @@ package imree.modules
 			var a_transparent_object:box = new box(100, 100);
 			asset_content_wrapper.addChild(a_transparent_object);
 			
-			var player:FLVPlayback = new FLVPlayback();
+			player = new FLVPlayback();
 			player.addEventListener(VideoEvent.SKIN_LOADED, add_player);
 			player.addEventListener(SkinErrorEvent.SKIN_ERROR, skin_error);
 			player.skin = "SkinOverAllNoFullscreen.swf";
@@ -174,10 +183,46 @@ package imree.modules
 				
 			}
 			phase_feature = true;
-		
 		}
 		
 		
+		override public function draw_edit_UI(e:* = null, animate:Boolean = true, start_at_position:int = 0):void {
+			var elements:Vector.<f_element> = prepare_edit_form_elements();
+			var form:f_data = prepare_edit_form(elements);
+			
+			var edit_ui:Sprite = new Sprite();
+			edit_ui.addChild(form);
+			
+			if (player !== null) {
+				player = null;
+			}
+			player = new FLVPlayback();
+			player.skin = "SkinOverAllNoFullscreen.swf";
+			player.load(asset_url); 
+			player.setSize(400, 400);
+			player.x = edit_ui.width;
+			edit_ui.addChild(player);
+			
+			var button_ui:Button = new Button();
+			button_ui.setSize(80, 40);
+			button_ui.label = "Take new snapshot";
+			button_ui.addEventListener(MouseEvent.CLICK, takeSnapshot);
+			button_ui.x = player.x;
+			button_ui.y = player.height + 20;
+			edit_ui.addChild(button_ui);
+			
+			function takeSnapshot():void {
+				var nsObj:VideoPlayer = player.getVideoPlayer(0);				
+				var data:Object = { 'module_asset_id':module_asset_id, 'seconds':nsObj.playheadTime};
+				
+				main.connection.server_command("generate_screen_grab", data, capture_ready, true);
+			}
+			function capture_ready(e2:*= null):void {
+				main.toast("Screen capture ready");
+			}
+			asset_editor = new modal(main.Imree.staging_area.width, main.Imree.staging_area.height, null, edit_ui);
+			main.Imree.Exhibit.overlay_add(asset_editor);
+		}
 	}
 
 }

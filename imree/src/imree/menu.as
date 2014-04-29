@@ -35,9 +35,9 @@ package imree
 		private var body:Sprite;
 		public var size_percentage:Number;
 		private var back_btn:smart_button;
-		private var about:Button;
-		private var edit_current_mod:Button;
-		private var edit_current_exhibit:Button;
+		private var about:Sprite;
+		private var edit_current_mod:Sprite;
+		private var edit_current_exhibit:Sprite;
 		private var super_admin:button_SuperAdmin;
 		public function menu(_contents:Vector.<DisplayObject>, _main:Main, _imree:IMREE, _allow_hide:Boolean = true) 
 		{
@@ -122,23 +122,32 @@ package imree
 			if (main.Imree !== null && main.Imree.current_page is exhibit_display) {
 				var current_top_module:module = exhibit_display(main.Imree.current_page).current_module();
 				if (current_top_module !== null && current_top_module.user_can_edit) {
+					/**
 					edit_current_mod = new Button();
 					edit_current_mod.setSize(128, 128);
 					edit_current_mod.label = "Edit Module: \n" + current_top_module.module_name;
+					*/
+					edit_current_mod = new button_edit_module();
 					edit_current_mod.addEventListener(MouseEvent.CLICK, edit_current_mod_clicked);
 					contents.push(edit_current_mod);
 				}
 				if (exhibit_display(main.Imree.current_page).user_can_edit) {
+					/**
 					edit_current_exhibit = new Button();
 					edit_current_exhibit.setSize(128, 128);
 					edit_current_exhibit.label = "Edit Exhibit";
+					*/
+					edit_current_exhibit = new button_edit();
 					edit_current_exhibit.addEventListener(MouseEvent.CLICK, edit_current_exhibit_clicked);
 					contents.push(edit_current_exhibit);
 				}
 				if (main.Imree.Exhibit.exhibit_about !== null && main.Imree.Exhibit.exhibit_about.length > 0) {
+					/**
 					about = new Button();
 					about.setSize(128, 128);
 					about.label = "About Exhibit";
+					*/
+					about = new button_info();
 					about.addEventListener(MouseEvent.CLICK, about_clicked);
 					contents.push(about);
 				}

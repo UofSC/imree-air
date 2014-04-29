@@ -60,6 +60,7 @@ package imree.modules
 		
 		public function draw_feature_content():void {
 			main.log('Loading [id:' + module_id + '] [name: ' + module_name + '] ' + asset_url);
+			main.Imree.Exhibit.navigator.hide();
 			//for the particular asset, draw on the asset_content_wrapper after calling prepare_asset_window
 		}
 		
@@ -84,8 +85,10 @@ package imree.modules
 			asset_foreground = new box(asset_window.foreground.width, asset_window.foreground.height);
 			asset_text_description_wrapper = new Sprite();
 			
-			var next:button_right = new button_right();
-			var back:button_left = new button_left();
+			var text_backgound:box;
+			
+			var next:button_right_internal = new button_right_internal();
+			var back:button_left_internal = new button_left_internal();
 			main.Imree.UI_size(next);
 			main.Imree.UI_size(back);
 			if(asset_next) {
@@ -98,27 +101,33 @@ package imree.modules
 			} else {
 				back.alpha = .3;
 			}
-			asset_foreground.addChild(next);
-			asset_foreground.addChild(back);
+			
 			
 			if (main.Imree.Device.orientation === "portrait") {
 				asset_content_wrapper = new box(asset_foreground.width, asset_foreground.height * .7);
 				asset_text_wrapper = new box(asset_foreground.width - 20, asset_foreground.height * .3 - 20 - next.height);
 				asset_text_wrapper.y = asset_foreground.height * .7 + 10;
 				asset_text_wrapper.x = 10;
-				next.x = asset_foreground.width - next.width;
-				next.y = asset_foreground.height - next.height;
-				back.y = asset_foreground.height - next.height;
+				text_backgound = new box(asset_content_wrapper.width, asset_text_wrapper.height, Theme.background_color_secondary, 1); 
+				next.x = text_backgound.width - next.width ;
+				next.y = text_backgound.height - next.height;
+				back.y = text_backgound.height - next.height;
 			} else {
 				asset_content_wrapper = new box(asset_foreground.width * .7, asset_foreground.height);
 				asset_text_wrapper = new box(asset_foreground.width * .3 -20, asset_foreground.height - 20 - next.height);
 				asset_text_wrapper.x = asset_foreground.width * .7 + 10;
 				asset_text_wrapper.y = 10;
-				next.x = asset_foreground.width - next.width;
-				next.y = asset_foreground.height - next.height;
-				back.x = asset_text_wrapper.x;
-				back.y = asset_foreground.height - back.height;
+				text_backgound = new box(asset_text_wrapper.width + 20, asset_content_wrapper.height + 20, Theme.background_color_secondary, 1);
+				next.x = text_backgound.width - next.width -10 ;
+				next.y = text_backgound.height - next.height -30;
+				back.x = text_backgound.x +10;
+				back.y = text_backgound.height - back.height-30;
 			}
+			
+			text_backgound.addChild(next);
+			text_backgound.addChild(back);
+			next.transform.colorTransform = Theme.color_transform_page_buttons;
+			back.transform.colorTransform = Theme.color_transform_page_buttons;
 			
 			var content_mask:box = new box(asset_content_wrapper.width, asset_content_wrapper.height);
 			asset_content_wrapper.addChild(content_mask);
@@ -135,9 +144,12 @@ package imree.modules
 			}
 			
 			var desc:text = new text(desc_string, asset_text_wrapper.width, Theme.font_style_description, asset_text_wrapper.height - title.height);
+			asset_text_wrapper.addChild(text_backgound);
 			asset_text_wrapper.addChild(title);
 			asset_text_wrapper.addChild(asset_text_description_wrapper);
 			asset_text_description_wrapper.addChild(desc);
+			text_backgound.x = -10;
+			text_backgound.y = -10;
 			asset_text_description_wrapper.y = title.height + 10;
 			
 			loading_indicator = new loading_spinner_sprite();

@@ -140,6 +140,10 @@ package imree
 			
 			return request;
 		}
+		
+		public function toast(str:*):void {
+			main.toast(str);
+		}
 	}
 	
 }

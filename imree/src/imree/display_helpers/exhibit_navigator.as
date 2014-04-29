@@ -1,12 +1,23 @@
 package imree.display_helpers {
+	import com.greensock.easing.Cubic;
+	import com.greensock.TweenLite;
 	import fl.controls.Button;
 	import flash.display.MovieClip;
+	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
+	import flash.text.TextFormat;
+	import flash.text.TextFormatAlign;
+	import flash.utils.Timer;
+	import imree.data_helpers.Theme;
+	import imree.IMREE;
 	import imree.Main;
 	import imree.modules.module;
 	import imree.pages.exhibit_display;
 	import imree.shortcuts.box;
+	import imree.text;
+	import imree.textFont;
 	
 	/**
 	 * ...
@@ -16,10 +27,14 @@ package imree.display_helpers {
 		
 		public var exhibit:exhibit_display;
 		public var main:Main;
-		private var wrapper:box;
+		public var wrapper:box;
 		private var portrait:Boolean;
 		private var butts:Vector.<smart_button>;
 		private var t:exhibit_navigator;
+		private var on_x:int;
+		private var on_y:int;
+		private var off_x:int;
+		private var off_y:int;
 		public function exhibit_navigator(_exhibit:exhibit_display, _main:Main) {
 			exhibit = _exhibit;
 			main = _main;
@@ -31,19 +46,28 @@ package imree.display_helpers {
 		private function added2stage(e:Event):void {
 			this.removeEventListener(Event.ADDED_TO_STAGE, added2stage);
 			this.addEventListener(Event.REMOVED_FROM_STAGE, removed_from_stage);
+			portrait = main.Imree.Device.orientation === "portrait";
+			var max_width:int = 320;
 			
-			var big_butt_sample:button_navigator_primary_module = new button_navigator_primary_module();
-			var small_butt_sample:button_navigator_secondary_module = new button_navigator_secondary_module();
 			
 			butts = new Vector.<smart_button>();
 			for each(var mod:module in exhibit.modules) {
-				var butt_ui:button_navigator_primary_module = new button_navigator_primary_module();
+				var format:textFont = Theme.font_style_description;
+				format.align = TextFormatAlign.CENTER;
+				var butt_text:text = new text(mod.module_name, max_width - 20, format);
+				var butt_ui:box = new box(max_width, butt_text.height + 10);
+				butt_ui.addChild(butt_text);
+				butt_text.x = 10; 
+				butt_text.y = 5;
 				var butt:smart_button = new smart_button(butt_ui, shortcut_clicked);
 				butt.data = mod;
 				butts.push(butt);
 				if (mod === exhibit.current_module()) {
 					for each(var mod2:module in mod.items) {
-						var small_butt_ui:button_navigator_secondary_module = new button_navigator_secondary_module();
+						var small_butt_ui:box = new box(40, 40);
+						small_butt_ui.graphics.beginFill(Theme.font_style_description.color, 1);
+						small_butt_ui.graphics.drawCircle(small_butt_ui.width / 2, small_butt_ui.height / 2, 14);
+						small_butt_ui.graphics.endFill();
 						var small_butt:smart_button = new smart_button(small_butt_ui, small_shortcut_clicked);
 						small_butt.data = mod2;
 						butts.push(small_butt);
@@ -53,27 +77,76 @@ package imree.display_helpers {
 			
 			
 			if (portrait) {
-				wrapper = new box(main.Imree.staging_area.width, big_butt_sample.height + 20, 0xFFFFFF, 1);
+				wrapper = new box(main.Imree.staging_area.width, max_width, 0xFFFFFF, 1);
 				wrapper.y = main.stage.stageHeight - wrapper.height;
+				off_x = 0;
+				off_y = 0 - wrapper.height;
 				var butt_x:int = 10;
 				for each(butt in butts) {
 					wrapper.addChild(butt);
-					butt.y = big_butt_sample.height/2 - butt.height /2 + 10;
+					butt.y = butt.height/2 - butt.height /2 + 10;
 					butt.x = butt_x;
 					butt_x += butt.width + 10;
 				}
 			} else {
-				wrapper  = new box(big_butt_sample.width + 20, main.Imree.staging_area.height, 0xFFFFFF, 1);
+				wrapper  = new box(max_width, main.Imree.staging_area.height, Theme.background_color_secondary, 1);
 				wrapper.x = main.stage.stageWidth - wrapper.width;
+				off_x = 0;
+				off_y = 0 - wrapper.height;
 				var butt_y:int = 10;
 				for each(butt in butts) {
 					wrapper.addChild(butt);
-					butt.x = big_butt_sample.width/2 - butt.width /2 + 10;
+					butt.x = max_width/2 - butt.width /2 + 5;
 					butt.y = butt_y;
-					butt_y += butt.height + 10;
+					butt_y += butt.height + 5;
 				}
 			}
 			addChild(wrapper);
+			
+			var toggle_b:Sprite = new Sprite();
+			toggle_b.addChild(new box(max_width, IMREE.web_bar_height, 0xBBBBBB, 1));
+			var txt:text = new text(exhibit.current_module().module_name, max_width, format);
+			txt.y = toggle_b.height / 2 - txt.height / 2;
+			toggle_b.addChild(txt);
+			toggler= new smart_button(toggle_b, toggle);
+			
+			on = true;
+			main.Imree.web_bar();
+			
+			var tim:Timer = new Timer(4000, 1);
+			tim.addEventListener(TimerEvent.TIMER, timer_ticked);
+			tim.start();
+			function timer_ticked(f:Event):void {
+				tim.stop();
+				tim.removeEventListener(TimerEvent.TIMER, timer_ticked);
+				tim = null;
+				hide();
+			}
+			
+		}
+		public var toggler:smart_button;
+		private var on:Boolean;
+		public function toggle(e:* = null):void {
+			if (on) {
+				hide();
+			} else {
+				show();
+			}
+		}
+		public function show(e:*= null):void {
+			if(!on) {
+				TweenLite.to(this, .5, { x:0, y:0, ease:Cubic.easeOut } );
+				if (main.Imree.current_page is exhibit_display) {
+					exhibit_display(main.Imree.current_page).overlay_remove();
+				}
+				on = true;
+			}
+		}
+		public function hide(e:* = null):void {
+			if (on) {
+				TweenLite.to(this, .6, { x:off_x, y:off_y, ease:Cubic.easeIn } );
+				on = false;
+			}
 		}
 		private function removed_from_stage(e:Event):void {
 			this.removeEventListener(Event.REMOVED_FROM_STAGE, removed_from_stage);

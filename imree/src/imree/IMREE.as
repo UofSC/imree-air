@@ -1,5 +1,6 @@
 package imree 
 {
+	import adobe.utils.CustomActions;
 	import com.greensock.data.TweenLiteVars;
 	import com.greensock.events.LoaderEvent;
 	import com.greensock.loading.LoaderMax;
@@ -9,6 +10,7 @@ package imree
 	import fl.controls.Button;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.display.DisplayObjectContainer;
 	import flash.display.LoaderInfo;
 	import flash.events.TimerEvent;
 	import flash.net.navigateToURL;
@@ -137,6 +139,11 @@ package imree
 			}
 			
 			addEventListener(Event.RESIZE, stage_resized);
+		}
+		public function menu_on_top(e:* = null):void {
+			if (Menu !== null) {
+				addChildAt(Menu, numChildren);
+			}
 		}
 		
 		public function location_aware():void {
@@ -358,7 +365,8 @@ package imree
 		}
 		
 		private var web_bar_wrapper:box;
-		static private var web_bar_height:int;
+		private var web_bar_items:Vector.<DisplayObject>
+		static public var web_bar_height:int;
 		public function web_bar(bar_height:int = 0):void {
 			if (web_bar_wrapper !== null) {
 				if (contains(web_bar_wrapper)) {
@@ -369,7 +377,7 @@ package imree
 			if (bar_height > 0) {
 				web_bar_height = bar_height;
 			}
-			web_bar_wrapper = new box(main.stage.stageWidth, web_bar_height, 0x73000a, 1);
+			web_bar_wrapper = new box(main.stage.stageWidth, web_bar_height, 0x858585, 1);
 			addChild(web_bar_wrapper);
 			web_bar_wrapper.y = 0 - web_bar_height;
 			var sample_button:button_menu = new button_menu();
@@ -379,7 +387,41 @@ package imree
 			web_bar_wrapper.addChild(institute);
 			institute.x = sample_button.width + 20;
 			this.y = web_bar_height;
+			
+			if (web_bar_items === null) {
+				web_bar_items = new Vector.<DisplayObject>();
+			}
+			
+			if (current_page is exhibit_display && exhibit_display(current_page).navigator !== null && exhibit_display(current_page).navigator.toggler !== null) {
+				if (!web_bar_wrapper.contains(exhibit_display(current_page).navigator.toggler)) {
+					web_bar_wrapper.addChild(exhibit_display(current_page).navigator.toggler);
+					exhibit_display(current_page).navigator.toggler.x = main.stage.stageWidth - exhibit_display(current_page).navigator.toggler.width;
+				}
+			}
+			
+			menu_on_top();
 		}
+		
+		public var navigator_toggler:smart_button;
+		public function web_bar_add(obj:DisplayObject):void {
+			if (web_bar_items === null) {
+				web_bar_items = new Vector.<DisplayObject>();
+			}
+			if(web_bar_items.indexOf(obj) === -1) {
+				web_bar_items.push(obj);
+				web_bar();
+			}
+		}
+		public function web_bar_remove(obj:DisplayObject):void {
+			if (web_bar_items === null) {
+				web_bar_items = new Vector.<DisplayObject>();
+			}
+			if(web_bar_items.indexOf(obj) !== -1) {
+				web_bar_items.splice(web_bar_items.indexOf(obj), 1);
+				web_bar();
+			}
+		}
+		
 		private function stage_resized(e:Event):void {
 			web_bar();
 			Menu.update();

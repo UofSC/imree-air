@@ -34,7 +34,8 @@ package imree.data_helpers {
 		static public var background_pattern_primary:BitmapData;
 		static public var background_pattern_secondary:BitmapData;
 		
-		static public var image_color_transform:ColorTransform;
+		static public var color_transform_page_buttons:ColorTransform;
+		static public var color_transform_background_image:ColorTransform;
 		
 		static private var primary_fields_processed:Boolean = false;
 		public var styles:Vector.<textFont>;
@@ -81,28 +82,35 @@ package imree.data_helpers {
 						Theme.font_style_title = txtFont;
 					} else if (target.getLineText(0).search("sub_title") === 0) {
 						Theme.font_style_sub_title = txtFont
-					}else if (target.getLineText(0).search("heading1") === 0) {
+					} else if (target.getLineText(0).search("heading1") === 0) {
 						Theme.font_style_h1 = txtFont
-					}else if (target.getLineText(0).search("heading2") === 0) {
+					} else if (target.getLineText(0).search("heading2") === 0) {
 						Theme.font_style_h2 = txtFont
-					}else if (target.getLineText(0).search("heading3") === 0) {
+					} else if (target.getLineText(0).search("heading3") === 0) {
 						Theme.font_style_h3 = txtFont
-					}else if (target.getLineText(0).search("caption") === 0) {
+					} else if (target.getLineText(0).search("caption") === 0) {
 						Theme.font_style_caption = txtFont
-					}else if (target.getLineText(0).search("description") === 0) {
+					} else if (target.getLineText(0).search("description") === 0) {
 						Theme.font_style_description = txtFont
-					}else if (target.getLineText(0).search("background_color_primary") === 0) {
+					} else if (target.getLineText(0).search("background_color_primary") === 0) {
 						Theme.background_color_primary = txtFont.color;
-					}else if (target.getLineText(0).search("background_color_secondary") === 0) {
+					} else if (target.getLineText(0).search("background_color_secondary") === 0) {
 						Theme.background_color_secondary = txtFont.color;
-					}  else {
-						// Is not a textfield we're tracking
-					}
+					} else if (target.getLineText(0).search("image_wash_color") === 0) {
+						Theme.background_color_secondary = txtFont.color;
+					} else {
+						// Is not a textfield we're tracking  image_wash_color
+					} 
 				} else if(theme.getChildAt(i)  is MovieClip) {
-					Theme.image_color_transform = MovieClip(theme.getChildAt(i)).transform.colorTransform;
+					if (theme.getChildAt(i) is button_left_internal) {
+						Theme.color_transform_page_buttons = theme.getChildAt(i).transform.colorTransform;
+					} else if (theme.getChildAt(i) is sample_background_image) {
+						Theme.color_transform_background_image = theme.getChildAt(i).transform.colorTransform;
+					}
+					
 				} else if (theme.getChildAt(i) is Shape) {
 					
-				}
+				} 
 			}
 			return;
 		}

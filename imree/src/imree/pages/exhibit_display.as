@@ -16,6 +16,7 @@ package imree.pages
 	import flash.events.TimerEvent;
 	import flash.filters.BitmapFilterQuality;
 	import flash.filters.BlurFilter;
+	import flash.filters.ColorMatrixFilter;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.Timer;
@@ -59,6 +60,7 @@ package imree.pages
 		public var exhibit_theme_id:String;
 		public var exhibit_people_group_id:int;
 		public var exhibit_cover_image_url:String;
+		public var exhibit_about:String;
 		private var main:Main;
 		private var wrapper:Sprite;
 		public var asset_wrapper:Sprite;
@@ -117,6 +119,7 @@ package imree.pages
 				exhibit_people_group_id = xml.result.exhibit_properties.people_group_id;
 				exhibit_name = xml.result.exhibit_properties.exhibit_name;
 				exhibit_sub_name = xml.result.exhibit_properties.exhibit_sub_name;
+				exhibit_about = xml.result.exhibit_properties.exhibit_about;
 				draw_background(exhibit_cover_image_url);
 				if (modules.length === 0) {
 					addChild(new text("An Empty Exhibit!? Oh, the possibilities. If you're a curator, hit the menu button and choose to edit the current exhibit.", 300, Theme.font_style_h1));
@@ -170,6 +173,7 @@ package imree.pages
 				asset.filename = xml.asset_data_name;
 				asset.module_type = xml.module_type;
 				asset.module_id = null; //redundant, but a reminder
+				asset.module_display_name = xml.asset_display_name_on_thumb == '1';
 				asset.asset_url = xml.asset_url;
 				asset.asset_specific_thumb_url = xml.asset_specific_thumbnail_url;
 				asset.source_credit = xml.source_credit_statement;
@@ -351,9 +355,16 @@ package imree.pages
 			function background_defocus(e:LoaderEvent):void {				
 				var wrapper_cache_data:BitmapData = new BitmapData(wrapper.width, wrapper.height, false);
 				wrapper_cache_data.draw(image_wrapper);
-				wrapper_cache_data.applyFilter(wrapper_cache_data, new Rectangle(0,0,wrapper.width, wrapper.height), new Point(), new BlurFilter(10, 10, BitmapFilterQuality.MEDIUM));
+				var source_rectangle:Rectangle = new Rectangle(0, 0, wrapper.width, wrapper.height);
+				var matrix:Array = new Array();
+				matrix = matrix.concat([ 0.6, 0.3, 0.1, 0, 0 ]);
+				matrix = matrix.concat([ 0.6, 0.3, 0.1, 0, 0 ]);
+				matrix = matrix.concat([ 0.6, 0.3, 0.1, 0, 0 ]);
+				matrix = matrix.concat([ 0, 0, 1, 0 ]);
+				wrapper_cache_data.applyFilter(wrapper_cache_data, source_rectangle, new Point(), new ColorMatrixFilter(matrix));
+				wrapper_cache_data.applyFilter(wrapper_cache_data, source_rectangle, new Point(), new BlurFilter(10, 10, BitmapFilterQuality.MEDIUM));
+				wrapper_cache_data.colorTransform(new Rectangle(0, 0, wrapper_cache_data.width, wrapper_cache_data.height), Theme.color_transform_background_image);
 				var wrapper_cache:Bitmap = new Bitmap(wrapper_cache_data);
-				wrapper_cache.transform.colorTransform = Theme.image_color_transform;
 				wrapper.addChild(wrapper_cache);
 				
 				TweenLite.from(wrapper_cache, 2, { alpha:0 } );
@@ -540,6 +551,7 @@ package imree.pages
 				if (contains(navigator)) {
 					removeChild(navigator);
 				}
+				main.Imree.web_bar_remove(navigator.toggler);
 				navigator = null;
 			}
 			navigator = new exhibit_navigator(t, main);

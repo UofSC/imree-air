@@ -202,6 +202,7 @@ package imree.forms
 		
 		private function update_response(e:LoaderEvent):void {
 			trace("SAVED ::::: " + e.target.content);
+			conn.toast("All changes to the form are saved");
 			if (onSave !== null) {
 				onSave();
 			}

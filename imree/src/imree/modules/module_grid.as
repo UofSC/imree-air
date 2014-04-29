@@ -131,7 +131,7 @@ package imree.modules
 				items[j].x = positions[j].x;
 				items[j].y = positions[j].y + y_offest;
 				
-				if (module_display_child_names && items[j].module_name.length > 0) {
+				if (module_display_child_names && items[j].module_name.length > 0 && items[j].module_display_name) {
 					var child_label:text = new text(items[j].module_name, positions[j].width -10, Theme.font_style_description);
 					var label_background:box = new box(positions[j].width, child_label.height + 10, Theme.background_color_secondary, .6);
 					items[j].addChild(label_background);

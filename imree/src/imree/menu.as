@@ -6,6 +6,7 @@ package imree
 	import com.greensock.TweenLite;
 	import fl.controls.Button;
 	import flash.display.DisplayObject;
+	import flash.display.DisplayObjectContainer;
 	import flash.display.SimpleButton;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -13,6 +14,7 @@ package imree
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	import imree.data_helpers.user_privilege;
+	import imree.display_helpers.exhibit_info;
 	import imree.display_helpers.smart_button;
 	import imree.modules.module;
 	import imree.pages.exhibit_display;
@@ -33,6 +35,7 @@ package imree
 		private var body:Sprite;
 		public var size_percentage:Number;
 		private var back_btn:smart_button;
+		private var about:Button;
 		private var edit_current_mod:Button;
 		private var edit_current_exhibit:Button;
 		private var super_admin:button_SuperAdmin;
@@ -78,7 +81,7 @@ package imree
 				back_btn.dump();
 				back_btn = null;
 			}
-			back_btn = new smart_button(new button_back(), toggle);
+			back_btn = new smart_button(new button_menu(), toggle);
 			
 			if (body !== null) {
 				while (body.numChildren) {
@@ -98,28 +101,24 @@ package imree
 			/**
 			 * Setup edit buttons for the current "page" and the current exhibit
 			 */
-			if (edit_current_mod !== null) {
-				edit_current_mod.removeEventListener(MouseEvent.CLICK, hide);
-				edit_current_mod.removeEventListener(MouseEvent.CLICK, edit_current_mod_clicked);
-				if (body.contains(edit_current_mod)) {
-					body.removeChild(edit_current_mod);
+			var things_that_should_be_refeshed_each_update:Vector.<DisplayObject> = new Vector.<DisplayObject>();
+			things_that_should_be_refeshed_each_update.push(edit_current_mod, edit_current_exhibit, about);
+			for each(var obj:DisplayObject in things_that_should_be_refeshed_each_update) {
+				if (obj !== null) {
+					obj.removeEventListener(MouseEvent.CLICK, hide);
+					if (body.contains(obj)) {
+						body.removeChild(obj);
+					}
+					if (contents.indexOf(obj) !== -1) {
+						contents.splice(contents.indexOf(obj), 1);
+					}
+					obj = null;
 				}
-				if(contents.indexOf(edit_current_mod) !== false) {
-					contents.splice(contents.indexOf(edit_current_mod), 1);
-				}
-				edit_current_mod = null;
 			}
-			if ( edit_current_exhibit !== null) {
-				edit_current_exhibit.removeEventListener(MouseEvent.CLICK, hide);
-				edit_current_exhibit.removeEventListener(MouseEvent.CLICK, edit_current_exhibit_clicked);
-				if (body.contains(edit_current_exhibit)) {
-					body.removeChild(edit_current_exhibit);
-				}
-				if(contents.indexOf(edit_current_exhibit) !== false) {
-					contents.splice(contents.indexOf(edit_current_exhibit), 1);
-				}
-				edit_current_exhibit = null;
-			}
+			
+			
+			
+			
 			if (main.Imree !== null && main.Imree.current_page is exhibit_display) {
 				var current_top_module:module = exhibit_display(main.Imree.current_page).current_module();
 				if (current_top_module !== null && current_top_module.user_can_edit) {
@@ -135,6 +134,13 @@ package imree
 					edit_current_exhibit.label = "Edit Exhibit";
 					edit_current_exhibit.addEventListener(MouseEvent.CLICK, edit_current_exhibit_clicked);
 					contents.push(edit_current_exhibit);
+				}
+				if (main.Imree.Exhibit.exhibit_about !== null && main.Imree.Exhibit.exhibit_about.length > 0) {
+					about = new Button();
+					about.setSize(128, 128);
+					about.label = "About Exhibit";
+					about.addEventListener(MouseEvent.CLICK, about_clicked);
+					contents.push(about);
 				}
 			}
 			
@@ -174,7 +180,7 @@ package imree
 				size_percentage = (menu_toggle_button.width + 10) / main.stage.stageWidth;
 				animator.on_direction = "left";
 				animator.off_direction = "left";
-				body.addChild(new box(main.stage.stageWidth * size_percentage, main.stage.stageHeight, 0xFFFF99, 1));
+				body.addChild(new box(main.stage.stageWidth * size_percentage, main.stage.stageHeight, 0xC8C8C8, 1));
 				body.addChild(back_btn);
 				back_btn.x = 5;
 				back_btn.y = 5;
@@ -264,6 +270,11 @@ package imree
 			if (main.Imree.current_page is exhibit_display) {
 				var target:exhibit_display = exhibit_display(main.Imree.current_page);
 				main.Imree.show_exhibit_admin(int(target.id));
+			}
+		}
+		private function about_clicked(e:MouseEvent):void {
+			if (main.Imree.current_page is exhibit_display) {
+				main.Imree.Exhibit.overlay_add(new exhibit_info(main, main.Imree.Exhibit.exhibit_about));
 			}
 		}
 		private function super_admin_clicked(e:MouseEvent):void {

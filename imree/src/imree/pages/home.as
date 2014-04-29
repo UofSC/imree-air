@@ -34,6 +34,7 @@ package imree.pages
 		public var main:Main;
 		public var w:int;
 		public var h:int;
+		[Embed(source = "../images/grey_wash_wall.jpg")] public var gray_pattern:Class;
 		public function home(_w:int, _h:int, _main:Main) 
 		{
 			conn = _main.connection;
@@ -41,6 +42,12 @@ package imree.pages
 			main = _main;
 			w = _w;
 			h = _h;
+			var background:box = new box(w, h);
+			var pattern:Bitmap = new gray_pattern();
+			background.graphics.beginBitmapFill(pattern.bitmapData);
+			background.graphics.drawRect(0, .0, w, h);
+			background.graphics.endFill();
+			addChild(background);
 		}
 		
 		
@@ -51,7 +58,8 @@ package imree.pages
 			xml = XML(e.target.content);
 			
 			
-			var header_font:textFont = new textFont("AbrahamLincoln", 48);
+			var header_font:textFont = new textFont("OpenSansLight", 36);
+			header_font.color = 0xFFFFFF;
 			header_font.align = TextFormatAlign.CENTER;
 			var header:text = new text ("University of South Carolina Libraries", w * 0.90, header_font);
 			header.x = w * .05;
@@ -103,7 +111,7 @@ package imree.pages
 				trace(temp_url);
 				new ImageLoader(temp_url, img_loader_vars).load();
 				
-				var label_font:textFont = new textFont("AbrahamLincoln", 28);
+				var label_font:textFont = new textFont("OpenSans", 28);
 				label_font.align = TextFormatAlign.CENTER;
 				var label:text = new text (item.exhibit_name, exhibit_cover_wrapper.width * .8, label_font);
 				label.x = exhibit_cover_wrapper.width * .10 + exhibit_cover_wrapper.x;

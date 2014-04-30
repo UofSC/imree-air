@@ -1,7 +1,7 @@
 package imree.modules
 {
 	
-	import com.demonsters.debugger.MonsterDebugger;
+	//import com.demonsters.debugger.MonsterDebugger;
 	import com.greensock.BlitMask;
 	import com.greensock.easing.Cubic;
 	import com.greensock.easing.Elastic;
@@ -129,16 +129,19 @@ package imree.modules
 			asset_content_wrapper.removeChild(loading_indicator);
 			loading_indicator = null;
 			
-			var play_button:button_right = new button_right();
-			play_button.x = asset_text_wrapper.width / 2 - play_button.width / 2;
-			play_button.y = asset_text_wrapper.height + 10;
+			var play_button:button_play = new button_play();
 			main.Imree.UI_size(play_button);
-			asset_text_description_wrapper.addChild(play_button);
-			var pause_button:button_menu = new button_menu();
+			play_button.x = text_backgound.width / 2 - play_button.width / 2;
+			play_button.y = text_backgound.height - play_button.height -30;
+			text_backgound.addChild(play_button);
+			var pause_button:button_pause = new button_pause();
+			main.Imree.UI_size(pause_button);
 			pause_button.x = play_button.x;
 			pause_button.y = play_button.y;
-			main.Imree.UI_size(pause_button);
-			asset_text_wrapper.addChild(pause_button);
+			text_backgound.addChild(pause_button);
+			play_button.visible = false;
+			
+			TweenLite.from(pause_button, 1, { y:pause_button.y + pause_button.height * 2, x: pause_button.x - pause_button.width * .5, scaleX:2, scaleY:2, ease:Cubic.easeOut } );
 			
 			play_button.addEventListener(MouseEvent.CLICK, play_button_clicked);
 			function play_button_clicked(a_variable_that_dont_matter:MouseEvent):void {

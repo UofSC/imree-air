@@ -20,22 +20,21 @@ package imree.display_helpers
 		public var orientation:String;
 		public var box_size:int;
 		public var supports_qr:Boolean;
+		public var ui_size:int;
 		public function device(main:Main) 
 		{
-			if (Stage.supportsOrientationChange) {
-				screen_inches_wide = main.stage.fullScreenWidth / Capabilities.screenDPI;
-				screen_inches_tall = main.stage.fullScreenHeight / Capabilities.screenDPI;
-			} else {
-				screen_inches_wide = main.stage.stageWidth / Capabilities.screenDPI;
-				screen_inches_tall = main.stage.stageHeight / Capabilities.screenDPI;
-			}
 			
+			screen_inches_wide = main.stage.stageWidth / Capabilities.screenDPI;
+			screen_inches_tall = main.stage.stageHeight / Capabilities.screenDPI;
 			screen_square_inches = screen_inches_tall * screen_inches_wide;
 			main.log("Device: square_inches = " + screen_inches_wide + " x " + screen_inches_tall + " = " + screen_square_inches);
 			
 			
 			dpi = Capabilities.screenDPI;
 			box_size = dpi * 1.5;
+			box_size = 100;
+			ui_size = 90;
+			
 			var max_dimension:int;
 			if (screen_inches_tall > screen_inches_wide) {
 				orientation = "portrait";
@@ -55,6 +54,9 @@ package imree.display_helpers
 			}
 			if (max_dimension / box_size > 15) {
 				box_size *= 2;
+			}
+			if (main.Imree !== null) {
+				main.Imree.web_bar();
 			}
 			
 			//determine device type with http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/desktop/NativeApplication.html features

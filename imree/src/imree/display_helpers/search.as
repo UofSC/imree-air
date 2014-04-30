@@ -273,6 +273,7 @@ package imree.display_helpers {
 			for (var b:int = 0; b < boxes.length; b++) {
 				i = String(b);
 				if (xml.result.children.children()[i].children.children().length() > 0) {
+					trace(xml.result.children.children()[i]);
 					box(boxes[i]).data.children_xml = xml.result.children.children()[i].children.children();
 					boxes[i].addEventListener(MouseEvent.CLICK, complex_object_selected);
 					var book_indicator:Icon_book_background = new Icon_book_background();

@@ -23,7 +23,7 @@ package imree.display_helpers
 			main = _main;
 			background = new box(_w, _h, Theme.background_color_primary, .7);
 			
-			offset = main.Imree.Device.box_size / 2;
+			offset = main.Imree.Device.ui_size;
 			if (main.Imree.Device.orientation === "portrait") {
 				foreground = new box(_w, _h - offset, Theme.background_color_primary, 1);
 				foreground.y = offset;

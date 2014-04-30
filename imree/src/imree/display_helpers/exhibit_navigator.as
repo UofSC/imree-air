@@ -49,10 +49,13 @@ package imree.display_helpers {
 			portrait = main.Imree.Device.orientation === "portrait";
 			var max_width:int = 320;
 			
+			if (Theme.font_style_title === null) {
+				return;
+			}
 			
 			butts = new Vector.<smart_button>();
+			var format:textFont = Theme.font_style_description;
 			for each(var mod:module in exhibit.modules) {
-				var format:textFont = Theme.font_style_description;
 				var original_align:String = format.align;
 				format.align = TextFormatAlign.CENTER;
 				var butt_text:text = new text(mod.module_name, max_width - 20, format);
@@ -97,10 +100,12 @@ package imree.display_helpers {
 			toggle_b.addChild(new box(max_width, IMREE.web_bar_height, 0x333333, 1));
 			var original_align2:String = format.align;
 			format.align = TextFormatAlign.CENTER;
-			var txt:text = new text(exhibit.current_module().module_name, max_width, format);
-			format.align = original_align2;
-			txt.y = toggle_b.height / 2 - txt.height / 2;
-			toggle_b.addChild(txt);
+			if(exhibit.current_module() !== null) {
+				var txt:text = new text(exhibit.current_module().module_name, max_width, format);
+				format.align = original_align2;
+				txt.y = toggle_b.height / 2 - txt.height / 2;
+				toggle_b.addChild(txt);
+			}
 			toggler= new smart_button(toggle_b, toggle);
 			
 			on = true;
@@ -144,8 +149,10 @@ package imree.display_helpers {
 		}
 		private function removed_from_stage(e:Event):void {
 			this.removeEventListener(Event.REMOVED_FROM_STAGE, removed_from_stage);
-			removeChild(wrapper);
-			wrapper = null;
+			if(wrapper !== null) {
+				removeChild(wrapper);
+				wrapper = null;
+			}
 		}
 		private function shortcut_clicked(probably_module:*= null):void {
 			hide();

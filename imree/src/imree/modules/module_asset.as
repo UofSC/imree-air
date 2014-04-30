@@ -83,30 +83,19 @@ package imree.modules
 			//adding the asset is up to the specific asset type
 		}
 		
+		public var text_backgound:box;
 		public function prepare_asset_window(_w:int, _h:int):void {
 			var asset_window:window = new window(_w, _h, main);
 			asset_foreground = new box(asset_window.foreground.width, asset_window.foreground.height);
 			asset_text_description_wrapper = new Sprite();
 			
-			var text_backgound:box;
-			
 			var next:button_right_internal = new button_right_internal();
 			var back:button_left_internal = new button_left_internal();
 			main.Imree.UI_size(next);
 			main.Imree.UI_size(back);
-			if(asset_next) {
-				next.addEventListener(MouseEvent.CLICK, asset_next_click);
-			} else {
-				next.alpha = .3;
-			}
-			if (asset_previous) {
-				back.addEventListener(MouseEvent.CLICK, asset_back_click);
-			} else {
-				back.alpha = .3;
-			}
 			
 			var scroller:scrollPaneFancy = new scrollPaneFancy();
-		
+			
 			if (main.Imree.Device.orientation === "portrait") {
 				asset_content_wrapper = new box(asset_foreground.width, asset_foreground.height * .7);
 				asset_text_wrapper = new box(asset_foreground.width - 20 - next.width - back.width, asset_foreground.height * .3);
@@ -130,13 +119,27 @@ package imree.modules
 				next.y = text_backgound.height - next.height -30;
 				back.x = text_backgound.x +10;
 				back.y = text_backgound.height - back.height - 30;
-				
 			}
 			
 			text_backgound.addChild(next);
 			text_backgound.addChild(back);
 			next.transform.colorTransform = Theme.color_transform_page_buttons;
 			back.transform.colorTransform = Theme.color_transform_page_buttons;
+			if (asset_next !== null) {
+				next.addEventListener(MouseEvent.CLICK, asset_next_click);
+			} else {
+				next.alpha = .3;
+				next.addEventListener(MouseEvent.CLICK, close_asset_window);
+			}
+			if (asset_previous !== null) {
+				back.addEventListener(MouseEvent.CLICK, asset_back_click);
+			} else {
+				back.alpha = .3;
+				next.addEventListener(MouseEvent.CLICK, close_asset_window);
+			}
+			function close_asset_window(r:MouseEvent):void {
+				main.Imree.Exhibit.overlay_remove();
+			}
 			
 			var content_mask:box = new box(asset_content_wrapper.width, asset_content_wrapper.height);
 			asset_content_wrapper.addChild(content_mask);
@@ -148,13 +151,13 @@ package imree.modules
 			scroller.verticalScrollPolicy = ScrollPolicy.AUTO;
 			scroller.setSize(asset_text_wrapper.width, asset_text_wrapper.height - title.height - 20);
 			var desc_string:String = "";
-			if (description_textflow !== null && description_textflow.length > 0) {
-				desc_string += description_textflow;
+			if (description !== null && description.length > 0) {
+				desc_string += description;
 			}
 			if (source_credit !== null && source_credit.length > 0) {
 				desc_string += " " + source_credit;
 			}
-			
+			trace(desc_string);
 			var desc:text = new text(desc_string, asset_text_wrapper.width, Theme.font_style_description, asset_text_wrapper.height - title.height);
 			asset_text_wrapper.addChild(text_backgound);
 			asset_text_wrapper.addChild(title);
@@ -189,12 +192,15 @@ package imree.modules
 				asset_window.addChild(edit_button);
 			}
 			
+			
+			
 			function asset_back_click(e:MouseEvent):void {
 				if(asset_previous !== null) {
 					asset_previous.draw_feature(_w, _h);
 				}
 			}
 			function asset_next_click(e:MouseEvent):void {
+				trace("going to " + asset_next);
 				if (asset_next !== null) {
 					asset_next.draw_feature(_w, _h);
 				}

@@ -11,6 +11,7 @@ package imree.data_helpers {
 	import flash.text.TextFormat;
 	import flash.utils.getDefinitionByName;
 	import flash.utils.getQualifiedClassName;
+	import imree.Main;
 	import imree.textFont;
 	
 	/**
@@ -41,7 +42,8 @@ package imree.data_helpers {
 		public var styles:Vector.<textFont>;
 		
 		
-		[Embed(source = "../../../fonts/AbrahamLincoln.ttf", fontName = 'AbrahamLincoln', embedAsCFF = "true")] static public var AbrahamLincolnFont:Class;
+
+		/**
 		[Embed(source = "../../../fonts/Lobster.ttf", fontName = 'Lobster', embedAsCFF = "true")] static public var LobsterFont:Class;
 		[Embed(source = "../../../fonts/Lora-Bold.ttf", fontName = 'LoraBold', embedAsCFF = "true")] static public var LoraBoldFont:Class;
 		[Embed(source = "../../../fonts/Lora-BoldItalic.ttf", fontName = 'LoraBoldItalic', embedAsCFF = "true")] static public var LoraBoldItalicFont:Class;
@@ -52,18 +54,33 @@ package imree.data_helpers {
 		[Embed(source = "../../../fonts/OpenSans-ExtraBold.ttf", fontName = 'OpenSansExtraBold', embedAsCFF = "true")] static public var OpenSansExtraBoldFont:Class;
 		[Embed(source = "../../../fonts/OpenSans-ExtraBoldItalic.ttf", fontName = 'OpenSansExtraBoldItalic', embedAsCFF = "true")] static public var OpenSansExtraBoldItalicFont:Class;
 		[Embed(source = "../../../fonts/OpenSans-Italic.ttf", fontName = 'OpenSansItalic', embedAsCFF = "true")] static public var OpenSansItalicFont:Class;
-		[Embed(source = "../../../fonts/OpenSans-Light.ttf", fontName = 'OpenSansLight', embedAsCFF = "true")] static public var OpenSansLightFont:Class;
 		[Embed(source = "../../../fonts/OpenSans-LightItalic.ttf", fontName = 'OpenSansLightItalic', embedAsCFF = "true")] static public var OpenSansLightItalicFont:Class;
-		[Embed(source = "../../../fonts/OpenSans-Regular.ttf", fontName = 'OpenSans', embedAsCFF = "true")] static public var OpenSansFont:Class;
 		[Embed(source = "../../../fonts/OpenSans-Semibold.ttf", fontName = 'OpenSansSemibold', embedAsCFF = "true")] static public var OpenSansSemiboldFont:Class;
 		[Embed(source = "../../../fonts/OpenSans-SemiboldItalic.ttf", fontName = 'OpenSansSemiboldItalic', embedAsCFF = "true")] static public var OpenSansSemiboldItalicFont:Class;
+		*/
+		[Embed(source = "../../../fonts/AbrahamLincoln.ttf", 	fontName = 'AbrahamLincoln',	fontWeight="normal", 	embedAsCFF = "true")] static public var AbrahamLincolnFont:Class;
+		[Embed(source = "../../../fonts/OpenSans-Light.ttf", 	fontName = 'OpenSansLight', 		fontWeight="normal", 	embedAsCFF = "true")] static public var OpenSansLightFont:Class;
+		[Embed(source = "../../../fonts/OpenSans-Regular.ttf", 	fontName = 'OpenSans', 		fontWeight="normal", 	embedAsCFF = "true")] static public var OpenSansFont:Class;
+		[Embed(source = "../../../fonts/Dosis-Medium.ttf",	fontName = 'Dosis', 			fontWeight="normal",	embedAsCFF = "true")] static public var DosisFont:Class;
+		[Embed(source = "../../../fonts/GarRegular.TTF", 		fontName = 'Garamond', 		fontWeight="normal",	embedAsCFF = "true")] static public var GaramondFont:Class;
+		[Embed(source = "../../../fonts/Archer-Book.otf", 		fontName = 'ArcherLight', 		fontWeight="normal",	embedAsCFF = "true")] static public var ArcherFont:Class;
 		
 		public function Theme() {
 			
 		}
 		
-		public function get_theme(id:int):* {
-			var theme:MovieClip =  MovieClip(new theme_1());
+		public function get_theme(id:int, main:Main):* {
+			var theme:MovieClip;
+			if (id === 1) {
+				theme =  MovieClip(new theme_1());
+			} else if (id === 2) {
+				theme =  MovieClip(new theme_2());
+			} else if (id === 3) {
+				theme =  MovieClip(new theme_3());
+			} else if (id === 4) {
+				theme =  MovieClip(new theme_4());
+			} 
+			
 			
 			for (var i:int = 0; i < theme.numChildren; i++) {
 				if (theme.getChildAt(i) is TextField) {
@@ -76,6 +93,7 @@ package imree.data_helpers {
 					txtFont.italic = format.italic;
 					txtFont.size = int(format.size);
 					txtFont.align = format.align;
+					
 					txtFont.leading = Number(format.leading);
 					
 					if (target.getLineText(0).search("title") === 0) {
@@ -101,16 +119,22 @@ package imree.data_helpers {
 					} else {
 						// Is not a textfield we're tracking  image_wash_color
 					} 
-				} else if(theme.getChildAt(i)  is MovieClip) {
-					if (theme.getChildAt(i) is button_left_internal) {
-						Theme.color_transform_page_buttons = theme.getChildAt(i).transform.colorTransform;
-					} else if (theme.getChildAt(i) is sample_background_image) {
+				} else if(theme.getChildAt(i)  is button_back) {
+					Theme.color_transform_page_buttons = theme.getChildAt(i).transform.colorTransform;
+				} else if (theme.getChildAt(i) is sample_background_image) {
 						Theme.color_transform_background_image = theme.getChildAt(i).transform.colorTransform;
-					}
+				}
 					
-				} else if (theme.getChildAt(i) is Shape) {
-					
-				} 
+				
+			}
+			
+			if (main.stage.stageWidth < 600) {
+				Theme.font_style_title.size *= .8;
+				Theme.font_style_sub_title.size *= .8;
+			}
+			if (main.stage.stageWidth < 600) {
+				Theme.font_style_title.size *= .7;
+				Theme.font_style_sub_title.size *= .7;
 			}
 			return;
 		}

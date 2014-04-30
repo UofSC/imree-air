@@ -1,6 +1,6 @@
 package imree.pages 
 {
-	import com.demonsters.debugger.MonsterDebugger;
+	//import com.demonsters.debugger.MonsterDebugger;
 	import fl.controls.Button;
 	import fl.controls.ComboBox;
 	import fl.data.DataProvider;
@@ -111,6 +111,7 @@ package imree.pages
 					'module_type':String(selector.selectedItem.data),
 					'exhibit_id':String(target_exhibit.id)
 				};
+				trace(obj);
 				main.connection.server_command("new_module", obj, add_module_by_name_done, true);
 			}
 			function add_module_by_name_done(s:Event):void {
@@ -134,7 +135,7 @@ package imree.pages
 			selector_label.x = form.width + 50;
 			proxies_wrapper.x = form.width + selector.width + 90;
 			
-			var dialog:modal = new modal(main.Imree.staging_area.width, main.Imree.staging_area.height, buttons, edit_ui, null, 0x000000, .70, "left");
+			var dialog:modal = new modal(main.Imree.staging_area.width, main.Imree.staging_area.height, buttons, edit_ui, null, 0xFFFFFF, .70, "left");
 			main.Imree.Exhibit.overlay_add(dialog);
 			
 			

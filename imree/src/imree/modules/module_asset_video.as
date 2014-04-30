@@ -3,7 +3,7 @@ package imree.modules
 			
 	
 	import com.adobe.images.JPGEncoder;
-	import com.demonsters.debugger.MonsterDebugger;
+	//import com.demonsters.debugger.MonsterDebugger;
 	import com.greensock.loading.*;
 	import com.greensock.loading.data.VideoLoaderVars;
 	import com.greensock.loading.display.*;
@@ -151,8 +151,11 @@ package imree.modules
 			
 			asset_content_wrapper.addEventListener(Event.REMOVED_FROM_STAGE, player_is_removed);
 			function player_is_removed(asdf:Event):void {
+				player.getVideoPlayer(0).netStream.close();
+				player.getVideoPlayer(0).clear();
 				player.stop();
 				player.load(null);
+				
 				player.removeEventListener(VideoEvent.SKIN_LOADED, add_player);
 				player.removeEventListener(SkinErrorEvent.SKIN_ERROR, skin_error);
 			}

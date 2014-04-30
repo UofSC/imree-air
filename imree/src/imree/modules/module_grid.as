@@ -113,7 +113,7 @@ package imree.modules
 			
 			var y_offest:Number = 0;
 			if (module_display_name) {
-				var name_label:text = new text(module_name + module_sub_name, _w, Theme.font_style_h2);
+				var name_label:text = new text(module_name + module_sub_name, _w, Theme.font_style_h1);
 				wrapper.addChild(name_label);
 				y_offest = name_label.height;
 			}
@@ -159,11 +159,12 @@ package imree.modules
 		override public function draw_edit_button():void {
 			if(edit_button === null) {
 				edit_button = new Sprite();
-				var button:Button = new Button();
-				button.setSize(main.Imree.Device.box_size / 4, main.Imree.Device.box_size / 4);
-				button.label = "Edit Grid";
-				edit_button.addChild(button);
-				edit_button.y -= main.Imree.Device.box_size / 3;
+				var butt:button_edit_module = new button_edit_module();
+				main.Imree.UI_size(butt);
+				edit_button.addChild(butt);
+				edit_button.y -= main.Imree.Device.ui_size - 10;
+				edit_button.x -= 10;
+				edit_button.transform.colorTransform = Theme.color_transform_page_buttons;
 			}
 			phase_feature = grid_feature_drawn;
 			super.draw_edit_button();

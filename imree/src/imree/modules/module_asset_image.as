@@ -23,6 +23,8 @@ package imree.modules
 	import flash.system.Capabilities;
 	import imree.display_helpers.modal;
 	import imree.display_helpers.window;
+	import imree.forms.f_data;
+	import imree.forms.f_element;
 	import imree.images.loading_spinner_sprite;
 	import imree.Main;
 	import imree.pages.exhibit_display;
@@ -66,6 +68,8 @@ package imree.modules
 			imgvars.width(_w);
 			imgvars.height(_h);
 			imgvars.noCache(true);
+			imgvars.allowMalformedURL(true);
+			imgvars.alternateURL(asset_url + "?size=" + String(_h));
 			imgvars.scaleMode(ScaleMode.PROPORTIONAL_OUTSIDE);
 			imgvars.container(result);
 			new ImageLoader(asset_url + "?size=" + String(_h), imgvars).load();
@@ -99,6 +103,27 @@ package imree.modules
 		
 		override public function draw_edit_button():void {
 			super.draw_edit_button();
+		}
+		override public function draw_edit_UI(e:* = null, animate:Boolean = true, start_at_position:int = 0):void {
+			var elements:Vector.<f_element> = prepare_edit_form_elements();
+			var form:f_data = prepare_edit_form(elements);
+			var editor:Sprite = new Sprite();
+			editor.addChild(form);
+			var add_as_exhibit_background_ui:Button = new Button();
+			add_as_exhibit_background_ui.setSize(150, 150);
+			add_as_exhibit_background_ui.label = "Use as Exhibit Background";
+			add_as_exhibit_background_ui.addEventListener(MouseEvent.CLICK, add_as_exhibit_background_clicked);
+			add_as_exhibit_background_ui.x = editor.width; 
+			editor.addChild(add_as_exhibit_background_ui);
+			asset_editor = new modal(main.Imree.staging_area.width, main.Imree.staging_area.height, null, editor);
+			main.Imree.Exhibit.overlay_add(asset_editor);
+			
+		}
+		private function add_as_exhibit_background_clicked(e:MouseEvent):void {
+			main.connection.server_command("module_asset_image_as_background_image", { 'module_asset_id':module_asset_id }, add_as_exhibit_background_done, true);
+			function add_as_exhibit_background_done(f:LoaderEvent):void {
+				main.toast("Added as background. Refresh Exhibit to view.");
+			}
 		}
 		
 		override public function draw_feature_content():void {

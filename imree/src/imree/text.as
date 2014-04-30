@@ -33,8 +33,10 @@ package imree
 		 * We're using http://www.adobe.com/devnet-apps/tlf/demo/ to help us write 
 		 */
 		public var format:textFont;
+		private var value:String;
 		public function text(str:String, _width:int = 300, Format:textFont = null, _height:Number = 10000) {
 			is_cached = false;
+			value = str;
 			if (Format === null) {
 				Format = new textFont();
 			}
@@ -85,6 +87,9 @@ package imree
 				addChild(new Bitmap(bitdata));
 				is_cached = true;
 			}
+		}
+		public function get_val():String {
+			return value;
 		}
 	}
 

@@ -6,6 +6,7 @@ package imree.modules {
 	import com.greensock.loading.data.ImageLoaderVars;
 	import com.greensock.loading.display.ContentDisplay;
 	import com.greensock.loading.ImageLoader;
+	import com.greensock.TweenLite;
 	import com.greensock.TweenMax;
 	import com.soulwire.display.PaperSprite;
 	import fl.containers.BaseScrollPane;
@@ -79,13 +80,18 @@ package imree.modules {
 			frame.foreground_content_wrapper.addChild(feature_wrapper);
 			var arrow_right:button_right_internal = new button_right_internal();
 			var arrow_left:button_left_internal = new button_left_internal();
-			
-			var waiting_on:int = 0;
 			main.Imree.UI_size(arrow_right);
 			main.Imree.UI_size(arrow_left);
+			arrow_left.transform.colorTransform = Theme.color_transform_page_buttons;
+			arrow_right.transform.colorTransform = Theme.color_transform_page_buttons;
+			var description_area:box;
+			var title1:text = new text("loading", _w - arrow_left.width * 2, Theme.font_style_caption);
+			var title2:text = new text("loading", _w - arrow_left.width * 2, Theme.font_style_caption);
+			var waiting_on:int = 0;
+			
 			
 			if (items.length > 1) {
-				var pages_holder:box = new box(feature_wrapper.width, feature_wrapper.height);
+				var pages_holder:box = new box(feature_wrapper.width, feature_wrapper.height- arrow_right.height-5);
 				feature_wrapper.addChild(pages_holder);
 				var page1:box = new box(pages_holder.width / 2 , pages_holder.height, Theme.background_color_primary, 0);
 				var page2:box = new box(pages_holder.width / 2, pages_holder.height, Theme.background_color_primary, 0);
@@ -101,24 +107,37 @@ package imree.modules {
 				var pg2_cache:Sprite;
 				var direction:String = "right";
 				
+				arrow_right.addEventListener(MouseEvent.CLICK, page_click);
+				
+				arrow_left.addEventListener(MouseEvent.CLICK, page_click);
 				var content1:box = new box(page1.width, page1.height, Theme.background_color_primary, 0);
 				var content2:box = new box(page2.width, page2.height, Theme.background_color_primary, 0);
 				page1.addChild(content1);
 				page2.addChild(content2);
 				content1.name = "one";
 				content2.name = "two";
+				
+				description_area = new box(feature_wrapper.width, arrow_left.height + 5, Theme.background_color_secondary,1);
+				feature_wrapper.addChild(description_area);
+				description_area.y = pages_holder.height;
+				arrow_right.x = description_area.width - arrow_right.width+2;
+				description_area.addChild(arrow_right);
+				description_area.addChild(arrow_left);
+				
+				
 				var page_num:int = 0;
-				
-				
-				feature_wrapper.addChild(arrow_right);
-				feature_wrapper.addChild(arrow_left);
-				arrow_right.x = feature_wrapper.width - arrow_right.width+2;
-				arrow_left.x = 0;
-				arrow_right.y = _h / 2 - arrow_right.height / 2;
-				arrow_left.y = _h / 2 - arrow_left.height / 2;
-				arrow_right.addEventListener(MouseEvent.CLICK, page_click);
-				arrow_left.addEventListener(MouseEvent.CLICK, page_click);
 				function page_click(e:MouseEvent = null):void {
+					if (title1 !== null) {
+						TweenLite.to(title1, .2, { alpha:0 } );
+					}
+					if (title2 !== null) {
+						TweenLite.to(title2, .2, { alpha:0 } );
+					}
+					title1 = new text("");
+					title2 = new text("");
+					TweenLite.to(arrow_left, .4, { alpha:0 } );
+					TweenLite.to(arrow_left, .4, { alpha:0 } ); 
+					
 					var pg1_bits:BitmapData = new BitmapData(page1.width, page2.height, true, 0);
 					pg1_bits.draw(page1);
 					var pg2_bits:BitmapData = new BitmapData(page2.width, page2.height, true, 0);
@@ -213,9 +232,25 @@ package imree.modules {
 					vars.noCache(true);
 					if (page.name === "one") {
 						vars.hAlign(AlignMode.RIGHT);
+						title1 = new text(img_mod.module_name, page.width - arrow_left.width * 2, Theme.font_style_caption);
+						title1.y = 5;
 					} else {
 						vars.hAlign(AlignMode.LEFT);
+						title2 = new text(img_mod.module_name, page.width - arrow_left.width * 2, Theme.font_style_caption);
+						title2.y = 5;
 					}
+					for (var i:int = 0; i < description_area.numChildren; i++) {
+						if (description_area.getChildAt(i) is text) {
+							description_area.removeChildAt(i);
+							i--;
+						}
+					}
+					title1.alpha = 0;
+					title2.alpha = 0;
+					description_area.addChild(title1);
+					description_area.addChild(title2);
+					title1.x = arrow_left.width + 5;
+					title2.x = description_area.width / 2;
 					vars.scaleMode(ScaleMode.PROPORTIONAL_INSIDE);
 					vars.allowMalformedURL(true);
 					vars.onComplete(loaded_image);
@@ -226,6 +261,8 @@ package imree.modules {
 					waiting_on++;
 					new ImageLoader(url, vars).load();
 					
+					
+					
 				}
 				page_click();
 				
@@ -233,6 +270,7 @@ package imree.modules {
 				function loaded_image(e:LoaderEvent):void {
 					waiting_on--;
 					if (waiting_on === 0) {	
+						
 						if (direction === "right") {
 							page1.visible = true;
 							var pg1_bits:BitmapData = new BitmapData(page1.width, page1.height, true, 0);
@@ -261,11 +299,23 @@ package imree.modules {
 							page2.visible = true;
 							pages_holder.removeChild(pg2_cache);
 						}
+						if(description_area.width > 400) {
+							if (title1.get_val().length > 1) {
+								TweenLite.to(title1, .4, { alpha:1 } );
+							}
+							if (title2.get_val().length > 1) {
+								TweenLite.to(title2, .4, { alpha:1 } );
+							}
+						}
 						if (page_num +1<= items.length) {
 							arrow_right.visible = true;
+							arrow_right.alpha = 0;
+							TweenLite.to(arrow_right, .5, { alpha:1 } );
 						}
 						if (page_num-2 > 0) {
 							arrow_left.visible = true;
+							arrow_left.alpha = 0;
+							TweenLite.to(arrow_left, .5, { alpha:1 } );
 						} 
 					}
 				}

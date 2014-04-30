@@ -1,5 +1,7 @@
 package imree.modules 
 {
+	import com.greensock.easing.Cubic;
+	import com.greensock.TweenLite;
 	import imree.data_helpers.Theme;
 	import fl.controls.Button;
 	import flash.display.Bitmap;
@@ -48,9 +50,10 @@ package imree.modules
 			phase_feature = true;
 		}
 		override public function draw_feature(_w:int, _h:int):void {
-			var covertext:text = new text(module_name, _w * .5, Theme.font_style_title, _h * .5);
-			covertext.x = (_w * .5) / 2 - covertext.width / 2;
-			covertext.y = (_h * .5) / 2 - covertext.height / 2;
+			var covertext:text = new text(module_name, _w * .6, Theme.font_style_title, _h);
+			
+			covertext.x = (_w * .6) / 2 - covertext.width / 2;
+			covertext.y = (_h * .6) / 2 - covertext.height / 2;
 			addChild(covertext);
 			addChild(new box(_w * .5, _h * .5));
 			phase_feature = true;
@@ -58,14 +61,18 @@ package imree.modules
 		override public function draw_edit_button():void {
 			if (edit_button === null) {
 				edit_button = new Sprite();
-				var simple:Button = new Button();
-				simple.label = "Edit Text";
-				simple.setSize(80, 30);
-				edit_button.addChild(simple);
+				var edit_ui:button_edit_module = new button_edit_module();
+				main.Imree.UI_size(edit_ui);
+				edit_button.addChild(edit_ui);
 			}
 			if (!contains(edit_button)) {
 				addChild(edit_button);
-				edit_button.x = t.width / 2 - edit_button.width / 2;
+				edit_button.x = 0
+				edit_button.y -= edit_button.height;
+				edit_button.transform.colorTransform = Theme.color_transform_page_buttons;
+
+				
+				TweenLite.from(edit_button, 1, {scaleX: .2, scaleY:.2, alpha:0, ease:Cubic.easeOut})
 			}
 			if (!edit_button.hasEventListener(MouseEvent.CLICK)) {
 				edit_button.addEventListener(MouseEvent.CLICK, draw_edit_UI);

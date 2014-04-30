@@ -1,4 +1,4 @@
-package com.sbhave.nativeExtensions.zbar
+﻿package com.sbhave.nativeExtensions.zbar
 {
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
@@ -7,7 +7,7 @@ package com.sbhave.nativeExtensions.zbar
 	import flash.external.*;
 	import flash.utils.Timer;
 	
-	import org.osmf.events.TimeEvent;
+	//import org.osmf.events.TimeEvent;
 
     // The application using the Gyroscope extension can create multiple instances of
     // Gyroscope. However, the instances all use a singleton ExtensionContext object.

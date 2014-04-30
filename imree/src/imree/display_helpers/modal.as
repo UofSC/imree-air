@@ -1,5 +1,5 @@
 package imree.display_helpers {
-	import com.demonsters.debugger.MonsterDebugger;
+	//import com.demonsters.debugger.MonsterDebugger;
 	import fl.controls.Button;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
@@ -67,7 +67,7 @@ package imree.display_helpers {
 			if (_buttons === null) {
 				buttons = new Vector.<smart_button>();
 				var butt_ok:Button = new Button();
-				butt_ok.label = "Okay";
+				butt_ok.label = "Close";
 				butt_ok.setSize(80, 70);
 				buttons.push(new smart_button(butt_ok, okay_event));
 			}

@@ -86,16 +86,23 @@ package imree.pages
 				
 				
 				var exhibit_cover_wrapper:box;
+				var text_wrapper:box;
 				if (main.Imree.Device.orientation === "portrait") {
-					exhibit_cover_wrapper = new box(w * .90, h * .5, 0x000000,.5, 1);
+					exhibit_cover_wrapper = new box(w * .90, h * .4, 0x000000,.5, 1);
 					exhibit_cover_wrapper.x = w * .05;
 					exhibit_cover_wrapper.y = current_x + 15;
 					current_x += exhibit_cover_wrapper.height +15;
+					text_wrapper = new box(exhibit_cover_wrapper.width, 150, 0x000000, 1);
+					text_wrapper.y = exhibit_cover_wrapper.height;
 				} else {
-					exhibit_cover_wrapper = new box(w * .5, h * .7, 0x000000,.5, 1);
+					exhibit_cover_wrapper = new box(w * .5, h * .6, 0x000000,.5, 1);
 					exhibit_cover_wrapper.x = current_x + 15;
 					current_x += exhibit_cover_wrapper.width +15;
+					text_wrapper = new box(exhibit_cover_wrapper.width, 100, 0x000000, .8);
+					text_wrapper.y = exhibit_cover_wrapper.height - text_wrapper.height;
+
 				}
+				
 				exhibit_cover_wrapper.data = item.exhibit_id;
 				exhibit_cover_wrapper.mouseChildren = false;
 				exhibit_cover_wrapper.addEventListener(MouseEvent.CLICK, exhibit_selected);
@@ -110,15 +117,14 @@ package imree.pages
 				}
 				trace(temp_url);
 				new ImageLoader(temp_url, img_loader_vars).load();
-				
-				var label_font:textFont = new textFont("OpenSans", 28);
-				label_font.align = TextFormatAlign.CENTER;
-				var label:text = new text (item.exhibit_name, exhibit_cover_wrapper.width * .8, label_font);
-				label.x = exhibit_cover_wrapper.width * .10 + exhibit_cover_wrapper.x;
-				label.y = exhibit_cover_wrapper.height * .10 + exhibit_cover_wrapper.y;
-				wrapper.addChild(label);
-				exhibit_cover_wrapper.transform.colorTransform = new ColorTransform(.33, .29, .10, 1, 50, 50, 60, 0);
-				
+				var format:textFont = new textFont("OpenSans", 18);
+				format.align = TextFormatAlign.CENTER;
+				format.color = 0xDEDEDE;
+				var label:text = new text(item.exhibit_name, text_wrapper.width, format);
+				text_wrapper.addChild(label);
+				label.x = 10;
+				label.y = 10;
+				exhibit_cover_wrapper.addChild(text_wrapper);
 			}			
 			scroller.update();
 			

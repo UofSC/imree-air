@@ -1,6 +1,6 @@
 package imree.pages
 {
-	import com.demonsters.debugger.MonsterDebugger;
+	//import com.demonsters.debugger.MonsterDebugger;
 	import com.greensock.easing.Cubic;
 	import com.greensock.events.LoaderEvent;
 	import com.greensock.layout.ScaleMode;
@@ -79,9 +79,6 @@ package imree.pages
 			t = this;
 			wrapper = new Sprite();
 			var bk:box = new box(w * 1.3, h * 1.3, Theme.background_color_primary, 1);
-			if (Theme.background_pattern_primary !== null) {
-				bk.bitmapFill(Theme.background_pattern_primary);
-			}
 			wrapper.addChild(bk);
 			wrapper.x -= w * .15;
 			wrapper.y -= h * .15;
@@ -101,6 +98,7 @@ package imree.pages
 				spinner = null;
 				var xml:XML = XML(e.target.content);
 				modules = new Vector.<module>();
+				new Theme().get_theme(int(xml.result.exhibit_properties.theme_id), main);
 				if (xml.result.modules !== undefined) {
 					for (var i:int = 0; i < xml.result.modules.children().length(); i++) {
 						modules.push(build_module(xml.result.modules.children()[i], i + 1 !== xml.result.modules.children().length()));
@@ -139,6 +137,7 @@ package imree.pages
 				for each (var i:XML in xml.child_modules.children())
 				{
 					result.push(build_module(i, false));
+					
 				}
 			}
 			

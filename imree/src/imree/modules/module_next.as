@@ -2,6 +2,7 @@ package imree.modules
 {
 	import fl.controls.Button;
 	import flash.events.MouseEvent;
+	import imree.data_helpers.Theme;
 	import imree.shortcuts.box;
 	import imree.data_helpers.position_data;
 	import imree.layout;
@@ -23,6 +24,7 @@ package imree.modules
 			arrow.rotation = 180;
 			arrow.x = arrow.width * 2;
 			arrow.y = arrow.height;
+			arrow.transform.colorTransform = Theme.color_transform_page_buttons;
 			addChild(arrow);
 			arrow.addEventListener(MouseEvent.CLICK, next_clicked);
 			return null;
@@ -33,6 +35,7 @@ package imree.modules
 			arrow.rotation = 180;
 			arrow.x = arrow.width * 2;
 			arrow.y = arrow.height;
+			arrow.transform.colorTransform = Theme.color_transform_page_buttons;
 			addChild(arrow);
 			arrow.addEventListener(MouseEvent.CLICK, next_clicked);
 		}

@@ -1,6 +1,6 @@
 package imree.modules 
 {
-	import com.demonsters.debugger.MonsterDebugger;
+	//import com.demonsters.debugger.MonsterDebugger;
 	import com.greensock.easing.Cubic;
 	import com.greensock.events.LoaderEvent;
 	import com.greensock.loading.XMLLoader;
@@ -174,9 +174,9 @@ package imree.modules
 			if (phase_feature) {
 				if (edit_button === null) {
 					edit_button = new Sprite();
-					var simple:Button = new Button();
-					simple.label = "Edit";
-					edit_button.addChild(simple);
+					var butt:button_edit_module = new button_edit_module();
+					main.Imree.UI_size(butt);
+					edit_button.addChild(butt);
 				}
 				if (!contains(edit_button)) {
 					addChild(edit_button);
@@ -291,7 +291,7 @@ package imree.modules
 			form.connect(main.connection, int(module_id), 'modules', 'module_id');
 			form.get_dynamic_data_for_all();
 			form.draw();
-			var form_wrapper:box = new box(form.width + main.Imree.Device.box_size/2, form.height + main.Imree.Device.box_size/2, 0xF521FF, 1);
+			var form_wrapper:box = new box(form.width + main.Imree.Device.box_size/2, form.height + main.Imree.Device.box_size/2, 0xEDEDED, 1);
 			form_wrapper.addChild(form);
 			form.x = main.Imree.Device.box_size /4;
 			form.y = main.Imree.Device.box_size / 4;
@@ -301,7 +301,7 @@ package imree.modules
 				proxies[i].addEventListener(MouseEvent.MOUSE_DOWN, proxy_mouseDown);
 			}
 			
-			var dialog:modal = new modal(main.Imree.staging_area.width, main.Imree.staging_area.height, buttons, form_wrapper, proxies, 0x000000, 1, "left");
+			var dialog:modal = new modal(main.Imree.staging_area.width, main.Imree.staging_area.height, buttons, form_wrapper, proxies, 0xEDEDED, 1, "left");
 			main.Imree.Exhibit.overlay_add(dialog);
 			
 			var location_mark_ui:Button = new Button();

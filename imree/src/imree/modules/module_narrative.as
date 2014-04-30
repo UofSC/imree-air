@@ -110,7 +110,7 @@ package imree.modules
 			wrapper_handle = new Sprite();
 			slidder.addChild(wrapper_handle);
 			for each(var i:module in items) {
-				if (i is module_narrative) {
+				if (i is module_narrative || i is module_pager) {
 					i.draw_thumb();
 				} else {
 					i.draw_feature(_w-30, _h-30);
@@ -187,10 +187,12 @@ package imree.modules
 			
 			addEventListener(Event.REMOVED_FROM_STAGE, remove_scroller_listeners);
 			function remove_scroller_listeners(d:*= null):void {
-				scroller.removeEventListener(ScrollEvent.SCROLL, dragging);
-				scroller.removeEventListener(MouseEvent.MOUSE_WHEEL, scrollwheel);
-				scroller.drag_disable();
-				scroller = null;
+				if (scroller !== null) {
+					scroller.removeEventListener(ScrollEvent.SCROLL, dragging);					
+					scroller.removeEventListener(MouseEvent.MOUSE_WHEEL, scrollwheel);
+					scroller.drag_disable();
+					scroller = null;
+				}
 			}
 			phase_feature = true;
 		}

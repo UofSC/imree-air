@@ -47,7 +47,10 @@
     <!--<depthAndStencil>true</depthAndStencil>-->
     <!-- required for 3D -->
     <systemChrome>standard</systemChrome>
-    <autoOrients>true</autoOrients>
+    <autoOrients>false</autoOrients>
+    <resizable>true</resizable>
+    <minimizable>true</minimizable>
+    <maximizable>true</maximizable>
   </initialWindow>
   <icon>
     <image48x48>icons/icon_48.png</image48x48>

@@ -6,17 +6,16 @@
     <movie input="" />
     <movie path="bin\imree.swf" />
     <movie fps="40" />
-    <movie width="480" />
-    <movie height="786" />
+    <movie width="900" />
+    <movie height="600" />
     <movie version="3" />
-    <movie minorVersion="6" />
+    <movie minorVersion="9" />
     <movie platform="AIR Mobile" />
-    <movie background="#800000" />
+    <movie background="#80000A" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="src" />
-    <class path="QR\qr-zbar-ane-master\NativeAndroid\src" />
   </classpaths>
   <!-- Build options -->
   <build>

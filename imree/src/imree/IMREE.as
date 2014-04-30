@@ -12,11 +12,13 @@ package imree
 	import flash.display.BitmapData;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.LoaderInfo;
+	import flash.display.StageDisplayState;
+	import flash.display.StageScaleMode;
+	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.net.navigateToURL;
 	import flash.system.System;
 	import flash.utils.Timer;
-	import imree.data_helpers.Theme;
 	import imree.display_helpers.modal;
 	import imree.forms.super_admin;
 	import imree.modules.module;
@@ -57,7 +59,6 @@ package imree
 		public var Menu:menu
 		public var Home:home;
 		public var Exhibit:exhibit_display;
-		public var theme:Theme;
 		public var page_admin_exhibit:modal;
 		public var pages:Vector.<DisplayObject>;
 		public var menu_items:Vector.<DisplayObject>;
@@ -67,7 +68,7 @@ package imree
 		{
 			main = _main;
 			Device = new device(main);
-			UI_width = Device.box_size / 3;
+			UI_width = Device.ui_size;
 			
 			var menu_can_hide:Boolean = true;
 			var context_vars:Object = LoaderInfo(main.root.loaderInfo).parameters;
@@ -89,8 +90,6 @@ package imree
 				
 			}
 			
-			theme = new Theme();
-			theme.get_theme(1);
 			
 			Home = new home(staging_area.width, staging_area.height, main);
 			Home.onSelect = load_exhibit;
@@ -206,7 +205,7 @@ package imree
 			
 		}
 		
-		public static var UI_width:int;
+		public var UI_width:int;
 		public function UI_size(obj:DisplayObject):Number {
 			var new_width:Number = UI_width;
 			var new_height:Number = (obj.height / obj.width) * new_width;
@@ -367,6 +366,8 @@ package imree
 		private var web_bar_wrapper:box;
 		private var web_bar_items:Vector.<DisplayObject>
 		static public var web_bar_height:int;
+		public var fullscreen_button:button_full_screen;
+		public var fullscreen_restore_button:button_restore_screen;
 		public function web_bar(bar_height:int = 0):void {
 			if (web_bar_wrapper !== null) {
 				if (contains(web_bar_wrapper)) {
@@ -382,7 +383,7 @@ package imree
 			web_bar_wrapper.y = 0 - web_bar_height;
 			var sample_button:button_menu = new button_menu();
 			UI_size(sample_button);
-			var institute:text = new text("University of South Carolina", main.stage.stageWidth - sample_button.width - 10, new textFont("AbrahamLincoln", 24));
+			var institute:text = new text("University of South Carolina", main.stage.stageWidth - sample_button.width - 10, new textFont("OpenSansLight", 24));
 			institute.y = web_bar_height / 2 - institute.height / 2;
 			web_bar_wrapper.addChild(institute);
 			institute.x = sample_button.width + 20;
@@ -392,13 +393,37 @@ package imree
 				web_bar_items = new Vector.<DisplayObject>();
 			}
 			
+			var current_x:int = main.stage.stageWidth;
 			if (current_page is exhibit_display && exhibit_display(current_page).navigator !== null && exhibit_display(current_page).navigator.toggler !== null) {
 				if (!web_bar_wrapper.contains(exhibit_display(current_page).navigator.toggler)) {
 					web_bar_wrapper.addChild(exhibit_display(current_page).navigator.toggler);
 					exhibit_display(current_page).navigator.toggler.x = main.stage.stageWidth - exhibit_display(current_page).navigator.toggler.width;
+					current_x -= exhibit_display(current_page).navigator.toggler.width;
 				}
 			}
 			
+			if (fullscreen_button === null) {				
+				fullscreen_button = new button_full_screen();
+				UI_size(fullscreen_button);
+				fullscreen_button.addEventListener(MouseEvent.CLICK, main.fullscreen_up);
+			}
+			if (fullscreen_restore_button === null) {
+				fullscreen_restore_button = new button_restore_screen();
+				UI_size(fullscreen_restore_button);
+				fullscreen_restore_button.addEventListener(MouseEvent.CLICK, main.fullscreen_down);
+			}
+			if (main.stage.displayState === StageDisplayState.NORMAL) {
+				fullscreen_button.visible = true;
+				fullscreen_restore_button.visible = false;
+			} else {
+				fullscreen_button.visible = false;
+				fullscreen_restore_button.visible = true;
+			}
+			web_bar_wrapper.addChild(fullscreen_button);
+			fullscreen_button.x = current_x - fullscreen_button.width;
+			web_bar_wrapper.addChild(fullscreen_restore_button);
+			fullscreen_restore_button.x = fullscreen_button.x;
+			current_x -= fullscreen_button.width;
 			menu_on_top();
 		}
 		

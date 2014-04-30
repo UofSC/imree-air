@@ -23,6 +23,7 @@ package imree
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.LoaderInfo;
+	import flash.display.StageDisplayState;
 	import flash.events.Event;
 	import flash.display.Sprite;
 	import flash.display.StageAlign;
@@ -32,6 +33,7 @@ package imree
 	import flash.events.*;
 	import flash.geom.Rectangle;
 	import flash.system.Capabilities;
+	import flash.system.fscommand;
 	import flash.text.TextFormat;
 	import flash.ui.Multitouch;
 	import flash.ui.MultitouchInputMode;
@@ -47,7 +49,7 @@ package imree
 	import imree.shortcuts.box;
 	import imree.keycommander;
 	import imree.signage.signage_stack;
-	import com.demonsters.debugger.MonsterDebugger;
+	//import com.demonsters.debugger.MonsterDebugger;
 	
 	
 	
@@ -77,7 +79,7 @@ package imree
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
 			
-			MonsterDebugger.initialize(this);
+			//MonsterDebugger.initialize(this);
 			
 			
 			stage.addEventListener(Event.DEACTIVATE, deactivate);
@@ -137,6 +139,8 @@ package imree
 						if (Stage.supportsOrientationChange) {
 							stage.addEventListener(StageOrientationEvent.ORIENTATION_CHANGE, orientation_update);
 						}
+						stage.addEventListener(Event.RESIZE, orientation_update);
+						stage.addEventListener(FullScreenEvent.FULL_SCREEN, orientation_update);
 						if (xml.result.mode == 'tablet') {
 							Imree.location_aware(); 
 						} else {
@@ -151,7 +155,14 @@ package imree
 				t.addChild(preloader);
 			}				
 		}
-		
+		public function fullscreen_up(e:MouseEvent):void {
+			stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
+			
+		}
+		public function fullscreen_down(e:MouseEvent):void {
+			stage.displayState = StageDisplayState.NORMAL;
+			
+		}
 		public  function orientation_update(e:*=null):void {
 			var cache_data:BitmapData = new BitmapData(stage.stageWidth, stage.stageHeight, false);
 			cache_data.draw(stage);
@@ -302,7 +313,9 @@ package imree
 				vars.allowMalformedURL(true);
 			return vars;
 		}		
-		
+		private function general_loader_error(e:LoaderEvent):void {
+			trace("This is the loader" + e.currentTarget);
+		}
 		
 		public function que_image(e:LoaderCore):void {
 			image_loader_que.append(e);

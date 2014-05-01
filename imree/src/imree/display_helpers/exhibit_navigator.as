@@ -71,7 +71,7 @@ package imree.display_helpers {
 					for each(var mod2:module in mod.items) {
 						var small_butt_ui:box = new box(40, 40);
 						small_butt_ui.graphics.beginFill(Theme.font_style_description.color, 1);
-						small_butt_ui.graphics.drawCircle(small_butt_ui.width / 2, small_butt_ui.height / 2, 14);
+						small_butt_ui.graphics.drawCircle(small_butt_ui.width / 2, small_butt_ui.height / 2, 10);
 						small_butt_ui.graphics.endFill();
 						var small_butt:smart_button = new smart_button(small_butt_ui, small_shortcut_clicked);
 						small_butt.data = mod2;

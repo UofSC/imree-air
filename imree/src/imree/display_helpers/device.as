@@ -3,6 +3,7 @@ package imree.display_helpers
 	import flash.desktop.*;
 	import flash.display.Stage;
 	import flash.system.Capabilities;
+	import flash.system.TouchscreenType;
 	import imree.Main;
 	/**
 	 * ...
@@ -34,6 +35,10 @@ package imree.display_helpers
 			box_size = dpi * 1.5;
 			box_size = 100;
 			ui_size = 90;
+			
+			if (Capabilities.touchscreenType === TouchscreenType.NONE) {
+				ui_size = 72;
+			}
 			
 			var max_dimension:int;
 			if (screen_inches_tall > screen_inches_wide) {

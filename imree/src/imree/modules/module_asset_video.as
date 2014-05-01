@@ -1,8 +1,10 @@
-package imree.modules 
+﻿package imree.modules 
 {
 			
 	
 	import com.adobe.images.JPGEncoder;
+	import flash.events.TimerEvent;
+	import flash.utils.Timer;
 	//import com.demonsters.debugger.MonsterDebugger;
 	import com.greensock.loading.*;
 	import com.greensock.loading.data.VideoLoaderVars;
@@ -149,12 +151,26 @@ package imree.modules
 			asset_content_wrapper.removeChild(loading_indicator);
 			loading_indicator = null;
 			
+			var timer:Timer = new Timer(1000);
+			timer.addEventListener(TimerEvent.TIMER, do_visibility_check);
+			timer.start();
+			function do_visibility_check(te:TimerEvent):void {
+				if (player.stage === null) {
+					player_is_removed(null);
+				}
+			}
+			
 			asset_content_wrapper.addEventListener(Event.REMOVED_FROM_STAGE, player_is_removed);
 			function player_is_removed(asdf:Event):void {
 				player.getVideoPlayer(0).netStream.close();
 				player.getVideoPlayer(0).clear();
 				player.stop();
 				player.load(null);
+				if (timer !== null) {
+					timer.removeEventListener(TimerEvent.TIMER, do_visibility_check);
+					timer.stop();
+					timer = null;
+				}
 				
 				player.removeEventListener(VideoEvent.SKIN_LOADED, add_player);
 				player.removeEventListener(SkinErrorEvent.SKIN_ERROR, skin_error);
@@ -190,6 +206,8 @@ package imree.modules
 		
 		
 		override public function draw_edit_UI(e:* = null, animate:Boolean = true, start_at_position:int = 0):void {
+			player.stop();
+			
 			var elements:Vector.<f_element> = prepare_edit_form_elements();
 			var form:f_data = prepare_edit_form(elements);
 			
@@ -215,8 +233,12 @@ package imree.modules
 			edit_ui.addChild(button_ui);
 			
 			function takeSnapshot():void {
-				var nsObj:VideoPlayer = player.getVideoPlayer(0);				
-				var data:Object = { 'module_asset_id':module_asset_id, 'seconds':nsObj.playheadTime};
+				var nsObj:VideoPlayer = player.getVideoPlayer(0);
+				var target_time:Number = nsObj.playheadTime;
+				if (target_time < 1) {
+					target_time = 6;
+				}
+				var data:Object = { 'module_asset_id':module_asset_id, 'seconds':target_time};
 				
 				main.connection.server_command("generate_screen_grab", data, capture_ready, true);
 			}

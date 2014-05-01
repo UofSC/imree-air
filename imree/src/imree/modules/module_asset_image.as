@@ -222,6 +222,7 @@ package imree.modules
 					} 
 					image_wrapper.scaleX *= scale_factor;
 					image_wrapper.scaleY *= scale_factor;
+					check_resize();
 				}
 				
 				/**

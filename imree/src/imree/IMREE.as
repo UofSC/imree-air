@@ -17,7 +17,9 @@ package imree
 	import flash.events.MouseEvent;
 	import flash.events.TimerEvent;
 	import flash.net.navigateToURL;
+	import flash.system.Capabilities;
 	import flash.system.System;
+	import flash.system.TouchscreenType;
 	import flash.utils.Timer;
 	import imree.display_helpers.modal;
 	import imree.forms.super_admin;
@@ -147,7 +149,7 @@ package imree
 		
 		public function location_aware():void {
 			main.toast("Location Aware");
-			var timer:Timer = new Timer(2000,0);
+			var timer:Timer = new Timer(1000,0);
 			timer.addEventListener(TimerEvent.TIMER, update_device_location);
 			timer.start();
 			
@@ -262,6 +264,7 @@ package imree
 		
 		public function show_home(e:*= null):void {
 			show(Home);
+			web_bar();
 			Menu.update();
 		}
 		
@@ -338,8 +341,8 @@ package imree
 			if (Exhibit !== null) {
 				if (Exhibit.parent !== null) {
 					var freeze:BitmapData = new BitmapData(main.stage.stageWidth, main.stage.stageHeight,true, 0);
-					freeze.draw(Exhibit);
-					freeze_obj = new Bitmap(freeze, 'auto', true);
+					//freeze.draw(Exhibit);
+					//freeze_obj = new Bitmap(freeze, 'auto', true);
 				}
 				for each(var mod:module in Exhibit.modules) {
 					mod.dump();
@@ -402,28 +405,30 @@ package imree
 				}
 			}
 			
-			if (fullscreen_button === null) {				
-				fullscreen_button = new button_full_screen();
-				UI_size(fullscreen_button);
-				fullscreen_button.addEventListener(MouseEvent.CLICK, main.fullscreen_up);
+			if(Capabilities.touchscreenType === TouchscreenType.NONE) {
+				if (fullscreen_button === null) {				
+					fullscreen_button = new button_full_screen();
+					UI_size(fullscreen_button);
+					fullscreen_button.addEventListener(MouseEvent.CLICK, main.fullscreen_up);
+				}
+				if (fullscreen_restore_button === null) {
+					fullscreen_restore_button = new button_restore_screen();
+					UI_size(fullscreen_restore_button);
+					fullscreen_restore_button.addEventListener(MouseEvent.CLICK, main.fullscreen_down);
+				}
+				if (main.stage.displayState === StageDisplayState.NORMAL) {
+					fullscreen_button.visible = true;
+					fullscreen_restore_button.visible = false;
+				} else {
+					fullscreen_button.visible = false;
+					fullscreen_restore_button.visible = true;
+				}
+				web_bar_wrapper.addChild(fullscreen_button);
+				fullscreen_button.x = current_x - fullscreen_button.width;
+				web_bar_wrapper.addChild(fullscreen_restore_button);
+				fullscreen_restore_button.x = fullscreen_button.x;
+				current_x -= fullscreen_button.width;
 			}
-			if (fullscreen_restore_button === null) {
-				fullscreen_restore_button = new button_restore_screen();
-				UI_size(fullscreen_restore_button);
-				fullscreen_restore_button.addEventListener(MouseEvent.CLICK, main.fullscreen_down);
-			}
-			if (main.stage.displayState === StageDisplayState.NORMAL) {
-				fullscreen_button.visible = true;
-				fullscreen_restore_button.visible = false;
-			} else {
-				fullscreen_button.visible = false;
-				fullscreen_restore_button.visible = true;
-			}
-			web_bar_wrapper.addChild(fullscreen_button);
-			fullscreen_button.x = current_x - fullscreen_button.width;
-			web_bar_wrapper.addChild(fullscreen_restore_button);
-			fullscreen_restore_button.x = fullscreen_button.x;
-			current_x -= fullscreen_button.width;
 			menu_on_top();
 		}
 		

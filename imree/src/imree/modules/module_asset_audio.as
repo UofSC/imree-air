@@ -61,29 +61,27 @@ package imree.modules
 			thumb_wrapper.addChild(result);
 			
 			var url_request:URLRequest;
-			if (asset_specific_thumb_url !== null && asset_specific_thumb_url.length > 0)
-			{
+			trace("IMAGE :" + asset_specific_thumb_url);
+			if (asset_specific_thumb_url !== null && asset_specific_thumb_url.length > 0) {
 				url_request = new URLRequest(asset_specific_thumb_url);
-			}
-			else
-			{
-				
+				var imgvars:ImageLoaderVars = new ImageLoaderVars();
+					imgvars.crop(true);
+					imgvars.width(_w);
+					imgvars.height(_h);
+					imgvars.noCache(true);
+					imgvars.scaleMode(ScaleMode.PROPORTIONAL_OUTSIDE);
+					imgvars.container(result);
+					imgvars.allowMalformedURL(true);
+					imgvars.alternateURL(asset_specific_thumb_url);
+				new ImageLoader(url_request, imgvars).load();
+			} else	{
 				var audio_thumb:GenericAudio = new GenericAudio();
 				audio_thumb.width = result.width;
 				audio_thumb.height = result.height;
 				result.addChild(audio_thumb);
-				
-					//url_request = new URLRequest("http://images3.alphacoders.com/377/3779.jpg"); //generic thumb
 			}
 			
-			var imgvars:ImageLoaderVars = new ImageLoaderVars();
-			imgvars.crop(true);
-			imgvars.width(_w);
-			imgvars.height(_h);
-			imgvars.noCache(true);
-			imgvars.scaleMode(ScaleMode.PROPORTIONAL_OUTSIDE);
-			imgvars.container(result);
-			new ImageLoader(url_request, imgvars).load();
+			
 			if (onSelect !== null && Return === false)
 			{
 				thumb_wrapper.addEventListener(MouseEvent.CLICK, thumb_clicked);

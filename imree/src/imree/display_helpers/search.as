@@ -1,10 +1,12 @@
 package imree.display_helpers {
+	import com.adobe.images.JPGEncoder;
 	import com.adobe.serialization.json.*;
 	import com.greensock.events.LoaderEvent;
 	import com.greensock.layout.ScaleMode;
 	import com.greensock.loading.data.ImageLoaderVars;
 	import com.greensock.loading.ImageLoader;
 	import com.greensock.TweenLite;
+	import com.marston.utils.URLRequestWrapper;
 	import fl.containers.ScrollPane;
 	import fl.controls.Button;
 	import fl.controls.ComboBox;
@@ -13,13 +15,28 @@ package imree.display_helpers {
 	import fl.events.DataChangeEvent;
 	import fl.events.DataChangeType;
 	import fl.events.ListEvent;
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.display.DisplayObjectContainer;
+	import flash.display.Loader;
+	import flash.display.LoaderInfo;
 	import flash.display.Sprite;
+	import flash.errors.IOError;
+	import flash.events.ErrorEvent;
 	import flash.events.Event;
-	import flash.events.MediaEvent;
+	import flash.events.IOErrorEvent;
+	import flash.events.*;
 	import flash.events.MouseEvent;
+	import flash.events.SecurityErrorEvent;
 	import flash.filesystem.*;
+	import flash.geom.Matrix;
 	import flash.media.*;
+	import flash.net.FileFilter;
+	import flash.net.FileReference;
+	import flash.net.URLLoader;
+	import flash.net.URLLoaderDataFormat;
+	import flash.net.URLStream;
+	import flash.utils.ByteArray;
 	import flash.utils.IDataInput;
 	import imree.data_helpers.data_value_pair;
 	import imree.data_helpers.position_data;
@@ -102,30 +119,109 @@ package imree.display_helpers {
 				onDestroy();
 			}
 			
+			
+			var upload_button:Button = new Button();
+			upload_button.label = "Upload New Video";
+			upload_button.setSize(80, 80);
+			search_ui_wrapper.addChild(upload_button);
+			upload_button.x = search_ui_wrapper.width / 2 - upload_button.width / 2 + 80;
+			upload_button.y = 80;
+			upload_button.addEventListener(MouseEvent.CLICK, upload_get_file_reference);
+			var reference:FileReference;
+			function upload_get_file_reference(me:MouseEvent):void {
+				reference = new FileReference();
+				reference.addEventListener(Event.SELECT, upload_do_upload);
+				var filefilter:FileFilter = new FileFilter("Videos : (*.m4v, *.mp4)", "*.mp4, *.m4v");
+				reference.browse();
+			}
+			function upload_do_upload(Evt:Event):void {
+				reference.removeEventListener(Event.SELECT, upload_do_upload);
+				reference.addEventListener(Event.COMPLETE, upload_asset_loaded);
+				reference.load();
+			}
+			function upload_asset_loaded(Evt:Event):void {
+				reference.removeEventListener(Event.COMPLETE, upload_asset_loaded);
+				var jpegdata:ByteArray = reference.data;
+				var urlwrapper:URLRequestWrapper = new URLRequestWrapper(jpegdata, 'video.mp4', null, {'command':'upload_bytes','module_id':Module.module_id, 'username':main.connection.username, 'password':main.connection.password})
+				urlwrapper.url = main.connection.uri;
+				var loader:URLLoader = new URLLoader();
+				loader.dataFormat = URLLoaderDataFormat.BINARY;
+				loader.addEventListener(Event.COMPLETE, take_picture_uploaded);
+				loader.addEventListener(IOErrorEvent.IO_ERROR, camera_error);
+				loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, camera_error);
+				loader.load(urlwrapper.request);
+			}
+			
+			
+			
+			
 			if (main.Imree.Device.is_web_player === false && CameraUI.isSupported) {				
 				var take_picture_UI:Button = new Button();
-					take_picture_UI.setSize(80, 70);
-					take_picture_UI.label = "Snap Photo";
+				take_picture_UI.setSize(80, 70);
+				take_picture_UI.label = "Snap Photo";
 				var take_picture_butt:smart_button = new smart_button(take_picture_UI, take_picture_click);
 				search_ui_wrapper.addChild(take_picture_butt);
 				take_picture_butt.x = search_ui_wrapper.width / 2 - take_picture_butt.width / 2;
 				take_picture_butt.y = search_ui_wrapper.height + 15;
-				var cam:CameraUI;
 			}
-			function take_picture_click(me:*= null):void {
-				cam = new CameraUI();
-				cam.addEventListener(MediaEvent.COMPLETE, take_picture_result);
-				cam.launch(MediaType.IMAGE);
+			
+			function take_picture_click(e:Event):void {
+				var cameraUI:CameraUI = new CameraUI();
+				cameraUI.addEventListener(MediaEvent.COMPLETE, onCameraUIComplete);
+				cameraUI.addEventListener(Event.CANCEL, camera_error);
+				cameraUI.addEventListener(ErrorEvent.ERROR, camera_error);
+				cameraUI.launch(MediaType.IMAGE);
 			}
-			function take_picture_result(me:MediaEvent):void {
-				cam.removeEventListener(MediaEvent.COMPLETE, take_picture_result);
-				var mp:MediaPromise = MediaPromise(me.data);
-				var file:File = File(mp.file);
-				main.connection.server_upload({"module_id":String(Module.module_id)}, file, take_picture_uploaded);
+			function camera_error(e:*):void {
+				main.toast(String(e));
 			}
-			function take_picture_uploaded(me:*= null):void {
+			function onCameraUIComplete(e:Event):void {
+				var cameraUI:CameraUI = e.target as CameraUI;
+				cameraUI.removeEventListener(MediaEvent.COMPLETE, onCameraUIComplete);
+				cameraUI.removeEventListener(Event.CANCEL, camera_error);
+				cameraUI.removeEventListener(ErrorEvent.ERROR, camera_error);
+				var mediaPromise:MediaPromise = MediaEvent(e).data;
+				this.mpLoader = new Loader();
+				this.mpLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, onMediaPromiseLoaded);
+				this.mpLoader.addEventListener(IOErrorEvent.IO_ERROR, onMediaPromiseLoadError);
+				this.mpLoader.loadFilePromise(mediaPromise);
 				
 			}
+			function onMediaPromiseLoadError(ioerror:IOErrorEvent):void {
+				main.toast(String(ioerror));
+			}
+			function onMediaPromiseLoaded(e:Event):void {
+				var mpLoaderInfo:LoaderInfo = e.target as LoaderInfo;
+				mpLoaderInfo.removeEventListener(Event.COMPLETE, onMediaPromiseLoaded);
+				mpLoaderInfo.loader.removeEventListener(IOErrorEvent.IO_ERROR, onMediaPromiseLoadError);
+				var bitmap:Bitmap = mpLoaderInfo.content as Bitmap;
+				var matrix:Matrix = new Matrix();
+				var scale:Number = .5;
+				matrix.scale(scale, scale);
+				var bitmapdata:BitmapData = new BitmapData(bitmap.bitmapData.width * scale, bitmap.bitmapData.height * scale, false);
+				bitmapdata.draw(bitmap, matrix, null, null, null, true);
+				var jpegdata:ByteArray = new JPGEncoder(60).encode(bitmapdata);
+				
+				var urlwrapper:URLRequestWrapper = new URLRequestWrapper(jpegdata, 'image.jpg', null, {'command':'upload_bytes','module_id':Module.module_id, 'username':main.connection.username, 'password':main.connection.password})
+				urlwrapper.url = main.connection.uri;
+				var loader:URLLoader = new URLLoader();
+				loader.dataFormat = URLLoaderDataFormat.BINARY;
+				loader.addEventListener(Event.COMPLETE, take_picture_uploaded);
+				loader.addEventListener(IOErrorEvent.IO_ERROR, camera_error);
+				loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, camera_error);
+				loader.load(urlwrapper.request);
+				
+				
+			    //var obj:Object = { 'bytes':jpegdata.readUTFBytes(jpegdata.bytesAvailable), 'length':jpegdata.length, 'module_id':Module.module_id };
+			    //main.connection.server_command("upload_bytes", obj, take_picture_uploaded, true);
+			    
+			}
+			function take_picture_uploaded(me:*= null):void {
+				main.toast("Upload Done");
+			}
+			
+			
+			
 		}
 		
 		

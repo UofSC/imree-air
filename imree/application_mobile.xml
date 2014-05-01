@@ -78,6 +78,5 @@
 	http://developer.android.com/guide/topics/manifest/manifest-intro.html
 	-->
   <extensions>
-    <extensionID>com.sbhave.nativeExtensions.zbar</extensionID>
   </extensions>
 </application>

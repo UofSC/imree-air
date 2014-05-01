@@ -47,14 +47,14 @@ package imree.forms
 				var labelfont:textFont = new textFont( '_sans', 22);
 				var inputFormat:TextFormat = new TextFormat("_sans", 20);
 				
-				var title:text = new text("Please log in", 300, new textFont( '_sans', 32));
+				var title:text = new text("Please log in", 300, new textFont( '_sans', 16));
 				auth_wrapper.addChild(title);
 				title.y = 10;
 				title.center_x(auth_wrapper);
 				
 				var elements:Vector.<f_element> = new Vector.<f_element>();
-					elements.push(new f_element_text("Username", 'username','steelmaj@mailbox.sc.edu'));
-					elements.push(new f_element_password("Password", 'password','helpinghand'));
+					elements.push(new f_element_text("Username", 'username',''));
+					elements.push(new f_element_password("Password", 'password',''));
 				var form:f_data = new f_data(elements);
 					form.layout(16, 380, 300);
 					form.onSubmit = auth;

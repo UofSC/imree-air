@@ -2,6 +2,7 @@ package imree
 {
 	
 	//import air.update.logging.Logger;
+	import com.demonsters.debugger.MonsterDebugger;
 	import com.greensock.data.TweenLiteVars;
 	import com.greensock.easing.Cubic;
 	import com.greensock.events.LoaderEvent;
@@ -79,8 +80,7 @@ package imree
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
 			
-			//MonsterDebugger.initialize(this);
-			
+			MonsterDebugger.initialize(this);
 			
 			stage.addEventListener(Event.DEACTIVATE, deactivate);
 			//Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;

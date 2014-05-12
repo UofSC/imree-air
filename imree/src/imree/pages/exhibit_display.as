@@ -425,6 +425,7 @@ package imree.pages
 				bk_proxy.data = { index:mod.items.indexOf(i), mod:i };
 				boxes_wrapper.addChild(bk_proxy);
 				boxes.push(bk_proxy);
+				
 			}
 			boxes_wrapper.center(reorder_background);
 			var hero:box = null;
@@ -471,7 +472,7 @@ package imree.pages
 		
 		public function overlay_add(obj:DisplayObjectContainer):void {
 			if (overlay !== null){
-				if (overlay.parent == t){
+				if (overlay.parent == t) {
 					t.removeChild(overlay);
 				}
 				while (overlay.numChildren){

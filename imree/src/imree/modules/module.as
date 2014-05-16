@@ -221,19 +221,20 @@ package imree.modules
 			}
 		}
 		private var pending_save:int = 0;
+		private var block_Ld:Sprite;
+		private var spinner:loading_spinner_sprite;
 		public function save_new_mod_order():void {
 					pending_save = 0;
-					
-						var block_Ld:Sprite = new Sprite();
-						var spinner:loading_spinner_sprite = new loading_spinner_sprite;
-						block_Ld.graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
-						block_Ld.graphics.beginFill (0x000000, 0.5);
-						spinner.x = stage.stageWidth / 2 - spinner.width / 2;
-						spinner.y = stage.stageHeight / 2 - spinner.height / 2;
+											
+						block_Ld = new Sprite();
+						spinner = new loading_spinner_sprite;
+						block_Ld.addChild(new box(main.stage.stageWidth, main.stage.stageHeight, 0x000000, 0.8));
 						block_Ld.addChild(spinner);
-						main.Imree.Exhibit.overlay_add(block_Ld);
+						spinner.x = main.stage.stageWidth / 2.5;
+						spinner.y = main.stage.stageHeight / 3;
+												
+						main.addChild(block_Ld);	
 						
-					
 		for each(var m:module in items) {
 				if(m.original_order != items.indexOf(m)) {
 					if (m is module_asset && module_asset(m).module_asset_id !== null) {
@@ -251,13 +252,22 @@ package imree.modules
 						}; 
 						main.connection.server_command("change_module_order", data2, reload, true);
 					}
+				
+							
+					
 				}
+				
+				
 			}
+			
 		}
 		public function reload(e:*=null):void {
 			pending_save--;
 			main.log("Save Pending: " + String(pending_save));
-			if (pending_save <=1 ) {
+			if (pending_save <= 1 ) {
+				if (block_Ld.parent !== null) {
+					main.removeChild(block_Ld);
+				}
 				Exhibit.reload_current_page();
 			}
 		}

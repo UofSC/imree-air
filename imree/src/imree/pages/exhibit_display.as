@@ -474,6 +474,7 @@ package imree.pages
 			if (overlay !== null){
 				if (overlay.parent == t) {
 					t.removeChild(overlay);
+					
 				}
 				while (overlay.numChildren){
 					overlay.removeChildAt(0);

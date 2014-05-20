@@ -246,6 +246,7 @@ package imree.pages
 						'module_order':String(target.modules.indexOf(m)) 
 					}; 
 					main.connection.server_command("change_module_order", data2, reload, true);
+					
 				}
 			}
 		}

@@ -36,9 +36,8 @@ package imree.modules
 	import imree.forms.f_element_select;
 	import imree.forms.f_element_text;
 	import imree.layout;
-	import imree.Main;
-	import imree.pages.exhibit_display;
 	import imree.shortcuts.box;
+	
 	/**
 	 * ...
 	 * @author Jason Steelman
@@ -73,6 +72,7 @@ package imree.modules
 		public var edit_background:Sprite;
 		public var edit_wrapper:Sprite;
 		public var phase_feature:Boolean;
+		
 		public function module(_main:Main, _Exhibit:exhibit_display, _items:Vector.<module>=null)
 		{
 			items = _items;
@@ -221,19 +221,11 @@ package imree.modules
 			}
 		}
 		private var pending_save:int = 0;
-		private var block_Ld:Sprite;
-		private var spinner:loading_spinner_sprite;
+		
 		public function save_new_mod_order():void {
 					pending_save = 0;
 											
-						block_Ld = new Sprite();
-						spinner = new loading_spinner_sprite;
-						block_Ld.addChild(new box(main.stage.stageWidth, main.stage.stageHeight, 0x000000, 0.8));
-						block_Ld.addChild(spinner);
-						spinner.x = main.stage.stageWidth / 2.5;
-						spinner.y = main.stage.stageHeight / 3;
-												
-						main.addChild(block_Ld);	
+					main.loading_indicator_add();	
 						
 		for each(var m:module in items) {
 				if(m.original_order != items.indexOf(m)) {
@@ -265,9 +257,9 @@ package imree.modules
 			pending_save--;
 			main.log("Save Pending: " + String(pending_save));
 			if (pending_save <= 1 ) {
-				if (block_Ld.parent !== null) {
-					main.removeChild(block_Ld);
-				}
+				
+				main.loading_indicator_remove();
+				
 				Exhibit.reload_current_page();
 			}
 		}

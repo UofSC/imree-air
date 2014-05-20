@@ -45,21 +45,20 @@ package imree
 	import imree.display_helpers.*;
 	import imree.forms.*;
 	import imree.images.loading_flower_sprite;
+	import imree.images.loading_spinner_sprite;
 	import imree.pages.exhibit_display;
 	import imree.pages.Preloader;
 	import imree.shortcuts.box;
 	import imree.keycommander;
 	import imree.signage.signage_stack;
+	
 	//import com.demonsters.debugger.MonsterDebugger;
-	
-	
-	
 	
 	/**
 	 * ...
 	 * @author Jason Steelman <uscart@gmail.com>, Tonya Holladay, add yur name here as you work on this project/file
 	 */
-	public class Main extends Sprite 
+	public class Main extends Sprite
 	{
 		public var connection:serverConnect;
 		
@@ -74,7 +73,8 @@ package imree
 		public var preloader:Preloader;
 		
 		public var t:Main;
-		public function Main():void 
+		
+		public function Main():void
 		{
 			t = this;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
@@ -87,14 +87,18 @@ package imree
 			Multitouch.inputMode = MultitouchInputMode.GESTURE;
 			textFont.main = this;
 			stage.addChild(this);
-			if(Stage.supportsOrientationChange) {
+			if (Stage.supportsOrientationChange)
+			{
 				stage.autoOrients = true;
 				stage.addEventListener(Event.RESIZE, resizedstage);
-			} else {
+			}
+			else
+			{
 				resizedstage();
 			}
 			
-			function resizedstage(e:*= null):void {
+			function resizedstage(e:* = null):void
+			{
 				stage.removeEventListener(Event.RESIZE, resizedstage);
 				animator = new animate(t);
 				animator.off_direction = "up"; //should depend on theme + device_type
@@ -114,36 +118,43 @@ package imree
 				User = new user(t);
 				
 				var vars:LoaderMaxVars = new LoaderMaxVars();
-					vars.maxConnections(2);
-					vars.autoLoad(true);
-					vars.auditSize(false);
+				vars.maxConnections(2);
+				vars.autoLoad(true);
+				vars.auditSize(false);
 				image_loader_que = new LoaderMax();
 				LoaderMax.activate([ImageLoader]);
 				image_loader_que.load();
 				
-				
 				connection = new serverConnect("http://imree.tcl.sc.edu/imree-php/api/", t);
 				connection.server_command("mode", '', sign_mode_loader);
-				function sign_mode_loader(evt:LoaderEvent):void {
+				function sign_mode_loader(evt:LoaderEvent):void
+				{
 					var xml:XML = XML(evt.currentTarget.content);
-					if (xml.result.mode == 'signage') {
+					if (xml.result.mode == 'signage')
+					{
 						connection.session_key = xml.result.key;
 						trace("Based on our IP, this device has been instructed to be digital signage, but I'm overriding that");
 						load_imree();
 						t.preloader.hide();
-					} else {
+					}
+					else
+					{
 						connection.session_key = xml.result.key;
 						trace("Based on our IP, this device has been instructed to be IMREE");
 						t.load_imree();
 						
-						if (Stage.supportsOrientationChange) {
+						if (Stage.supportsOrientationChange)
+						{
 							stage.addEventListener(StageOrientationEvent.ORIENTATION_CHANGE, orientation_update);
 						}
 						stage.addEventListener(Event.RESIZE, orientation_update);
 						stage.addEventListener(FullScreenEvent.FULL_SCREEN, orientation_update);
-						if (xml.result.mode == 'tablet') {
-							Imree.location_aware(); 
-						} else {
+						if (xml.result.mode == 'tablet')
+						{
+							Imree.location_aware();
+						}
+						else
+						{
 							toast("Not Tablet");
 						}
 					}
@@ -153,29 +164,38 @@ package imree
 				t.addChild(Logger_IO);
 				t.preloader = new Preloader(t);
 				t.addChild(preloader);
-			}				
+			}
 		}
-		public function fullscreen_up(e:MouseEvent):void {
+		
+		public function fullscreen_up(e:MouseEvent):void
+		{
 			stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
-			
+		
 		}
-		public function fullscreen_down(e:MouseEvent):void {
+		
+		public function fullscreen_down(e:MouseEvent):void
+		{
 			stage.displayState = StageDisplayState.NORMAL;
-			
+		
 		}
-		public  function orientation_update(e:*=null):void {
+		
+		public function orientation_update(e:* = null):void
+		{
 			var cache_data:BitmapData = new BitmapData(stage.stageWidth, stage.stageHeight, false);
 			cache_data.draw(stage);
 			var start_at_exhibit:int = -1;
 			var start_at_module:int = 0;
 			var start_at_sub_module:int = 0;
-			if (Imree !== null) {
-				if (Imree.current_page !== null && Imree.current_page is exhibit_display) {
+			if (Imree !== null)
+			{
+				if (Imree.current_page !== null && Imree.current_page is exhibit_display)
+				{
 					start_at_exhibit = exhibit_display(Imree.current_page).id;
 					start_at_module = exhibit_display(Imree.current_page).current_module_i;
 				}
 				empty_display_object_container(Imree);
-				if (contains(Imree) ) {
+				if (contains(Imree))
+				{
 					removeChild(Imree);
 				}
 				Imree = null;
@@ -183,48 +203,50 @@ package imree
 			load_imree(start_at_exhibit, start_at_module, start_at_sub_module);
 		}
 		
-		private function load_signage():void {
+		private function load_signage():void
+		{
 			var stack:signage_stack = new signage_stack(connection, this.stage.stageWidth, this.stage.stageHeight);
 			//stage.addChild(stack);
 			//var newsItemz:news_accordion_item = new news_accordion_item("Some headline", "Description Description Description Description Description Description Description Description Description Description Description Description ");
 			//addChild(newsItemz);
-			
-			/**
-			var news_accord:Vector.<news_accordion_item> = new Vector.<news_accordion_item>();
-				news_accord.push(new news_accordion_item("HeadlineHeadlineHeadlineHeadlineHeadlineHeadline", "Description"));
-				news_accord.push(new news_accordion_item("HeaHeadlineHeadlineHeadlineHeadlineHeadlineHeadlinedline", "Description"));
-				news_accord.push(new news_accordion_item("HeaHeadlineHeadlineHeadlineHeadlinedline", "Description"));
-				news_accord.push(new news_accordion_item("HeHeadlineHeadlineHeadlineHeadlineadline", "Description"));
-				news_accord.push(new news_accordion_item("HeHeadlineHeadlineHeadlineadline", "Description"));
-			var news_acc: news_accordion = new news_accordion(news_accord, 300, 500);
-			//stage.addChild(news_acc);
-			
-			*/
-			
-			
-			/*var accord:Vector.<accordion_item> = new Vector.<accordion_item>();
-				accord.push(new accordion_item("Some headline", "Some Descrip"));
-				accord.push(new accordion_item("Some headline", "Some Descrip"));
-				accord.push(new accordion_item("Some headline", "Some Descrip"));
-				accord.push(new accordion_item("Some headline", "Some Descrip"));
-				accord.push(new accordion_item("Some headline", "Some Descrip"));
-			var accordian:accordion = new accordion(accord, 300, 500);
-			stage.addChild(accordian);
-			*/
-
-
+		
+		/**
+		   var news_accord:Vector.<news_accordion_item> = new Vector.<news_accordion_item>();
+		   news_accord.push(new news_accordion_item("HeadlineHeadlineHeadlineHeadlineHeadlineHeadline", "Description"));
+		   news_accord.push(new news_accordion_item("HeaHeadlineHeadlineHeadlineHeadlineHeadlineHeadlinedline", "Description"));
+		   news_accord.push(new news_accordion_item("HeaHeadlineHeadlineHeadlineHeadlinedline", "Description"));
+		   news_accord.push(new news_accordion_item("HeHeadlineHeadlineHeadlineHeadlineadline", "Description"));
+		   news_accord.push(new news_accordion_item("HeHeadlineHeadlineHeadlineadline", "Description"));
+		   var news_acc: news_accordion = new news_accordion(news_accord, 300, 500);
+		   //stage.addChild(news_acc);
+		
+		 */
+		
+		/*var accord:Vector.<accordion_item> = new Vector.<accordion_item>();
+		   accord.push(new accordion_item("Some headline", "Some Descrip"));
+		   accord.push(new accordion_item("Some headline", "Some Descrip"));
+		   accord.push(new accordion_item("Some headline", "Some Descrip"));
+		   accord.push(new accordion_item("Some headline", "Some Descrip"));
+		   accord.push(new accordion_item("Some headline", "Some Descrip"));
+		   var accordian:accordion = new accordion(accord, 300, 500);
+		   stage.addChild(accordian);
+		 */
+		
 		}
 		
-		private function load_imree(start_at_exhibit:int = -1, start_at_module:int = 0, start_at_sub_module:int = 0):void {
+		private function load_imree(start_at_exhibit:int = -1, start_at_module:int = 0, start_at_sub_module:int = 0):void
+		{
 			Imree = new IMREE(this, start_at_exhibit, start_at_module, start_at_sub_module);
 			addChild(Imree);
 		}
 		
 		private var toast_wrapper:box;
 		private var toast_timer:Timer;
-		public function toast(str:String):void {
+		
+		public function toast(str:String):void
+		{
 			toast_clear();
-			toast_timer= new Timer(5000, 1);
+			toast_timer = new Timer(5000, 1);
 			toast_timer.addEventListener(TimerEvent.TIMER, toast_clear);
 			var txt:text = new text(str, 300);
 			toast_wrapper = new box(txt.width + 10, txt.height + 10, 0xFFFFFF, 1, 1, 0x000000);
@@ -236,59 +258,85 @@ package imree
 			toast_wrapper.y = (stage.stageHeight * 7) / 8 - toast_wrapper.height / 2;
 			toast_timer.start();
 		}
-		private function toast_clear(e:*=null):void {
-			if(toast_timer !== null) {
+		
+		private function toast_clear(e:* = null):void
+		{
+			if (toast_timer !== null)
+			{
 				toast_timer.stop();
 				toast_timer.removeEventListener(TimerEvent.TIMER, toast_clear);
 				toast_timer = null;
 			}
-			if (toast_wrapper !== null && contains(toast_wrapper)) {
+			if (toast_wrapper !== null && contains(toast_wrapper))
+			{
 				removeChild(toast_wrapper);
 			}
 		}
 		
-		public function log(str:*, IO_data:String=null):void {
-			if (IO_data !== null) {
-				Logger_IO.add(String(str) + "\n"+ IO_data + "\n");
+		public function log(str:*, IO_data:String = null):void
+		{
+			if (IO_data !== null)
+			{
+				Logger_IO.add(String(str) + "\n" + IO_data + "\n");
 			}
 			Logger.add(str + " SEE IO log for more");
 			trace(str);
 		}
-		public function log_to_server(str:*):void {
+		
+		public function log_to_server(str:*):void
+		{
 			connection.server_command("error_log", str);
 		}
-		public function general_io_error(e:LoaderEvent):void {
+		
+		public function general_io_error(e:LoaderEvent):void
+		{
 			LoaderCore(e.target).load(true);
 			log("IO ERROR: " + e.text);
 		}
-		public function general_loader_fail(str:*):void {
+		
+		public function general_loader_fail(str:*):void
+		{
 			log("IO general_loader_fail: " + str);
 		}
-		private function deactivate(e:Event):void 
+		
+		private function deactivate(e:Event):void
 		{
 			// make sure the app behaves well (or exits) when in background
 			//NativeApplication.nativeApplication.exit();
 		}
-		public function randomize ( a : *, b : * ) : int {
-			return ( Math.random() > .5 ) ? 1 : -1;
+		
+		public function randomize(a:*, b:*):int
+		{
+			return (Math.random() > .5) ? 1 : -1;
 		}
-		public function empty_display_object_container(obj:DisplayObjectContainer):* {
-			while (obj.numChildren) {
+		
+		public function empty_display_object_container(obj:DisplayObjectContainer):*
+		{
+			while (obj.numChildren)
+			{
 				obj.removeChildAt(0);
 			}
 			return;
 		}
-		public function clean_slate(obj:*):* {
-			if (obj is Array) {
-				for each(var i:* in obj) {
+		
+		public function clean_slate(obj:*):*
+		{
+			if (obj is Array)
+			{
+				for each (var i:*in obj)
+				{
 					clean_slate(i);
 				}
 				return;
-			} else {
+			}
+			else
+			{
 				var target:DisplayObjectContainer;
-				if (obj !== null && obj is DisplayObjectContainer) {
-					target = DisplayObjectContainer(obj);					
-					if (target.parent !== null) {
+				if (obj !== null && obj is DisplayObjectContainer)
+				{
+					target = DisplayObjectContainer(obj);
+					if (target.parent !== null)
+					{
 						target.parent.removeChild(target);
 					}
 					empty_display_object_container(target);
@@ -298,37 +346,66 @@ package imree
 			}
 		}
 		
-		
-		public function img_loader_vars(container:DisplayObjectContainer):ImageLoaderVars {
+		public function img_loader_vars(container:DisplayObjectContainer):ImageLoaderVars
+		{
 			var vars:ImageLoaderVars = new ImageLoaderVars();
-				vars.scaleMode(ScaleMode.PROPORTIONAL_OUTSIDE); 
-				vars.container(container);
-				vars.width(container.width);
-				vars.height(container.height);
-				vars.crop(true);
-				vars.noCache(true);
-				vars.onIOError(general_io_error);
-				vars.onFail(general_loader_fail);
-				vars.estimatedBytes(10000);
-				vars.allowMalformedURL(true);
+			vars.scaleMode(ScaleMode.PROPORTIONAL_OUTSIDE);
+			vars.container(container);
+			vars.width(container.width);
+			vars.height(container.height);
+			vars.crop(true);
+			vars.noCache(true);
+			vars.onIOError(general_io_error);
+			vars.onFail(general_loader_fail);
+			vars.estimatedBytes(10000);
+			vars.allowMalformedURL(true);
 			return vars;
-		}		
-		private function general_loader_error(e:LoaderEvent):void {
+		}
+		
+		private function general_loader_error(e:LoaderEvent):void
+		{
 			trace("This is the loader" + e.currentTarget);
 		}
 		
-		public function que_image(e:LoaderCore):void {
+		public function que_image(e:LoaderCore):void
+		{
 			image_loader_que.append(e);
 			image_loader_que.load();
 		}
 		
-		public function image_is_resizeable(url:String):Boolean {
+		public function image_is_resizeable(url:String):Boolean
+		{
 			return url.search(/\/file\/[0-9^\.]*$/gm) > -1;
 		}
 		
-				
+		private var loading_indicator_wrapper:Sprite;
+		private var block_Ld:Sprite;
+		private var spinner:loading_spinner_sprite;
 		
+		public function loading_indicator_add():void
+		{
+			loading_indicator_wrapper = new Sprite();
+			
+						block_Ld = new Sprite();
+						spinner = new loading_spinner_sprite;
+						block_Ld.addChild(new box(stage.stageWidth, stage.stageHeight, 0x000000, 0.6));
+						block_Ld.addChild(spinner);
+						spinner.x = block_Ld.width / 2.5;
+						spinner.y = block_Ld.height / 3;
+						loading_indicator_wrapper.addChild(block_Ld);
+			
+			addChild(loading_indicator_wrapper);
+		}
+		
+		public function loading_indicator_remove():void
+		{
+			if (loading_indicator_wrapper !== null)
+			{
+				removeChild(loading_indicator_wrapper);
+				loading_indicator_wrapper = null;
+			}
+		}
+	
 	}
-	
-	
+
 }

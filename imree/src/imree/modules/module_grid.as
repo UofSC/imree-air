@@ -131,15 +131,23 @@ package imree.modules
 				items[j].x = positions[j].x;
 				items[j].y = positions[j].y + y_offest;
 				
-				if (module_display_child_names && items[j].module_name.length > 0 && items[j].module_display_name) {
-					var child_label:text = new text(items[j].module_name, positions[j].width -10, Theme.font_style_description);
-					var label_background:box = new box(positions[j].width, child_label.height + 10, Theme.background_color_secondary, .6);
-					items[j].addChild(label_background);
-					label_background.y = positions[j].height - label_background.height;
-					label_background.addChild(child_label);
-					child_label.x = 5;
-					child_label.y = 5;
-				}				
+					if (items[j] is module_asset && module_asset(items[j]).caption.length > 0) {
+						                                         
+						//text is stored in module_asset(items[j]).caption.length);
+						trace(module_asset(items[j]).caption.length);
+						
+						var child_label:text = new text(module_asset(items[j]).caption, positions[j].width -10, Theme.font_style_description);
+					
+						var label_background:box = new box(positions[j].width, child_label.height + 10, Theme.background_color_secondary, .6);
+									
+						module_asset(items[j]).addChild(label_background);
+						label_background.y = positions[j].height - label_background.height;
+						label_background.addChild(child_label);
+						child_label.x = 5;
+						child_label.y = 5;
+						
+					}			
+						
 				items[j].addEventListener(MouseEvent.CLICK, item_selected);
 			}
 			addChild(wrapper);

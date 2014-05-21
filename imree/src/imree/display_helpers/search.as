@@ -217,9 +217,17 @@ package imree.display_helpers {
 				loader.addEventListener(IOErrorEvent.IO_ERROR, camera_error);
 				loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, camera_error);
 				loader.load(urlwrapper.request);
+				main.loading_indicator_add();
+				
+				
+			    //var obj:Object = { 'bytes':jpegdata.readUTFBytes(jpegdata.bytesAvailable), 'length':jpegdata.length, 'module_id':Module.module_id };
+			    //main.connection.server_command("upload_bytes", obj, take_picture_uploaded, true);
+			    
+
 			}
 			function take_picture_uploaded(me:*= null):void {
 				main.toast("Upload Done");
+				main.loading_indicator_remove();
 			}
 			
 			
@@ -230,12 +238,15 @@ package imree.display_helpers {
 		public function submit(e:*=null):void {
 			trace("Query Started with " + search_box.get_value());
 			if (spinner === null ) {
+				
 				spinner = new loading_spinner_sprite(60);
 				search_ui_wrapper.addChild(spinner);
 				search_submit.visible = false;
 				spinner.x = search_submit.x;
+				main.loading_indicator_add();
 			}
 			main.connection.server_command("search", search_box.get_value(), results, true);
+			
 		}
 		
 		private function results(e:LoaderEvent):void {
@@ -243,7 +254,8 @@ package imree.display_helpers {
 				search_ui_wrapper.removeChild(spinner);
 				spinner = null;
 				search_submit.visible = true;
-			}
+				main.loading_indicator_remove();
+		}
 			
 			
 			var xml:XML = XML(e.target.content);
@@ -268,6 +280,7 @@ package imree.display_helpers {
 				thumb_loader_vars.width(image_portion_of_bk.width);
 				thumb_loader_vars.height(image_portion_of_bk.height);
 				new ImageLoader(String(xml.result.children.children()[i].thumbnail_url), thumb_loader_vars).load();
+				
 				
 				var txt:text = new text(String(xml.result.children.children()[i].title), main.Imree.Device.box_size - 10, new textFont('_sans', 14),main.Imree.Device.box_size -image_portion_of_bk.height - 10);
 				txt.y = image_portion_of_bk.height + 5;

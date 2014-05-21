@@ -36,9 +36,8 @@ package imree.modules
 	import imree.forms.f_element_select;
 	import imree.forms.f_element_text;
 	import imree.layout;
-	import imree.Main;
-	import imree.pages.exhibit_display;
 	import imree.shortcuts.box;
+	
 	/**
 	 * ...
 	 * @author Jason Steelman
@@ -73,6 +72,7 @@ package imree.modules
 		public var edit_background:Sprite;
 		public var edit_wrapper:Sprite;
 		public var phase_feature:Boolean;
+		
 		public function module(_main:Main, _Exhibit:exhibit_display, _items:Vector.<module>=null)
 		{
 			items = _items;
@@ -221,9 +221,11 @@ package imree.modules
 			}
 		}
 		private var pending_save:int = 0;
+		
 		public function save_new_mod_order():void {
 			pending_save = 0;
-			for each(var m:module in items) {
+			main.loading_indicator_add();	
+			for each(var m:module in items) 
 				if(m.original_order != items.indexOf(m)) {
 					if (m is module_asset && module_asset(m).module_asset_id !== null) {
 						pending_save++;
@@ -241,7 +243,9 @@ package imree.modules
 						main.connection.server_command("change_module_order", data2, reload, true);
 					}
 				}
+				
 			}
+			
 			var block_Ld:Sprite = new Sprite();
 			var spinner:loading_spinner_sprite = new loading_spinner_sprite;
 			block_Ld.graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
@@ -250,11 +254,15 @@ package imree.modules
 			spinner.y = stage.stageHeight / 2 - spinner.height / 2;
 			block_Ld.addChild(spinner);
 			main.Imree.Exhibit.overlay_add(block_Ld);
+
 		}
 		public function reload(e:*=null):void {
 			pending_save--;
 			main.log("Save Pending: " + String(pending_save));
-			if (pending_save <=1 ) {
+			if (pending_save <= 1 ) {
+				
+				main.loading_indicator_remove();
+				
 				Exhibit.reload_current_page();
 			}
 		}

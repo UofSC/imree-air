@@ -41,6 +41,8 @@ package imree.pages
 	import imree.text;
 	import imree.textFont;
 	import flashx.textLayout.formats.TextAlign;
+	import imree.Main;
+	import imree.pages.exhibit_display;
 	
 	/**
 	 * ...
@@ -84,17 +86,19 @@ package imree.pages
 			wrapper.y -= h * .15;
 			addChild(wrapper);
 			main.animator.on_stage(this);
-			spinner = new loading_spinner_sprite();
+			main.loading_indicator_add();
+			/*spinner = new loading_spinner_sprite();
 			wrapper.addChild(spinner);
 			spinner.x = w / 2 - spinner.width / 2;
-			spinner.y = h / 2 - spinner.height / 2;
+			spinner.y = h / 2 - spinner.height / 2;*/
 		}
 		
 		public function load(start_at:int = 0, focus_on_sub_module:int =0):void
 		{
 			main.connection.server_command("exhibit_data", id, data_loaded);
 			function data_loaded(e:LoaderEvent):void {
-				wrapper.removeChild(spinner);
+				//wrapper.removeChild(spinner);
+				main.loading_indicator_remove();
 				spinner = null;
 				var xml:XML = XML(e.target.content);
 				modules = new Vector.<module>();
@@ -480,6 +484,7 @@ package imree.pages
 			if (overlay !== null){
 				if (overlay.parent == t) {
 					t.removeChild(overlay);
+					
 				}
 				while (overlay.numChildren){
 					overlay.removeChildAt(0);

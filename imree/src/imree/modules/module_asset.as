@@ -230,14 +230,18 @@ package imree.modules
 				}
 				obj['module_asset_id'] = String(module_asset_id);
 				main.connection.server_command("module_asset_update", obj, save_row_complete, true);
+				main.Imree.Exhibit.reload_current_page();
 			}
 			function save_row_complete(evt:*= null):void {
 				main.toast("Asset metadata saved");
 				for each(var item:f_element in form.elements) {
 					item.indicate_ready();
+					
 				}
 			}
 			return form;
+			
+			
 		}
 		
 		public function prepare_edit_form_elements():Vector.<f_element> {

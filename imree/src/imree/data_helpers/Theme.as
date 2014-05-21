@@ -61,7 +61,7 @@ package imree.data_helpers {
 		[Embed(source = "../../../fonts/AbrahamLincoln.ttf", 	fontName = 'AbrahamLincoln',	fontWeight="normal", 	embedAsCFF = "true")] static public var AbrahamLincolnFont:Class;
 		[Embed(source = "../../../fonts/OpenSans-Light.ttf", 	fontName = 'OpenSansLight', 		fontWeight="normal", 	embedAsCFF = "true")] static public var OpenSansLightFont:Class;
 		[Embed(source = "../../../fonts/OpenSans-Regular.ttf", 	fontName = 'OpenSans', 		fontWeight="normal", 	embedAsCFF = "true")] static public var OpenSansFont:Class;
-		[Embed(source = "../../../fonts/Dosis-Medium.ttf",	fontName = 'Dosis', 			fontWeight="normal",	embedAsCFF = "true")] static public var DosisFont:Class;
+		[Embed(source = "../../../fonts/Dosis-Medium.ttf",		fontName = 'Dosis', 			fontWeight="normal",	embedAsCFF = "true")] static public var DosisFont:Class;
 		[Embed(source = "../../../fonts/GarRegular.TTF", 		fontName = 'Garamond', 		fontWeight="normal",	embedAsCFF = "true")] static public var GaramondFont:Class;
 		[Embed(source = "../../../fonts/Archer-Book.otf", 		fontName = 'ArcherLight', 		fontWeight="normal",	embedAsCFF = "true")] static public var ArcherFont:Class;
 		

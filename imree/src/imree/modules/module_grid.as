@@ -1,5 +1,6 @@
 package imree.modules 
 {
+	import com.demonsters.debugger.MonsterDebugger;
 	import com.greensock.data.TweenLiteVars;
 	import com.greensock.easing.Cubic;
 	import com.greensock.loading.ImageLoader;
@@ -16,7 +17,7 @@ package imree.modules
 	import flash.events.Event;
 	import flash.events.TimerEvent;
 	import flash.geom.ColorTransform;
-	import flash.system.Worker;
+	//import flash.system.Worker;
 	import flash.utils.Timer;
 	import imree.data_helpers.data_value_pair;
 	import imree.data_helpers.permission;
@@ -77,7 +78,7 @@ package imree.modules
 					var bk:box = new box(positions[i].width, positions[i].height);
 					var url:String = img.asset_url;
 					if (img.can_resize) {
-						url += "?size=" + String(positions[i].height);
+						url = main.image_url_resized(url, String(positions[i].height));
 					}
 					new ImageLoader(url, main.img_loader_vars(bk)).load();
 					thumbs.addChild(bk);
@@ -124,12 +125,14 @@ package imree.modules
 			}
 			
 			var positions:Vector.<position_data> = new layout().abstract_box_solver(raw_positions, _w, _h - y_offest, 5, overflow_from_direction, true);
-			
+			var height_calculated:Number = 0;
+			var width_calculated:Number = 0;
 			for (var j:int = 0; j < items.length; j++) {
 				items[j].draw_thumb(positions[j].width, positions[j].height);
 				wrapper.addChild(items[j]);
 				items[j].x = positions[j].x;
 				items[j].y = positions[j].y + y_offest;
+				items[j].addEventListener(MouseEvent.CLICK, item_selected);
 				
 				if (module_display_child_names && items[j].module_name.length > 0 && items[j].module_display_name) {
 					var child_label:text = new text(items[j].module_name, positions[j].width -10, Theme.font_style_description);
@@ -140,7 +143,15 @@ package imree.modules
 					child_label.x = 5;
 					child_label.y = 5;
 				}				
-				items[j].addEventListener(MouseEvent.CLICK, item_selected);
+				
+				height_calculated = Math.max(positions[j].height + positions[j].y + y_offest, height_calculated);
+				width_calculated = Math.max(positions[j].width + positions[j].x + y_offest, width_calculated);
+			}
+			
+			if (main.Imree.Device.orientation === 'portrait') {
+				wrapper.x = _w / 2 - width_calculated / 2;
+			} else {
+				wrapper.y = _h / 2 - height_calculated / 2;
 			}
 			addChild(wrapper);
 			function item_selected(e:MouseEvent):void {
@@ -154,6 +165,13 @@ package imree.modules
 				wrapper.addChild(new text("Empty Block", 150, Theme.font_style_h1));
 			}
 			
+			wrapper.addEventListener(Event.REMOVED_FROM_STAGE, removed_from_stage);
+			function removed_from_stage(e:Event):void {
+				wrapper.removeEventListener(Event.REMOVED_FROM_STAGE, removed_from_stage);
+				while (wrapper.numChildren) {
+					wrapper.removeChildAt(0);
+				}
+			}
 		}
 		
 		override public function draw_edit_button():void {
@@ -162,9 +180,9 @@ package imree.modules
 				var butt:button_edit_module = new button_edit_module();
 				main.Imree.UI_size(butt);
 				edit_button.addChild(butt);
-				edit_button.y -= main.Imree.Device.ui_size - 10;
 				edit_button.x -= 10;
 				edit_button.transform.colorTransform = Theme.color_transform_page_buttons;
+				trace(edit_button.getBounds(main.stage));
 			}
 			phase_feature = grid_feature_drawn;
 			super.draw_edit_button();

@@ -38,6 +38,12 @@ package imree.modules
 			arrow.transform.colorTransform = Theme.color_transform_page_buttons;
 			addChild(arrow);
 			arrow.addEventListener(MouseEvent.CLICK, next_clicked);
+			
+			if (main.Imree.Device.orientation === 'portrait') {
+				arrow.x = _w / 2 - arrow.width / 2;
+			} else {
+				arrow.y += _h / 2 - arrow.height / 2;
+			}
 		}
 		private function next_clicked(e:MouseEvent):void {
 			if (onSelect !== null) {

@@ -82,7 +82,7 @@ package imree.pages
 			exh.push(new f_element_text("Name", "exhibit_name"));
 			exh.push(new f_element_text("Start Date", "exhibit_date_start"));
 			exh.push(new f_element_text("Start End", "exhibit_date_end"));
-			var departments:f_element_select = new f_element_select("Deptartment", "exhibit_department_id", null, "Please Select");
+			var departments:f_element_select = new f_element_select("Department", "exhibit_department_id", null, "Please Select");
 			departments.dynamic_options = new f_element_DynamicOptions(main.connection, 'departments', 'department_id', 'department_name');
 			exh.push(new f_element_text("Theme", "theme_id"));
 			exh.push(departments);
@@ -174,12 +174,13 @@ package imree.pages
 						var tar:box = box(current_proxy_focus);
 						if (tar.data.mod is module_asset) {
 							pending_save++;
-							var data:Object = { 'table':'module_assets', 'where':" module_asset_id = '" + module_asset(tar.data.mod).module_asset_id + "' " };
-							main.connection.server_command("delete", data, reload, true);
+							
+							var data:Object = { "module_asset_id" : module_asset(tar.data.mod).module_asset_id };
+							main.connection.server_command("remove_module", data, reload, true);
 						} else {
 							pending_save++;
-							var dat:Object = { 'table':'modules', 'where':" module_id = '" + module(tar.data.mod).module_id + "' " };
-							main.connection.server_command("delete", dat, reload, true);
+							var dat:Object = { "module_id" : module(tar.data.mod).module_id};
+							main.connection.server_command("remove_module", dat, reload, true);
 						}
 						target_exhibit.modules.splice(target_exhibit.modules.indexOf(box(current_proxy_focus)), 1);
 						dump_edit_UI();

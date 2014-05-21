@@ -65,7 +65,7 @@ package imree.modules
 					var bk:box = new box(positions[i].width, positions[i].height);
 					var url:String = img.asset_url;
 					if (img.can_resize) {
-						url += "?size=" + String(positions[i].height);
+						url = main.image_url_resized(url,String(positions[i].height));
 					}
 					new ImageLoader(url, main.img_loader_vars(bk)).load();
 					thumbs.addChild(bk);
@@ -113,7 +113,7 @@ package imree.modules
 				if (i is module_narrative || i is module_pager) {
 					i.draw_thumb();
 				} else {
-					i.draw_feature(_w-30, _h-30);
+					i.draw_feature(_w - 30, _h - 30);
 				}
 				i.phase_feature = true;
 				i.alpha = .8;
@@ -122,12 +122,11 @@ package imree.modules
 				if (main.Imree.Device.orientation == 'portrait') {
 					i.y = position;
 					position += i.height  + main.Imree.Device.box_size / 2;
-					i.x = _w / 2 - i.width / 2;
 				} else {
 					i.x = position;
 					position += i.width + main.Imree.Device.box_size / 2;
-					i.y = _h / 2 - i.height / 2;
 				}
+				
 				i.slide_out();
 			}
 			

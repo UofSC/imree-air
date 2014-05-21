@@ -47,15 +47,20 @@ package imree
 				str = '<?xml version="1.0" encoding="utf-8"?><flow:TextFlow whiteSpaceCollapse="preserve" xmlns:flow="http://ns.adobe.com/textLayout/2008"><flow:p><flow:span>' + str + '</flow:span></flow:p></flow:TextFlow>';
 			}
 			var textFlow:TextFlow = TextConverter.importToFlow(str, TextConverter.TEXT_LAYOUT_FORMAT, config);
-			textFlow.paddingBottom = Format.padding;
-			textFlow.paddingTop = Format.padding;
-			textFlow.paddingLeft = Format.padding;
-			textFlow.paddingRight = Format.padding;
-			var controller:ContainerController = new ContainerController(this, _width, _height);
-			controller.setCompositionSize(_width, _height);
-			textFlow.flowComposer.addController(controller);
-			textFlow.flowComposer.updateAllControllers();
-			textFlow.addEventListener(UpdateCompleteEvent.UPDATE_COMPLETE, on_next_frame);
+			if (textFlow === null) { 
+				//occurs when str is wonky					
+				trace("Couldn't make textflow from string : " + str);
+			} else {
+				textFlow.paddingBottom = Format.padding;
+				textFlow.paddingTop = Format.padding;
+				textFlow.paddingLeft = Format.padding;
+				textFlow.paddingRight = Format.padding;
+				var controller:ContainerController = new ContainerController(this, _width, _height);
+				controller.setCompositionSize(_width, _height);
+				textFlow.flowComposer.addController(controller);
+				textFlow.flowComposer.updateAllControllers();
+				textFlow.addEventListener(UpdateCompleteEvent.UPDATE_COMPLETE, on_next_frame);
+			}
 			function on_next_frame(e:Event):void {
 				textFlow.removeEventListener(UpdateCompleteEvent.UPDATE_COMPLETE, on_next_frame);
 				cache();

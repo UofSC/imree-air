@@ -1,5 +1,6 @@
 package imree.display_helpers 
 {
+	import com.demonsters.debugger.MonsterDebugger;
 	import flash.desktop.*;
 	import flash.display.Stage;
 	import flash.system.Capabilities;
@@ -18,6 +19,7 @@ package imree.display_helpers
 		public var screen_inches_tall:Number;
 		public var dpi:Number;
 		public var is_web_player:Boolean;
+		public var is_flash_player:Boolean;
 		public var orientation:String;
 		public var box_size:int;
 		public var supports_qr:Boolean;
@@ -49,8 +51,6 @@ package imree.display_helpers
 				max_dimension = main.stage.stageWidth;
 			}
 			
-			trace(max_dimension, box_size);
-			
 			if (max_dimension / box_size > 6) {
 				box_size *= 2;
 			}
@@ -64,7 +64,14 @@ package imree.display_helpers
 				main.Imree.web_bar();
 			}
 			
+			
 			//determine device type with http://help.adobe.com/en_US/FlashPlatform/reference/actionscript/3/flash/desktop/NativeApplication.html features
+			if (Capabilities.playerType == "StandAlone" || Capabilities.playerType == "ActiveX" || Capabilities.playerType == "PlugIn") {
+				is_flash_player = true;
+			} else {
+				is_flash_player = false;
+			}
+			trace("Player Type: " + Capabilities.playerType);
 		}
 		
 	}

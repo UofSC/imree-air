@@ -1,6 +1,7 @@
 package imree.display_helpers {
 	import com.adobe.images.JPGEncoder;
 	import com.adobe.serialization.json.*;
+	import com.demonsters.debugger.MonsterDebugger;
 	import com.greensock.events.LoaderEvent;
 	import com.greensock.layout.ScaleMode;
 	import com.greensock.loading.data.ImageLoaderVars;
@@ -80,6 +81,8 @@ package imree.display_helpers {
 			allow_modules = false;
 		}
 		public function draw_search_box():void {
+			
+			MonsterDebugger.trace(main, "Drawing");
 			main.clean_slate([wrapper, search_box, search_submit, search_ui_wrapper]);
 			selections = new Vector.<data_value_pair>();
 			wrapper = new Sprite();
@@ -93,6 +96,8 @@ package imree.display_helpers {
 			
 			search_ui_wrapper.y = h / 2;
 			search_ui_wrapper.x = main.stage.stageWidth / 2 - search_box.width / 2;
+			
+			
 			
 			var search_submit_button:Button = new Button();
 			search_submit_button.setSize(100, 40);
@@ -127,7 +132,9 @@ package imree.display_helpers {
 			upload_button.x = search_ui_wrapper.width / 2 - upload_button.width / 2 + 80;
 			upload_button.y = 80;
 			upload_button.addEventListener(MouseEvent.CLICK, upload_get_file_reference);
+
 			var reference:FileReference;
+			
 			function upload_get_file_reference(me:MouseEvent):void {
 				reference = new FileReference();
 				reference.addEventListener(Event.SELECT, upload_do_upload);
@@ -153,16 +160,16 @@ package imree.display_helpers {
 			}
 			
 			
-			
-			
-			if (main.Imree.Device.is_web_player === false && CameraUI.isSupported) {				
-				var take_picture_UI:Button = new Button();
-				take_picture_UI.setSize(80, 70);
-				take_picture_UI.label = "Snap Photo";
-				var take_picture_butt:smart_button = new smart_button(take_picture_UI, take_picture_click);
-				search_ui_wrapper.addChild(take_picture_butt);
-				take_picture_butt.x = search_ui_wrapper.width / 2 - take_picture_butt.width / 2;
-				take_picture_butt.y = search_ui_wrapper.height + 15;
+			if (main.Imree.Device.is_flash_player === false) {			
+				if (CameraUI.isSupported) {
+					var take_picture_UI:Button = new Button();
+					take_picture_UI.setSize(80, 70);
+					take_picture_UI.label = "Snap Photo";
+					var take_picture_butt:smart_button = new smart_button(take_picture_UI, take_picture_click);
+					search_ui_wrapper.addChild(take_picture_butt);
+					take_picture_butt.x = search_ui_wrapper.width / 2 - take_picture_butt.width / 2;
+					take_picture_butt.y = search_ui_wrapper.height + 15;
+				}
 			}
 			
 			function take_picture_click(e:Event):void {
@@ -210,11 +217,6 @@ package imree.display_helpers {
 				loader.addEventListener(IOErrorEvent.IO_ERROR, camera_error);
 				loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, camera_error);
 				loader.load(urlwrapper.request);
-				
-				
-			    //var obj:Object = { 'bytes':jpegdata.readUTFBytes(jpegdata.bytesAvailable), 'length':jpegdata.length, 'module_id':Module.module_id };
-			    //main.connection.server_command("upload_bytes", obj, take_picture_uploaded, true);
-			    
 			}
 			function take_picture_uploaded(me:*= null):void {
 				main.toast("Upload Done");

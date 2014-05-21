@@ -8,6 +8,7 @@ package imree.modules
 	import com.greensock.loading.data.ImageLoaderVars;
 	import com.greensock.loading.display.ContentDisplay;
 	import com.greensock.loading.ImageLoader;
+	import com.greensock.loading.LoaderMax;
 	import com.greensock.TweenLite;
 	import fl.controls.Button;
 	import flash.display.Bitmap;
@@ -54,25 +55,22 @@ package imree.modules
 			var result:box = new box(_w, _h, 0xFFFFFF, .2);
 			thumb_wrapper.addChild(result);
 			
-			var url_request:URLRequest = new URLRequest(asset_url);
-			var url_data:URLVariables = new URLVariables();
-			if (can_resize) {
-				url_data.size = String(_h);
-			}
-			
-			url_request.data = url_data;
-			url_request.method = URLRequestMethod.GET;
-			
 			var imgvars:ImageLoaderVars = new ImageLoaderVars();
 			imgvars.crop(true);
 			imgvars.width(_w);
 			imgvars.height(_h);
-			imgvars.noCache(true);
-			imgvars.allowMalformedURL(true);
-			imgvars.alternateURL(asset_url + "?size=" + String(_h));
 			imgvars.scaleMode(ScaleMode.PROPORTIONAL_OUTSIDE);
 			imgvars.container(result);
-			new ImageLoader(asset_url + "?size=" + String(_h), imgvars).load();
+			imgvars.estimatedBytes(20000);
+			
+			
+			var target_url:String = asset_url;
+			if (can_resize) {
+				target_url = main.image_url_resized(target_url, _h);
+				imgvars.alternateURL(target_url);
+			}
+			
+			new ImageLoader(target_url, imgvars).load();
 			if (onSelect !== null && Return === false) {
 				thumb_wrapper.addEventListener(MouseEvent.CLICK, thumb_clicked);
 			}
@@ -129,7 +127,7 @@ package imree.modules
 		override public function draw_feature_content():void {
 			
 			var vars:ImageLoaderVars = main.img_loader_vars(asset_content_wrapper);
-				vars.noCache(true);
+				//vars.noCache(true);
 				vars.onComplete(image_downloaded);
 				vars.crop(false);
 				vars.container(null);

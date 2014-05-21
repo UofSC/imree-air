@@ -82,6 +82,9 @@ package imree
 			
 			MonsterDebugger.initialize(this);
 			
+			LoaderMax.defaultAuditSize = false;
+			LoaderMax.defaultEstimatedBytes = 10000;
+			
 			stage.addEventListener(Event.DEACTIVATE, deactivate);
 			//Multitouch.inputMode = MultitouchInputMode.TOUCH_POINT;
 			Multitouch.inputMode = MultitouchInputMode.GESTURE;
@@ -306,11 +309,9 @@ package imree
 				vars.width(container.width);
 				vars.height(container.height);
 				vars.crop(true);
-				vars.noCache(true);
 				vars.onIOError(general_io_error);
 				vars.onFail(general_loader_fail);
 				vars.estimatedBytes(10000);
-				vars.allowMalformedURL(true);
 			return vars;
 		}		
 		private function general_loader_error(e:LoaderEvent):void {
@@ -326,7 +327,14 @@ package imree
 			return url.search(/\/file\/[0-9^\.]*$/gm) > -1;
 		}
 		
-				
+		public function image_url_resized(target_url:String, size:*):String {
+			var ret_val:String = target_url.substring(0, target_url.lastIndexOf("/") + 1) + String(size) + "/" + target_url.substr(target_url.lastIndexOf("/") +1);
+			if (target_url.substr( -4).toLowerCase() !== ".jpg") {
+				ret_val += ".jpg";
+			}
+			return ret_val;
+		}
+		
 		
 	}
 	

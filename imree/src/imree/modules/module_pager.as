@@ -54,7 +54,7 @@ package imree.modules {
 				if (items[0] is module_asset_image) {
 					var url:String = module_asset_image(items[0]).asset_url;
 					if (module_asset_image(items[0]).can_resize) {
-						url += "?size=" + String(_h-15);
+						url = main.image_url_resized(url, _h - 15);
 					}
 					new ImageLoader(url, main.img_loader_vars(bk)).load();
 				}
@@ -188,9 +188,11 @@ package imree.modules {
 						flipper.front = new Bitmap(pg2_bits);
 						page1.visible = false;
 						if (page_num + 2 <= items.length) {
-							load_image_on_page(items[page_num++], content1);
-							load_image_on_page(items[page_num++], content2);
-							//page_num++;
+							if(items[page_num + 1] is module_asset_image) {
+								load_image_on_page(items[page_num++], content1);
+								load_image_on_page(items[page_num++], content2);
+							}
+							
 						} else if (page_num + 1 <= items.length) {
 							load_image_on_page(items[page_num], content1);
 							page_num++;
@@ -229,7 +231,6 @@ package imree.modules {
 					vars.height(page.height);
 					vars.container(page);
 					vars.crop(true);
-					vars.noCache(true);
 					if (page.name === "one") {
 						vars.hAlign(AlignMode.RIGHT);
 						title1 = new text(img_mod.module_name, page.width - arrow_left.width * 2, Theme.font_style_caption);
@@ -252,11 +253,10 @@ package imree.modules {
 					title1.x = arrow_left.width + 5;
 					title2.x = description_area.width / 2;
 					vars.scaleMode(ScaleMode.PROPORTIONAL_INSIDE);
-					vars.allowMalformedURL(true);
 					vars.onComplete(loaded_image);
 					var url:String = img_mod.asset_url;
 					if (img_mod.can_resize) {
-						url += "?size=" + page.height;
+						url = main.image_url_resized(url, page.height);
 					}
 					waiting_on++;
 					new ImageLoader(url, vars).load();

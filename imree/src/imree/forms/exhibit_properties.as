@@ -20,6 +20,8 @@ package imree.forms
 				options.push(new data_value_pair("SCPC", 3));
 			*/
 			
+			/**
+			 * No longer used?
 			var options:f_element_DynamicOptions = new f_element_DynamicOptions(conn, 'exhibits', 'exhibit_id', 'exhibit_name');
 			
 			var exh:Vector.<f_element> = new Vector.<f_element>();
@@ -34,6 +36,7 @@ package imree.forms
 			form.draw();
 			
 			addChild(form);
+			*/
 		}
 		
 	}

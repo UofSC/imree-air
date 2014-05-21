@@ -113,7 +113,7 @@ package imree.pages
 				var temp_url:String = item.exhibit_cover_image_url;
 				
 				if (main.image_is_resizeable(temp_url)) {
-					temp_url += "?size=" + String(Math.ceil(exhibit_cover_wrapper.height));
+					temp_url = main.image_url_resized(temp_url, String(Math.ceil(exhibit_cover_wrapper.height)));
 				}
 				trace(temp_url);
 				new ImageLoader(temp_url, img_loader_vars).load();

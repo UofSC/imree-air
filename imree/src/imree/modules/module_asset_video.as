@@ -89,12 +89,13 @@
 			
 			var url_request:URLRequest;
 			if (asset_specific_thumb_url !== null && asset_specific_thumb_url.length > 0) {
-				url_request = new URLRequest(asset_specific_thumb_url);
+				url_request = new URLRequest(main.image_url_resized(asset_specific_thumb_url, String(_h)));
 				var imgvars:ImageLoaderVars = new ImageLoaderVars();
 				imgvars.crop(true);
 				imgvars.width(_w);
 				imgvars.height(_h);
-				imgvars.noCache(true);
+				//imgvars.noCache(true);
+				imgvars.alternateURL(main.image_url_resized(asset_specific_thumb_url, String(_h)));
 				imgvars.scaleMode(ScaleMode.PROPORTIONAL_OUTSIDE);
 				imgvars.container(result);
 				new ImageLoader(url_request, imgvars).load();
@@ -218,6 +219,7 @@
 				player = null;
 			}
 			player = new FLVPlayback();
+			player.addEventListener(SkinErrorEvent.SKIN_ERROR, skin_error);
 			player.skin = "SkinOverAllNoFullscreen.swf";
 			player.load(asset_url); 
 			player.setSize(400, 400);
@@ -245,8 +247,36 @@
 			function capture_ready(e2:*= null):void {
 				main.toast("Screen capture ready");
 			}
+			
+			function add_player(e:*=null):void {
+				player.removeEventListener(VideoEvent.SKIN_LOADED, add_player);
+				player.removeEventListener(SkinErrorEvent.SKIN_ERROR, skin_error);
+				
+				player.skinBackgroundColor = Theme.background_color_secondary;
+				if(Capabilities.touchscreenType === TouchscreenType.NONE) {
+					player.skinAutoHide = true; //only mouse input
+				}
+				
+				player.load(asset_url);
+				player.scaleMode = VideoScaleMode.MAINTAIN_ASPECT_RATIO;
+				player.setSize(asset_content_wrapper.width, asset_content_wrapper.height);
+				player.width = asset_content_wrapper.width;
+				player.height = asset_content_wrapper.height;
+				player.x = 0;
+				player.y = 0;
+				player.playWhenEnoughDownloaded();
+				
+				asset_content_wrapper.addChild(player);
+				
+			}
+			
 			asset_editor = new modal(main.Imree.staging_area.width, main.Imree.staging_area.height, null, edit_ui);
 			main.Imree.Exhibit.overlay_add(asset_editor);
+			
+			function skin_error(e:SkinErrorEvent):void {
+				main.toast("Skin Error");
+				//add_player();
+			}
 		}
 	}
 

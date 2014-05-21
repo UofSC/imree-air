@@ -222,19 +222,8 @@ package imree.modules
 		}
 		private var pending_save:int = 0;
 		public function save_new_mod_order():void {
-					pending_save = 0;
-					
-						var block_Ld:Sprite = new Sprite();
-						var spinner:loading_spinner_sprite = new loading_spinner_sprite;
-						block_Ld.graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
-						block_Ld.graphics.beginFill (0x000000, 0.5);
-						spinner.x = stage.stageWidth / 2 - spinner.width / 2;
-						spinner.y = stage.stageHeight / 2 - spinner.height / 2;
-						block_Ld.addChild(spinner);
-						main.Imree.Exhibit.overlay_add(block_Ld);
-						
-					
-		for each(var m:module in items) {
+			pending_save = 0;
+			for each(var m:module in items) {
 				if(m.original_order != items.indexOf(m)) {
 					if (m is module_asset && module_asset(m).module_asset_id !== null) {
 						pending_save++;
@@ -253,6 +242,14 @@ package imree.modules
 					}
 				}
 			}
+			var block_Ld:Sprite = new Sprite();
+			var spinner:loading_spinner_sprite = new loading_spinner_sprite;
+			block_Ld.graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
+			block_Ld.graphics.beginFill (0x000000, 0.5);
+			spinner.x = stage.stageWidth / 2 - spinner.width / 2;
+			spinner.y = stage.stageHeight / 2 - spinner.height / 2;
+			block_Ld.addChild(spinner);
+			main.Imree.Exhibit.overlay_add(block_Ld);
 		}
 		public function reload(e:*=null):void {
 			pending_save--;

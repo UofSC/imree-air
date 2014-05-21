@@ -68,7 +68,6 @@ package imree.modules
 					imgvars.crop(true);
 					imgvars.width(_w);
 					imgvars.height(_h);
-					imgvars.noCache(true);
 					imgvars.scaleMode(ScaleMode.PROPORTIONAL_OUTSIDE);
 					imgvars.container(result);
 					imgvars.allowMalformedURL(true);

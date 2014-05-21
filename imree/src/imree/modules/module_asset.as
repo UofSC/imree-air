@@ -152,7 +152,7 @@ package imree.modules
 			scroller.setSize(asset_text_wrapper.width, asset_text_wrapper.height - title.height - 20);
 			var desc_string:String = "";
 			if (description !== null && description.length > 0) {
-				desc_string += description;
+				desc_string += description_textflow;
 			}
 			if (source_credit !== null && source_credit.length > 0) {
 				desc_string += " " + source_credit;

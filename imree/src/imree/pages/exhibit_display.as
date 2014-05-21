@@ -347,7 +347,7 @@ package imree.pages
 				imageloadervars.height(image_wrapper.height);
 				imageloadervars.scaleMode(ScaleMode.PROPORTIONAL_OUTSIDE);
 				imageloadervars.onComplete(background_defocus);
-			new ImageLoader(url + "?size=" + String(image_wrapper.height), imageloadervars).load(true)
+			new ImageLoader(main.image_url_resized(url, String(image_wrapper.height)), imageloadervars).load(true)
 			//image_wrapper.transform.colorTransform = Theme.image_color_transform;
 			
 			
@@ -404,6 +404,8 @@ package imree.pages
 		
 		public function reorder_items_in_module(mod:module, saveFunction:Function):void
 		{
+			/** 
+			 * Not used? 
 			var reorder_wrapper:box = new box(main.Imree.staging_area.width, main.Imree.staging_area.height);
 			var reorder_background:box = new box(main.Imree.staging_area.width, main.Imree.staging_area.height, 0x000000, .8);
 			reorder_wrapper.addChild(reorder_background);
@@ -441,7 +443,11 @@ package imree.pages
 				hero.stopDrag();
 				var result:box = get_box_target();
 				if (result != null) {
-					mod.change_mod_order(hero.data.mod, result.data.index);
+					if (result is icon_trashcan) {
+						
+					} else {
+						mod.change_mod_order(hero.data.mod, result.data.index);
+					}
 				}
 				saveFunction();
 				overlay_remove();
@@ -463,7 +469,7 @@ package imree.pages
 				}
 				return result;
 			}
-		
+			*/
 		}
 		
 		public function focus_on_module(mod:module, focused:Function=null):void {
@@ -523,7 +529,7 @@ package imree.pages
 			main.Imree.Menu.update();
 		}
 		
-		public function reload_current_page():void {
+		public function reload_current_page(e:*=null):void {
 			dump();
 			main.Imree.load_exhibit(id);
 		}

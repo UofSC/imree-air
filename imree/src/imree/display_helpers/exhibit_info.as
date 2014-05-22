@@ -21,7 +21,7 @@ package imree.display_helpers {
 			string = str;
 			var t:exhibit_info = this;
 			
-			background= new box(main.Imree.staging_area.width, main.Imree.staging_area.height, Theme.background_color_primary, .6);
+			background= new box(main.Imree.staging_area.width, main.Imree.staging_area.height, Theme.background_color_primary, .8);
 			var foreground:box = new box(main.Imree.staging_area.width * .8, main.Imree.staging_area.height * .8, Theme.background_color_secondary, 1);
 			var close_btn:button_back = new button_back();
 			main.Imree.UI_size(close_btn);

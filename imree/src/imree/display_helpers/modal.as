@@ -101,7 +101,7 @@ package imree.display_helpers {
 			var current_x:int = top_UI_wrapper.width;
 			for each(var butt:smart_button in buttons) {
 				top_UI_wrapper.addChild(butt);
-				current_x -= butt.width - 5;
+				current_x -= butt.width + 15;
 				butt.x = current_x;
 				butt.y = 5;
 			}
@@ -122,11 +122,13 @@ package imree.display_helpers {
 		public function add_displayObjects_as_grid(items:Vector.<DisplayObjectContainer>, padding:int = 10 ):void {
 			var proxies:Vector.<position_data> = new Vector.<position_data>();
 			for each(var obj:DisplayObjectContainer in items) {
-				var position_info:position_data = new position_data(Math.round(obj.width), Math.round(obj.height));
+				var position_info:position_data = new position_data(200, 200);
 				trace(position_info);
 				proxies.push(position_info);
 				
 			}
+			trace("here");
+			trace(proxies);
 			var mason:layout = new layout();
 			var positions:Vector.<position_data> = mason.abstract_box_solver(proxies, w, h, padding,dir);
 			

@@ -88,19 +88,19 @@ package imree.display_helpers {
 			wrapper = new Sprite();
 			search_ui_wrapper = new Sprite();
 			addChild(wrapper);
-			wrapper.addChild(new box(w, h, 0x0000ff, .8));
+			wrapper.addChild(new box(main.Imree.staging_area.width, main.Imree.staging_area.height , 0x606060, 1));
 			wrapper.addChild(search_ui_wrapper);
 			search_box = new f_element_text("Search", 'some_search_val');
 			search_ui_wrapper.addChild(search_box);
 			search_box.draw();
 			
 			search_ui_wrapper.y = h / 2;
-			search_ui_wrapper.x = main.stage.stageWidth / 2 - search_box.width / 2;
+			search_ui_wrapper.x = wrapper.width * .45 - search_box.width / 2;
 			
 			
 			
 			var search_submit_button:Button = new Button();
-			search_submit_button.setSize(100, 40);
+			search_submit_button.setSize(100, 20);
 			search_submit_button.label = "Submit Search";
 			search_submit = new smart_button(search_submit_button, submit);
 			search_ui_wrapper.addChild(search_submit);
@@ -109,11 +109,12 @@ package imree.display_helpers {
 			if (allow_modules) {
 				var selector:ComboBox = new ComboBox();
 				selector.prompt = "Add new module";
+				selector.setSize(120, 20);
 				var datas:Array = [{label:"Title", data:"title"}, {label:"Linear/Narrative",data:"narrative"}, {label:"Grid/Gallery",data:"grid"}, {label:'Book/Pagination',data:'pager'} ];
 				selector.dataProvider = new DataProvider(datas);
 				selector.addEventListener(Event.CHANGE, add_module_by_name);
 				search_ui_wrapper.addChild(selector);
-				selector.x = search_ui_wrapper.width / 2 - selector.width / 2;
+				selector.x = search_ui_wrapper.width / 2 - 20 - selector.width / 2;
 				selector.y = search_ui_wrapper.height;
 			}
 			function add_module_by_name(s:Event):void {
@@ -127,10 +128,10 @@ package imree.display_helpers {
 			
 			var upload_button:Button = new Button();
 			upload_button.label = "Upload New Video";
-			upload_button.setSize(80, 80);
+			upload_button.setSize(120, 20);
 			search_ui_wrapper.addChild(upload_button);
-			upload_button.x = search_ui_wrapper.width / 2 - upload_button.width / 2 + 80;
-			upload_button.y = 80;
+			upload_button.x = search_ui_wrapper.width / 2 - upload_button.width / 2 + 120;
+			upload_button.y = 100;
 			upload_button.addEventListener(MouseEvent.CLICK, upload_get_file_reference);
 
 			var reference:FileReference;
@@ -217,7 +218,7 @@ package imree.display_helpers {
 				loader.addEventListener(IOErrorEvent.IO_ERROR, camera_error);
 				loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, camera_error);
 				loader.load(urlwrapper.request);
-				main.loading_indicator_add();
+				
 				
 				
 			    //var obj:Object = { 'bytes':jpegdata.readUTFBytes(jpegdata.bytesAvailable), 'length':jpegdata.length, 'module_id':Module.module_id };
@@ -227,7 +228,7 @@ package imree.display_helpers {
 			}
 			function take_picture_uploaded(me:*= null):void {
 				main.toast("Upload Done");
-				main.loading_indicator_remove();
+			
 			}
 			
 			
@@ -243,7 +244,7 @@ package imree.display_helpers {
 				search_ui_wrapper.addChild(spinner);
 				search_submit.visible = false;
 				spinner.x = search_submit.x;
-				main.loading_indicator_add();
+				
 			}
 			main.connection.server_command("search", search_box.get_value(), results, true);
 			
@@ -254,7 +255,7 @@ package imree.display_helpers {
 				search_ui_wrapper.removeChild(spinner);
 				spinner = null;
 				search_submit.visible = true;
-				main.loading_indicator_remove();
+				
 		}
 			
 			

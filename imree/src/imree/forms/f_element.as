@@ -71,7 +71,7 @@ package imree.forms
 			loader = new loading_spinner_sprite(18);
 			loader.x = label_width + 10;
 			loader.y = 2;
-			addChild(loader);
+			//addChild(loader);
 			set_disable();
 		}
 		public function indicate_ready():void {

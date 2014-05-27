@@ -75,9 +75,9 @@ package imree.forms
 			var scroller:ScrollPane = new ScrollPane();
 			scroller.setSize(input_w + 20, 250);
 			scroller.source = textbox;
-			var background:box = new box(input_w +10, 260, 0xFFFFFF, 1, 1, 0x000000);
+			var background:box = new box(input_w +10, 200, 0xFFFFFF, 1, 1, 0x000000);
 			background.x = label_width + 5;
-			background.y = 20;
+			background.y = 25;
 			ui.addChild(background);
 			ui.addChild(scroller);
 			scroller.x = label_width + 10;
@@ -229,7 +229,7 @@ package imree.forms
 		
 		override public function get_height():Number 
 		{
-			return 270;
+			return 240;
 		}
 	}
 }

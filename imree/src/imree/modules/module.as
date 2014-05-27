@@ -330,14 +330,14 @@ package imree.modules
 	{
 		var buttons:Vector.<smart_button> = new Vector.<smart_button>();
 		var cancel_btn:Button = new Button();
-		cancel_btn.setSize(75, 75);
+		cancel_btn.setSize(85, 40);
 		cancel_btn.label = "Close";
 		function cancel_btn_click(m:MouseEvent = null):void
 		{
 			dump_edit_UI();
 		}
 		var save_btn:Button = new Button();
-		save_btn.setSize(75, 75);
+		save_btn.setSize(85, 40);
 		save_btn.textField.multiline = true;
 		save_btn.label = "Save \nNew Order";
 		function save_btn_click(m:MouseEvent = null):void
@@ -346,7 +346,7 @@ package imree.modules
 			save_new_mod_order();
 		}
 		var add_butt:Button = new Button();
-		add_butt.setSize(75, 75);
+		add_butt.setSize(85, 40);
 		add_butt.label = "Add Material";
 		buttons.push(new smart_button(cancel_btn, cancel_btn_click), new smart_button(save_btn, save_btn_click), new smart_button(add_butt, draw_search));
 		
@@ -354,7 +354,7 @@ package imree.modules
 		truefalse.push(new data_value_pair('Yes', '1'));
 		truefalse.push(new data_value_pair("No", '0'));
 		var elements:Vector.<f_element> = new Vector.<f_element>();
-		elements.push(new f_element_text('name', 'module_name'));
+		elements.push(new f_element_text('Name', 'module_name'));
 		elements.push(new f_element_select('Show Name', 'module_display_name', truefalse));
 		elements.push(new f_element_date("Date Start", "module_display_date_start"));
 		elements.push(new f_element_date("Date End", "module_display_date_end"));
@@ -363,9 +363,9 @@ package imree.modules
 		form.connect(main.connection, int(module_id), 'modules', 'module_id');
 		form.get_dynamic_data_for_all();
 		form.draw();
-		var form_wrapper:box = new box(form.width + main.Imree.Device.box_size / 2, form.height + main.Imree.Device.box_size / 2, 0xEDEDED, 1);
+		var form_wrapper:box = new box(form.width + main.Imree.Device.box_size / 2, form.height + main.Imree.Device.box_size / 2);
 		form_wrapper.addChild(form);
-		form.x = main.Imree.Device.box_size / 4;
+		form.x = main.Imree.Device.box_size / 5;
 		form.y = main.Imree.Device.box_size / 4;
 		
 		var proxies:Vector.<DisplayObjectContainer> = make_proxies(main.Imree.staging_area.width, main.Imree.staging_area.height);
@@ -374,15 +374,15 @@ package imree.modules
 			proxies[i].addEventListener(MouseEvent.MOUSE_DOWN, proxy_mouseDown);
 		}
 		
-		var dialog:modal = new modal(main.Imree.staging_area.width, main.Imree.staging_area.height, buttons, form_wrapper, proxies, 0xEDEDED, 1, "left");
+		var dialog:modal = new modal(main.Imree.staging_area.width, main.Imree.staging_area.height, buttons, form_wrapper, proxies, 0x6A6A6A, .97, "left");
 		main.Imree.Exhibit.overlay_add(dialog);
 		
 		var location_mark_ui:Button = new Button();
-		location_mark_ui.setSize(75, 75);
+		location_mark_ui.setSize(100, 40);
 		location_mark_ui.label = "Mark Location";
 		var location_mark:smart_button = new smart_button(location_mark_ui, location_mark_click);
 		var location_unmark_ui:Button = new Button();
-		location_unmark_ui.setSize(75, 75);
+		location_unmark_ui.setSize(100, 40);
 		location_unmark_ui.label = "Unmark Location";
 		var location_unmark:smart_button = new smart_button(location_unmark_ui, location_unmark_click);
 		main.connection.server_command("module_location_id", module_id, location_response);
@@ -597,7 +597,7 @@ package imree.modules
 			dir = "left";
 		}
 		var lay:layout = new layout();
-		var positions:Vector.<position_data> = lay.abstract_box_solver(originals, _w - 80, _h - 80, 5, dir);
+		var positions:Vector.<position_data> = lay.abstract_box_solver(originals, _w - 80, _h - 50, 5, dir);
 		for (var k:int = 0; k < originals.length; k++)
 		{
 			proxies[k].x = positions[k].x;

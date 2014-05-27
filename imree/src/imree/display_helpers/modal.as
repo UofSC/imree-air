@@ -6,6 +6,7 @@ package imree.display_helpers {
 	import flash.events.Event;
 	import flash.geom.Point;
 	import imree.data_helpers.position_data;
+	import imree.data_helpers.Theme;
 	import imree.layout;
 	import imree.shortcuts.box;
 	/**
@@ -23,7 +24,7 @@ package imree.display_helpers {
 		public var h:int;
 		private var t:modal;
 		private var dir:String;
-		public function modal(_w:int, _h:int, _buttons:Vector.<smart_button>=null, preset_content:DisplayObjectContainer=null, objects:Vector.<DisplayObjectContainer>=null, background_color:uint = 0xDEDEDE, background_alpha:Number = .8, direction:String = null) {
+		public function modal(_w:int, _h:int, _buttons:Vector.<smart_button>=null, preset_content:DisplayObjectContainer=null, objects:Vector.<DisplayObjectContainer>=null, background_color:uint = 0x6A6A6A, background_alpha:Number = .97, direction:String = null) {
 			w = _w;
 			h = _h;
 			t = this;
@@ -68,7 +69,7 @@ package imree.display_helpers {
 				buttons = new Vector.<smart_button>();
 				var butt_ok:Button = new Button();
 				butt_ok.label = "Close";
-				butt_ok.setSize(80, 70);
+				butt_ok.setSize(85, 40);
 				buttons.push(new smart_button(butt_ok, okay_event));
 			}
 			
@@ -101,9 +102,9 @@ package imree.display_helpers {
 			var current_x:int = top_UI_wrapper.width;
 			for each(var butt:smart_button in buttons) {
 				top_UI_wrapper.addChild(butt);
-				current_x -= butt.width + 15;
+				current_x -= butt.width + 10;
 				butt.x = current_x;
-				butt.y = 5;
+				butt.y = 20;
 			}
 		}
 		public function remove_button(butt:smart_button):void {

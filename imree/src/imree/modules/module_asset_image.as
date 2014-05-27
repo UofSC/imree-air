@@ -30,6 +30,8 @@ package imree.modules
 	import imree.Main;
 	import imree.pages.exhibit_display;
 	import imree.shortcuts.box;
+	import imree.text;
+	import imree.data_helpers.Theme;
 
 	
 	
@@ -108,11 +110,16 @@ package imree.modules
 			var editor:Sprite = new Sprite();
 			editor.addChild(form);
 			var add_as_exhibit_background_ui:Button = new Button();
-			add_as_exhibit_background_ui.setSize(150, 150);
-			add_as_exhibit_background_ui.label = "Use as Exhibit Background";
+			add_as_exhibit_background_ui.setSize(100, 100);
+			add_as_exhibit_background_ui.label = "Use as Exhibit \n Background";
+			var ex_bkg_label:text  = new text("Thumbnail?", 300, Theme.font_style_h2);
+			add_as_exhibit_background_ui.alpha = 1;
 			add_as_exhibit_background_ui.addEventListener(MouseEvent.CLICK, add_as_exhibit_background_clicked);
-			add_as_exhibit_background_ui.x = editor.width; 
+			add_as_exhibit_background_ui.x = editor.width;
+			ex_bkg_label.x = editor.width - add_as_exhibit_background_ui.width - 100;
+			
 			editor.addChild(add_as_exhibit_background_ui);
+			editor.addChild(ex_bkg_label);
 			asset_editor = new modal(main.Imree.staging_area.width, main.Imree.staging_area.height, null, editor);
 			main.Imree.Exhibit.overlay_add(asset_editor);
 			

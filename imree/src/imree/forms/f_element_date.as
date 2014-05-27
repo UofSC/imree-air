@@ -24,6 +24,8 @@ package imree.forms
 	
 	public class f_element_date extends f_element
 	{
+		private var special_height:Number;
+		
 		public var txtyr:NumericStepper;
 		public var txtmo:NumericStepper;
 		public var txtdate:NumericStepper;
@@ -41,7 +43,8 @@ package imree.forms
 				
 		}
 		
-		override public function draw(label_width:int = 100, input_w:int = 200, padding:int = 50 ):void {
+		
+		override public function draw(label_width:int = 100, input_w:int = 200, padding:int = 5 ):void {
 			ui = new Sprite();
 			addChild(ui);
 			
@@ -53,8 +56,10 @@ package imree.forms
 			
 			var internal_padding:int = Math.round(padding / 2);
 			var stepper_width:int = 80;
-			var stepper_height:int = 40;
+			var stepper_height:int = 20;
+			special_height = stepper_height + 20;
 			
+					
 			var txtyr_lab:text = new text("Year");
 			txtyr = new NumericStepper();
 			txtyr.minimum = -9999;
@@ -106,9 +111,11 @@ package imree.forms
 			}
 			
 			super.draw(label_width, input_w, padding);
+			
+			
 		}
-		
-		
+						
+				
 		override public function get_value():* {
 			return (txtyr.value + "/" + txtmo.value + "/" + txtdate.value + " " + txthr.value + ":" + txtmin.value + ":" + txtsec.value);
 			return null;
@@ -149,6 +156,13 @@ package imree.forms
 				txtsec.enabled = true;
 			}
 		}
-	}
+	
+		override public function get_height():Number 
+		{
+			return special_height;
+		}
+		
+		}
+	
 
 }

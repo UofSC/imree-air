@@ -275,16 +275,20 @@ package imree
 				close_button.label = "Close";
 				buttons.push(new smart_button(close_button, close_super_admin));
 			super_admin_instance = new super_admin(staging_area.width, staging_area.height, main);
-			var mod:modal = new modal(staging_area.width, staging_area.height, null, super_admin_instance,null,0xFFFFFF);
+			var mod:modal = new modal(staging_area.width, staging_area.height, null, super_admin_instance,null,0x6A6A6A,.97);
 			addChild(mod);
 			main.animator.on_stage(mod);
 			
 			var start_tracker_button_ui:Button = new Button();
-			start_tracker_button_ui.label = "Start Device Tracking";
+			start_tracker_button_ui.label = "Start \nDevice Tracking";
+			start_tracker_button_ui.textField.multiline = true;
+			start_tracker_button_ui.setSize(100, 40);
 			var start_tracker_button:smart_button = new smart_button(start_tracker_button_ui, start_tracker_click);
 			
 			var stop_tracker_button_ui:Button = new Button();
-			stop_tracker_button_ui.label = "Stop Device Tracking";
+			stop_tracker_button_ui.label = "Stop \nDevice Tracking";
+			stop_tracker_button_ui.textField.multiline = true;
+			stop_tracker_button_ui.setSize(100, 40);
 			var stop_tracker_button:smart_button = new smart_button(stop_tracker_button_ui, stop_tracker_click);
 			
 			main.connection.server_command("device_is_tracking", '', response_device_is_tracking);

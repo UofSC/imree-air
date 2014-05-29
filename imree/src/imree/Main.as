@@ -402,7 +402,7 @@ package imree
 						spinner = new loading_spinner_sprite;
 						block_Ld.addChild(new box(stage.stageWidth, stage.stageHeight, 0x000000, 0.6));
 						block_Ld.addChild(spinner);
-						spinner.x = block_Ld.width / 2.5;
+						spinner.x = block_Ld.width / 2.7;
 						spinner.y = block_Ld.height / 3;
 						loading_indicator_wrapper.addChild(block_Ld);
 			

@@ -92,6 +92,7 @@ package imree
 				addChild(new Bitmap(bitdata));
 				is_cached = true;
 			}
+			
 		}
 		public function get_val():String {
 			return value;

@@ -50,8 +50,8 @@ package imree.display_helpers {
 	import imree.text;
 	import imree.textFont;
 	import Icon_book_background;
+	import imree.data_helpers.Theme;
 	
-	import UniversityLibrariesLogo;
 	/**
 	 * ...
 	 * @author Jason Steelman
@@ -87,10 +87,7 @@ package imree.display_helpers {
 		public function draw_search_box():void {
 			
 			
-			var UniLogo:Sprite;
-			UniLogo = new UniversityLibrariesLogo;
-			
-						
+									
 			MonsterDebugger.trace(main, "Drawing");
 			main.clean_slate([wrapper, search_box, search_submit, search_ui_wrapper]);
 			selections = new Vector.<data_value_pair>();
@@ -99,16 +96,17 @@ package imree.display_helpers {
 			addChild(wrapper);
 			
 			wrapper.addChild(new box(main.Imree.staging_area.width, main.Imree.staging_area.height , 0x606060, 1));
-			wrapper.addChild(UniLogo);
-			UniLogo.x = wrapper.width * .30;
-			UniLogo.y = 0;
+			var Imree_label:text  = new text("IMREE", 300, Theme.font_style_h2);
+			wrapper.addChild(Imree_label);
+			Imree_label.x = wrapper.width * .45;
+			Imree_label.y =  wrapper.height * .3;
 			wrapper.addChild(search_ui_wrapper);
 			search_box = new f_element_text("Search", 'some_search_val');
 			search_ui_wrapper.addChild(search_box);
 			
 			search_box.draw();
 			
-			search_ui_wrapper.y = h / 2 + 75;
+			search_ui_wrapper.y = h / 2;
 			search_ui_wrapper.x = wrapper.width * .43 - search_box.width / 2;
 			
 			

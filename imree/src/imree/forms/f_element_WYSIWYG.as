@@ -67,13 +67,17 @@ package imree.forms
 			textbox.defaultTextFormat = inputFormat;
 			
 			textbox.wordWrap = true;
-			textbox.autoSize = TextFieldAutoSize.LEFT;
-			//textbox.height = 200; //@todo re evaluate what this value is
+			//textbox.autoSize = TextFieldAutoSize.LEFT;
+			textbox.height = 200; 
 			textbox.width = input_w;
 			txt = textbox;
 			loader_x = label_width;
+			var myFormat:TextFormat = new TextFormat();
+			myFormat.size = inputFormat;
+			trace(txt.textHeight / Number(myFormat.size));
+			
 			var scroller:ScrollPane = new ScrollPane();
-			scroller.setSize(input_w + 20, 250);
+			scroller.setSize(input_w + 20, 200);
 			scroller.source = textbox;
 			var background:box = new box(input_w +10, 200, 0xFFFFFF, 1, 1, 0x000000);
 			background.x = label_width + 5;

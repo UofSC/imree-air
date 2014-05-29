@@ -122,7 +122,7 @@ package imree.modules
 			var editor:Sprite = new Sprite();
 			editor.addChild(form);
 			var add_as_exhibit_background_ui:Button = new Button();
-			add_as_exhibit_background_ui.setSize(200, 40);
+			add_as_exhibit_background_ui.setSize(175, 20);
 			add_as_exhibit_background_ui.label = "Use as Exhibit Background";
 			add_as_exhibit_background_ui.alpha = 1;
 			add_as_exhibit_background_ui.addEventListener(MouseEvent.CLICK, add_as_exhibit_background_clicked);
@@ -130,7 +130,7 @@ package imree.modules
 			add_as_exhibit_background_ui.y = editor.height * .3;
 			
 			var ex_bkg_img:box = new box(175, 175, 0xfdfdfd, 1);
-			ex_bkg_img.x = editor.width * .9 + 15;
+			ex_bkg_img.x = editor.width * .9;
 			editor.addChild(ex_bkg_img);
 			
 			var imgvars_ex_tb:ImageLoaderVars = new ImageLoaderVars();

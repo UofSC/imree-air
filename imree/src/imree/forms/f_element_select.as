@@ -59,7 +59,7 @@ package imree.forms
 			component = combo;
 			combo.width = input_w;
 			combo.x = label_width + padding;
-			special_height = combo.height; //height before items added
+			special_height = combo.height + 15; //height before items added
 			
 			if(options !== null) {
 				var dat:Array = [];

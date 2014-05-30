@@ -49,10 +49,9 @@
 	import flash.net.URLRequestMethod;
 	import flash.net.URLVariables;
 	import imree.images.loading_spinner_sprite;
-	import imree.Main;
 	import imree.pages.exhibit_display;
 	import imree.shortcuts.box;
-	
+	import imree.Main;
 	import flash.media.Video;
 	import flash.events.Event;
 	import flash.events.ProgressEvent;
@@ -134,6 +133,7 @@
 		}
 		
 		public var player:FLVPlayback;
+		public var editor_player:FLVPlayback;
 		override public function draw_feature(_w:int, _h:int):void {
 			main.log('Loading module.module_asset_image [id:' + module_id + '] [name: ' + module_name + '] ' + asset_url);
 			prepare_asset_window(_w, _h);
@@ -215,27 +215,28 @@
 			var edit_ui:Sprite = new Sprite();
 			edit_ui.addChild(form);
 			
-			if (player !== null) {
-				player = null;
+			if (editor_player !== null) {
+				editor_player = null;
 			}
-			player = new FLVPlayback();
-			player.addEventListener(SkinErrorEvent.SKIN_ERROR, skin_error);
-			player.skin = "SkinOverAllNoFullscreen.swf";
-			player.load(asset_url); 
-			player.setSize(400, 400);
-			player.x = edit_ui.width;
-			edit_ui.addChild(player);
+			editor_player = new FLVPlayback();
+			editor_player.addEventListener(SkinErrorEvent.SKIN_ERROR, skin_error);
+			editor_player.skin = "SkinOverAllNoFullscreen.swf";
+			editor_player.skinBackgroundColor = Theme.background_color_secondary;
+			editor_player.load(asset_url); 
+			editor_player.setSize(400, 400);
+			editor_player.x = edit_ui.width - 140;
+			edit_ui.addChild(editor_player);
 			
 			var button_ui:Button = new Button();
-			button_ui.setSize(80, 40);
+			button_ui.setSize(150, 20);
 			button_ui.label = "Take new snapshot";
 			button_ui.addEventListener(MouseEvent.CLICK, takeSnapshot);
-			button_ui.x = player.x;
-			button_ui.y = player.height + 20;
+			button_ui.x = editor_player.x;
+			button_ui.y = editor_player.height - 35;
 			edit_ui.addChild(button_ui);
 			
 			function takeSnapshot():void {
-				var nsObj:VideoPlayer = player.getVideoPlayer(0);
+				var nsObj:VideoPlayer = editor_player.getVideoPlayer(0);
 				var target_time:Number = nsObj.playheadTime;
 				if (target_time < 1) {
 					target_time = 6;
@@ -249,24 +250,24 @@
 			}
 			
 			function add_player(e:*=null):void {
-				player.removeEventListener(VideoEvent.SKIN_LOADED, add_player);
-				player.removeEventListener(SkinErrorEvent.SKIN_ERROR, skin_error);
+				editor_player.removeEventListener(VideoEvent.SKIN_LOADED, add_player);
+				editor_player.removeEventListener(SkinErrorEvent.SKIN_ERROR, skin_error);
 				
-				player.skinBackgroundColor = Theme.background_color_secondary;
+				editor_player.skinBackgroundColor = Theme.background_color_secondary;
 				if(Capabilities.touchscreenType === TouchscreenType.NONE) {
-					player.skinAutoHide = true; //only mouse input
+					editor_player.skinAutoHide = true; //only mouse input
 				}
 				
-				player.load(asset_url);
-				player.scaleMode = VideoScaleMode.MAINTAIN_ASPECT_RATIO;
-				player.setSize(asset_content_wrapper.width, asset_content_wrapper.height);
-				player.width = asset_content_wrapper.width;
-				player.height = asset_content_wrapper.height;
-				player.x = 0;
-				player.y = 0;
-				player.playWhenEnoughDownloaded();
+				editor_player.load(asset_url);
+				editor_player.scaleMode = VideoScaleMode.MAINTAIN_ASPECT_RATIO;
+				editor_player.setSize(asset_content_wrapper.width, asset_content_wrapper.height);
+				editor_player.width = asset_content_wrapper.width;
+				editor_player.height = asset_content_wrapper.height;
+				editor_player.x = 0;
+				editor_player.y = 0;
+				editor_player.playWhenEnoughDownloaded();
 				
-				asset_content_wrapper.addChild(player);
+				asset_content_wrapper.addChild(editor_player);
 				
 			}
 			

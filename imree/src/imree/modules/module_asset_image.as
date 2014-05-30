@@ -1,4 +1,4 @@
-package imree.modules 
+package imree.modules
 {
 	import com.greensock.BlitMask;
 	import com.greensock.easing.Cubic;
@@ -30,9 +30,8 @@ package imree.modules
 	import imree.Main;
 	import imree.pages.exhibit_display;
 	import imree.shortcuts.box;
-
-	
-	
+	import imree.text;
+	import imree.data_helpers.Theme;
 	
 	/**
 	 * ...
@@ -41,15 +40,16 @@ package imree.modules
 	public class module_asset_image extends module_asset
 	{
 		
-		
-		public function module_asset_image(_main:Main, _Exhibit:exhibit_display,_items:Vector.<module>=null)
+		public function module_asset_image(_main:Main, _Exhibit:exhibit_display, _items:Vector.<module> = null)
 		{
 			t = this;
 			super(_main, _Exhibit, _items);
 			module_supports_reordering = true;
-			
+		
 		}
-		override public function draw_thumb(_w:int = 200, _h:int = 200, Return:Boolean = false):* {
+		
+		override public function draw_thumb(_w:int = 200, _h:int = 200, Return:Boolean = false):*
+		{
 			thumb_wrapper = new Sprite();
 			
 			var result:box = new box(_w, _h, 0xFFFFFF, .2);
@@ -63,79 +63,130 @@ package imree.modules
 			imgvars.container(result);
 			imgvars.estimatedBytes(20000);
 			
-			
 			var target_url:String = asset_url;
-			if (can_resize) {
+			if (can_resize)
+			{
 				target_url = main.image_url_resized(target_url, _h);
 				imgvars.alternateURL(target_url);
 			}
 			
 			new ImageLoader(target_url, imgvars).load();
-			if (onSelect !== null && Return === false) {
+			if (onSelect !== null && Return === false)
+			{
 				thumb_wrapper.addEventListener(MouseEvent.CLICK, thumb_clicked);
 			}
-			if (Return) {
+			if (Return)
+			{
 				return thumb_wrapper;
-			} else {
+			}
+			else
+			{
 				addChild(thumb_wrapper);
 				return null;
 			}
 		}
-		private function thumb_clicked(e:MouseEvent):void {
-			if (onSelect !== null) {
+		
+		private function thumb_clicked(e:MouseEvent):void
+		{
+			if (onSelect !== null)
+			{
 				onSelect(t);
 			}
 		}
 		
-		override public function drop_thumb():void {
-			if (thumb_wrapper !== null) {
+		override public function drop_thumb():void
+		{
+			if (thumb_wrapper !== null)
+			{
 				thumb_wrapper.removeEventListener(MouseEvent.CLICK, thumb_clicked);
 			}
 			super.drop_thumb();
 		}
-		override public function draw_feature(_w:int, _h:int):void {
+		
+		override public function draw_feature(_w:int, _h:int):void
+		{
 			prepare_asset_window(_w, _h);
 			draw_feature_content();
 			phase_feature = true;
 		}
 		
-		override public function draw_edit_button():void {
+		override public function draw_edit_button():void
+		{
 			super.draw_edit_button();
 		}
-		override public function draw_edit_UI(e:* = null, animate:Boolean = true, start_at_position:int = 0):void {
+		
+		override public function draw_edit_UI(e:* = null, animate:Boolean = true, start_at_position:int = 0):void
+		{
 			var elements:Vector.<f_element> = prepare_edit_form_elements();
 			var form:f_data = prepare_edit_form(elements);
 			var editor:Sprite = new Sprite();
 			editor.addChild(form);
 			var add_as_exhibit_background_ui:Button = new Button();
-			add_as_exhibit_background_ui.setSize(150, 150);
+			add_as_exhibit_background_ui.setSize(175, 20);
 			add_as_exhibit_background_ui.label = "Use as Exhibit Background";
+			add_as_exhibit_background_ui.alpha = 1;
 			add_as_exhibit_background_ui.addEventListener(MouseEvent.CLICK, add_as_exhibit_background_clicked);
-			add_as_exhibit_background_ui.x = editor.width; 
+			add_as_exhibit_background_ui.x = editor.width * .9;
+			add_as_exhibit_background_ui.y = editor.height * .3;
+			
+			var ex_bkg_img:box = new box(175, 175, 0xfdfdfd, 1);
+			ex_bkg_img.x = editor.width * .9;
+			editor.addChild(ex_bkg_img);
+			
+			var imgvars_ex_tb:ImageLoaderVars = new ImageLoaderVars();
+			imgvars_ex_tb.crop(true);
+			imgvars_ex_tb.width(ex_bkg_img.width);
+			imgvars_ex_tb.height(ex_bkg_img.height);
+			imgvars_ex_tb.scaleMode(ScaleMode.PROPORTIONAL_OUTSIDE);
+			imgvars_ex_tb.container(ex_bkg_img);
+			imgvars_ex_tb.estimatedBytes(20000);
+			
+			var target_url:String = asset_url;
+			if (can_resize)
+			{
+				target_url = main.image_url_resized(target_url, ex_bkg_img.height);
+				imgvars_ex_tb.alternateURL(target_url);
+			}
+			new ImageLoader(target_url, imgvars_ex_tb).load();
+			
 			editor.addChild(add_as_exhibit_background_ui);
+			
 			asset_editor = new modal(main.Imree.staging_area.width, main.Imree.staging_area.height, null, editor);
 			main.Imree.Exhibit.overlay_add(asset_editor);
-			
-		}
-		private function add_as_exhibit_background_clicked(e:MouseEvent):void {
-			main.connection.server_command("module_asset_image_as_background_image", { 'module_asset_id':module_asset_id }, add_as_exhibit_background_done, true);
-			function add_as_exhibit_background_done(f:LoaderEvent):void {
-				main.toast("Added as background. Refresh Exhibit to view.");
-			}
+		
 		}
 		
-		override public function draw_feature_content():void {
+		private function add_as_exhibit_background_clicked(e:MouseEvent):void
+		{
+			main.connection.server_command("module_asset_image_as_background_image", {'module_asset_id': module_asset_id}, add_as_exhibit_background_done, true);
+			
+			main.loading_indicator_add();
+			
+			function add_as_exhibit_background_done(f:LoaderEvent):void
+			{
+				main.loading_indicator_remove();
+				main.toast("Added as background.");
+				Exhibit.reload_current_page();
+			
+			}
+		
+		}
+		
+		override public function draw_feature_content():void
+		{
 			
 			var vars:ImageLoaderVars = main.img_loader_vars(asset_content_wrapper);
-				//vars.noCache(true);
-				vars.onComplete(image_downloaded);
-				vars.crop(false);
-				vars.container(null);
-				vars.scaleMode(ScaleMode.PROPORTIONAL_INSIDE);
+			//vars.noCache(true);
+			vars.onComplete(image_downloaded);
+			vars.crop(false);
+			vars.container(null);
+			vars.scaleMode(ScaleMode.PROPORTIONAL_INSIDE);
 			new ImageLoader(asset_url, vars).load();
 			
-			function image_downloaded(e:LoaderEvent):void {
-				if(loading_indicator !== null && asset_content_wrapper.contains(loading_indicator)) {
+			function image_downloaded(e:LoaderEvent):void
+			{
+				if (loading_indicator !== null && asset_content_wrapper.contains(loading_indicator))
+				{
 					asset_content_wrapper.removeChild(loading_indicator);
 					loading_indicator = null;
 				}
@@ -161,34 +212,29 @@ package imree.modules
 				/**
 				 * Offset the registration point of bitmap to be visual center
 				 */
-				bitmap.x = 0 - bitmap.width /2;
+				bitmap.x = 0 - bitmap.width / 2;
 				bitmap.y = 0 - bitmap.height / 2;
 				image_wrapper.x = (original_width / 2);
-				image_wrapper.y = (original_height/ 2);
+				image_wrapper.y = (original_height / 2);
 				
 				/**
 				 * Handle Mouse scroll wheel interactions
 				 */
 				asset_content_wrapper.addEventListener(MouseEvent.MOUSE_WHEEL, scroll_wheel_on_image);
-				function scroll_wheel_on_image(m:MouseEvent):void {
-					var factor:Number = m.delta *.1;
-					if (main.Imree.Device.orientation === 'portrait') {
+				function scroll_wheel_on_image(m:MouseEvent):void
+				{
+					var factor:Number = m.delta * .1;
+					if (main.Imree.Device.orientation === 'portrait')
+					{
 						factor *= 5;
 					}
-					TweenLite.to(image_wrapper, .2, { 
-						scaleX:Math.max(image_wrapper.scaleX + factor, .5),
-						scaleY:Math.max(image_wrapper.scaleY + factor, .5),
-						ease:Cubic.easeInOut,
-						onComplete:check_resize
-					} ); 
+					TweenLite.to(image_wrapper, .2, {scaleX: Math.max(image_wrapper.scaleX + factor, .5), scaleY: Math.max(image_wrapper.scaleY + factor, .5), ease: Cubic.easeInOut, onComplete: check_resize});
 				}
-				function check_resize(m:*= null):void {
-					if(image_wrapper.scaleX > max_scale || image_wrapper.scaleY > max_scale) {
-						TweenLite.to(image_wrapper, .6, { 
-							scaleX:Math.max(Math.min(max_scale, image_wrapper.scaleX), .5),
-							scaleY:Math.max(Math.min(max_scale, image_wrapper.scaleY), .5),
-							ease:Elastic.easeOut
-						} ); 
+				function check_resize(m:* = null):void
+				{
+					if (image_wrapper.scaleX > max_scale || image_wrapper.scaleY > max_scale)
+					{
+						TweenLite.to(image_wrapper, .6, {scaleX: Math.max(Math.min(max_scale, image_wrapper.scaleX), .5), scaleY: Math.max(Math.min(max_scale, image_wrapper.scaleY), .5), ease: Elastic.easeOut});
 					}
 				}
 				
@@ -196,12 +242,14 @@ package imree.modules
 				 * Handle mouse/finger drag interactions
 				 */
 				asset_content_wrapper.addEventListener(MouseEvent.MOUSE_DOWN, start_feature_drag);
-				function start_feature_drag(m:MouseEvent):void {
+				function start_feature_drag(m:MouseEvent):void
+				{
 					image_wrapper.startDrag();
 					asset_content_wrapper.addEventListener(MouseEvent.MOUSE_OUT, stop_feature_drag);
 					asset_content_wrapper.addEventListener(MouseEvent.MOUSE_UP, stop_feature_drag);
 				}
-				function stop_feature_drag(m:MouseEvent):void {
+				function stop_feature_drag(m:MouseEvent):void
+				{
 					image_wrapper.stopDrag();
 					asset_content_wrapper.removeEventListener(MouseEvent.MOUSE_OUT, stop_feature_drag);
 					asset_content_wrapper.removeEventListener(MouseEvent.MOUSE_UP, stop_feature_drag);
@@ -210,14 +258,17 @@ package imree.modules
 				/**
 				 * Handle pinch-zoom interactions
 				 */
-				if (Capabilities.touchscreenType != "none") {
+				if (Capabilities.touchscreenType != "none")
+				{
 					asset_content_wrapper.addEventListener(TransformGestureEvent.GESTURE_ZOOM, gesture_zoom_start);
 				}
-				function gesture_zoom_start(fingers:TransformGestureEvent):void {
+				function gesture_zoom_start(fingers:TransformGestureEvent):void
+				{
 					var scale_factor:Number = Math.min(fingers.scaleX, fingers.scaleY);
-					if ((fingers.scaleX + fingers.scaleY) / 2 > 0) {
+					if ((fingers.scaleX + fingers.scaleY) / 2 > 0)
+					{
 						scale_factor = Math.max(fingers.scaleX, fingers.scaleY);
-					} 
+					}
 					image_wrapper.scaleX *= scale_factor;
 					image_wrapper.scaleY *= scale_factor;
 					check_resize();
@@ -227,7 +278,8 @@ package imree.modules
 				 * prepare for garbage collection
 				 */
 				addEventListener(Event.REMOVED_FROM_STAGE, clear_image_listeners);
-				function clear_image_listeners(event:Event):void {
+				function clear_image_listeners(event:Event):void
+				{
 					image_wrapper.removeEventListener(MouseEvent.MOUSE_WHEEL, scroll_wheel_on_image);
 					image_wrapper.removeEventListener(TransformGestureEvent.GESTURE_ZOOM, gesture_zoom_start);
 					image_wrapper.removeEventListener(MouseEvent.MOUSE_DOWN, start_feature_drag);
@@ -236,6 +288,6 @@ package imree.modules
 			
 			super.draw_feature_content();
 		}
-		
+	
 	}
 }

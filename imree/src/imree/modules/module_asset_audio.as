@@ -16,7 +16,10 @@ package imree.modules
 	import com.greensock.*;
 	import com.greensock.loading.display.*;
 	import com.greensock.plugins.*;
-	
+	import flash.text.TextFormat;
+	import imree.display_helpers.modal;
+	import imree.forms.f_data;
+	import imree.forms.f_element;
 	
 	import flash.events.Event;
 	import flash.display.Bitmap;
@@ -33,6 +36,7 @@ package imree.modules
 	import imree.Main;
 	import imree.pages.exhibit_display;
 	import imree.shortcuts.box;
+	import fl.controls.Button;
 	
 	TweenPlugin.activate([VolumePlugin]);
 	
@@ -175,8 +179,34 @@ package imree.modules
 					relation.draw_feature_content();
 				}
 			}
-			
+		
 		}
 	
-	}
+	
+		override public function draw_edit_UI(e:* = null, animate:Boolean = true, start_at_position:int = 0):void {
+			sound.dispose();
+			
+			var elements:Vector.<f_element> = prepare_edit_form_elements();
+			var form:f_data = prepare_edit_form(elements);
+			
+			var edit_ui:Sprite = new Sprite();
+			edit_ui.addChild(form);
+			
+			
+			var button_ui:Button = new Button();
+			button_ui.setSize(150, 40);
+			button_ui.label = "Attach an Image\nto this Audio file";
+			//button_ui.addEventListener(MouseEvent.CLICK);
+			button_ui.x = edit_ui.width * .9;
+			button_ui.y = edit_ui.height * .3;
+			edit_ui.addChild(button_ui);
+			
+			asset_editor = new modal(main.Imree.staging_area.width, main.Imree.staging_area.height, null, edit_ui);
+			main.Imree.Exhibit.overlay_add(asset_editor);
+				
+			}
+			
+			
+			
+		}
 }

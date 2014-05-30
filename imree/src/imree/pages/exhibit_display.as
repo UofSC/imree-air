@@ -80,7 +80,7 @@ package imree.pages
 			main = _main;
 			t = this;
 			wrapper = new Sprite();
-			var bk:box = new box(w * 1.3, h * 1.3, Theme.background_color_primary, 1);
+			var bk:box = new box(w * 1.3, h * 1.3, Theme.background_color_primary, .5);
 			wrapper.addChild(bk);
 			wrapper.x -= w * .15;
 			wrapper.y -= h * .15;

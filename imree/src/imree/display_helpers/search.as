@@ -50,6 +50,8 @@ package imree.display_helpers {
 	import imree.text;
 	import imree.textFont;
 	import Icon_book_background;
+	import imree.data_helpers.Theme;
+	
 	/**
 	 * ...
 	 * @author Jason Steelman
@@ -79,23 +81,33 @@ package imree.display_helpers {
 			w = _w;
 			h = _h;
 			allow_modules = false;
+			
+			
 		}
 		public function draw_search_box():void {
 			
+			
+									
 			MonsterDebugger.trace(main, "Drawing");
 			main.clean_slate([wrapper, search_box, search_submit, search_ui_wrapper]);
 			selections = new Vector.<data_value_pair>();
 			wrapper = new Sprite();
 			search_ui_wrapper = new Sprite();
 			addChild(wrapper);
+			
 			wrapper.addChild(new box(main.Imree.staging_area.width, main.Imree.staging_area.height , 0x606060, 1));
+			var Imree_label:text  = new text("IMREE", 300, Theme.font_style_h2);
+			wrapper.addChild(Imree_label);
+			Imree_label.x = wrapper.width * .45;
+			Imree_label.y =  wrapper.height * .3;
 			wrapper.addChild(search_ui_wrapper);
 			search_box = new f_element_text("Search", 'some_search_val');
 			search_ui_wrapper.addChild(search_box);
+			
 			search_box.draw();
 			
 			search_ui_wrapper.y = h / 2;
-			search_ui_wrapper.x = wrapper.width * .45 - search_box.width / 2;
+			search_ui_wrapper.x = wrapper.width * .43 - search_box.width / 2;
 			
 			
 			
@@ -115,7 +127,7 @@ package imree.display_helpers {
 				selector.addEventListener(Event.CHANGE, add_module_by_name);
 				search_ui_wrapper.addChild(selector);
 				selector.x = search_ui_wrapper.width / 2 - 20 - selector.width / 2;
-				selector.y = search_ui_wrapper.height;
+				selector.y = 50;
 			}
 			function add_module_by_name(s:Event):void {
 				var obj:Object = {'module_order':'9999','module_name':'new module','module_parent_id':String(Module.module_id),'module_type':String(selector.selectedItem.data)};
@@ -131,9 +143,10 @@ package imree.display_helpers {
 			upload_button.setSize(120, 20);
 			search_ui_wrapper.addChild(upload_button);
 			upload_button.x = search_ui_wrapper.width / 2 - upload_button.width / 2 + 120;
-			upload_button.y = 100;
+			upload_button.y = 50;
 			upload_button.addEventListener(MouseEvent.CLICK, upload_get_file_reference);
-
+			
+			
 			var reference:FileReference;
 			
 			function upload_get_file_reference(me:MouseEvent):void {
@@ -164,12 +177,12 @@ package imree.display_helpers {
 			if (main.Imree.Device.is_flash_player === false) {			
 				if (CameraUI.isSupported) {
 					var take_picture_UI:Button = new Button();
-					take_picture_UI.setSize(80, 70);
+					take_picture_UI.setSize(120, 20);
 					take_picture_UI.label = "Snap Photo";
 					var take_picture_butt:smart_button = new smart_button(take_picture_UI, take_picture_click);
 					search_ui_wrapper.addChild(take_picture_butt);
-					take_picture_butt.x = search_ui_wrapper.width / 2 - take_picture_butt.width / 2;
-					take_picture_butt.y = search_ui_wrapper.height + 15;
+					take_picture_butt.x = search_ui_wrapper.width / 2 - take_picture_butt.width / 2 + 35;
+					take_picture_butt.y = 100;
 				}
 			}
 			
@@ -241,20 +254,27 @@ package imree.display_helpers {
 			if (spinner === null ) {
 				
 				spinner = new loading_spinner_sprite(60);
-				search_ui_wrapper.addChild(spinner);
+				main.loading_indicator_add();
+				//search_ui_wrapper.addChild(spinner);
 				search_submit.visible = false;
-				spinner.x = search_submit.x;
+				//spinner.x = search_submit.x;
 				
 			}
+			
 			main.connection.server_command("search", search_box.get_value(), results, true);
+			
 			
 		}
 		
 		private function results(e:LoaderEvent):void {
 			if (spinner !== null) {
-				search_ui_wrapper.removeChild(spinner);
+				
+				//search_ui_wrapper.removeChild(spinner);
+				main.loading_indicator_remove();
 				spinner = null;
+								
 				search_submit.visible = true;
+				
 				
 		}
 			
@@ -263,7 +283,10 @@ package imree.display_helpers {
 			
 			var scroller_contents:Sprite = new Sprite();
 			if (xml.result.children.children().length() == 0) {
+				
 				main.toast("No Results");
+				main.loading_indicator_remove();
+				
 			}
 			
 			var boxes:Vector.<DisplayObjectContainer> = new Vector.<DisplayObjectContainer>();

@@ -94,7 +94,7 @@ package imree.forms
 				edit_siblings_select.draw();
 				t.addChild(edit_siblings_select);
 				edit_siblings_select.x = 10;
-				j += edit_siblings_select.get_height() + 10;
+				j += edit_siblings_select.get_height();
 			}
 			
 			if (f_method === "update" && f_row_id > 0 && f_table.length > 0) {

@@ -70,11 +70,11 @@ package imree.modules
 		override public function draw_edit_button():void {
 			if (edit_button === null) {
 				var simple:Button = new Button();
-				simple.setSize(75, 75);
+				simple.setSize(85, 40);
 				simple.label = "Edit Meta";
 				edit_button = new Sprite();
 				edit_button.addChild(simple);
-				edit_button.x = 5;
+				edit_button.x = 3;
 				edit_button.y = 5;
 				if (!edit_button.hasEventListener(MouseEvent.CLICK)) {
 					edit_button.addEventListener(MouseEvent.CLICK, draw_edit_UI);

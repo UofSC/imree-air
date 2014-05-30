@@ -61,13 +61,13 @@ package imree.pages
 			var target_exhibit:exhibit_display = exhibit_display(main.Imree.current_page);
 			var buttons:Vector.<smart_button> = new Vector.<smart_button>();
 			var cancel_btn:Button = new Button(); 
-			cancel_btn.setSize(75, 75);
+			cancel_btn.setSize(85, 40);
 			cancel_btn.label = "Close"; 
 			function cancel_btn_click(m:MouseEvent=null):void {
 				dump_edit_UI();
 			}
 			var save_btn:Button = new Button();
-			save_btn.setSize(75, 75);
+			save_btn.setSize(85, 40);
 			save_btn.textField.multiline = true;
 			save_btn.label = "Save \nNew Order";
 			function save_btn_click(m:MouseEvent=null):void {
@@ -98,7 +98,8 @@ package imree.pages
 			
 			var selector:ComboBox = new ComboBox();
 			selector.prompt = "Add new module";
-			var selector_label:text  = new text("Add a new Module", 300, Theme.font_style_h2);
+			selector.setSize (150, 20);
+			var selector_label:text  = new text("Add a\nnew Module", 215, Theme.font_style_h2);
 			var datas:Array = [{label:"Title", data:"title"}, {label:"Linear/Narrative",data:"narrative"}, {label:"Grid/Gallery",data:"grid"}];
 			selector.dataProvider = new DataProvider(datas);
 			selector.addEventListener(Event.CHANGE, add_module_by_name);
@@ -131,11 +132,11 @@ package imree.pages
 			edit_ui.addChild(selector_label);
 			edit_ui.addChild(proxies_wrapper);
 			selector.x = form.width + 50;
-			selector.y = selector_label.height + 10;
+			selector.y = selector_label.height + 5;
 			selector_label.x = form.width + 50;
-			proxies_wrapper.x = form.width + selector.width + 90;
+			proxies_wrapper.x = form.width + selector.width + 150;
 			
-			var dialog:modal = new modal(main.Imree.staging_area.width, main.Imree.staging_area.height, buttons, edit_ui, null, 0xFFFFFF, .70, "left");
+			var dialog:modal = new modal(main.Imree.staging_area.width, main.Imree.staging_area.height, buttons, edit_ui, null, 0x6a6a6a, .9, "left");
 			main.Imree.Exhibit.overlay_add(dialog);
 			
 			

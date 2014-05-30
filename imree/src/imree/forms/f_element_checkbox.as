@@ -31,7 +31,7 @@ package imree.forms
 			ui = new Sprite();
 			
 			var label_display:text = new text(this.label, label_width, this.label_textFont);
-			label_display.y += 5;
+			label_display.y += 10;
 			ui.addChild(label_display)
 			special_height = label_display.height;
 			var chk:CheckBox = new CheckBox();

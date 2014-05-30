@@ -41,6 +41,7 @@ package imree.forms
 				
 		}
 		
+		private var special_height:int;
 		override public function draw(label_width:int = 100, input_w:int = 200, padding:int = 50 ):void {
 			ui = new Sprite();
 			addChild(ui);
@@ -54,6 +55,8 @@ package imree.forms
 			var internal_padding:int = Math.round(padding / 2);
 			var stepper_width:int = 80;
 			var stepper_height:int = 40;
+			
+			special_height = stepper_height + 30;
 			
 			var txtyr_lab:text = new text("Year");
 			txtyr = new NumericStepper();
@@ -108,6 +111,11 @@ package imree.forms
 			super.draw(label_width, input_w, padding);
 		}
 		
+		override public function get_height():Number 
+		{
+			return special_height;
+			
+		}
 		
 		override public function get_value():* {
 			return (txtyr.value + "/" + txtmo.value + "/" + txtdate.value + " " + txthr.value + ":" + txtmin.value + ":" + txtsec.value);

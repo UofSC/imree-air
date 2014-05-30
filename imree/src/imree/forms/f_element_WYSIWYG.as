@@ -229,7 +229,7 @@ package imree.forms
 		
 		override public function get_height():Number 
 		{
-			return 270;
+			return 300;
 		}
 	}
 }

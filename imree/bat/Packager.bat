@@ -8,6 +8,8 @@ goto start
 
 :android-config
 set CERT_FILE=%AND_CERT_FILE%
+echo %AND_SIGNING_OPTIONS%
+::set SIGNING_OPTIONS = -alias AIRcert -storetype jks
 set SIGNING_OPTIONS=%AND_SIGNING_OPTIONS%
 set ICONS=%AND_ICONS%
 set DIST_EXT=apk

@@ -86,6 +86,18 @@
 			var result:box = new box(_w, _h, 0xFFFFFF, .2);
 			thumb_wrapper.addChild(result);
 			
+			var video_thumb_icon_wrapper:box = new box(thumb_wrapper.width, thumb_wrapper.height, 0xFFFFFF, .2);
+			var video_thumb_icon:VideoIcon = new VideoIcon();
+			video_thumb_icon_wrapper.x = 0;
+			video_thumb_icon_wrapper.y = 0;
+			
+			video_thumb_icon.width = 30;
+			video_thumb_icon.height = 30;
+			video_thumb_icon.x = 0;
+			video_thumb_icon.y = 0;
+			video_thumb_icon_wrapper.addChild(video_thumb_icon);
+			thumb_wrapper.addChild(video_thumb_icon_wrapper);
+			
 			var url_request:URLRequest;
 			if (asset_specific_thumb_url !== null && asset_specific_thumb_url.length > 0) {
 				url_request = new URLRequest(main.image_url_resized(asset_specific_thumb_url, String(_h)));
@@ -100,7 +112,7 @@
 				new ImageLoader(url_request, imgvars).load();
 			} else {
 				
-				var vid_thumb: genericVidIcon = new genericVidIcon();
+				var vid_thumb: VideoIcon = new VideoIcon();
 				vid_thumb.width = result.width;
 				vid_thumb.height = result.height;
 				result.addChild(vid_thumb);

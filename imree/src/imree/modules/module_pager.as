@@ -50,6 +50,8 @@ package imree.modules {
 		override public function draw_thumb(_w:int = 200, _h:int = 200, Return:Boolean = false):* {
 			var bk:box = new box(_w - 5, _h - 15);
 			
+	
+			
 			if(items.length > 0) {
 				if (items[0] is module_asset_image) {
 					var url:String = module_asset_image(items[0]).asset_url;

@@ -38,6 +38,7 @@ package imree.data_helpers {
 		static public var color_transform_page_buttons:ColorTransform;
 		static public var color_transform_background_image:ColorTransform;
 		
+				
 		static private var primary_fields_processed:Boolean = false;
 		public var styles:Vector.<textFont>;
 		

@@ -74,7 +74,7 @@ package imree
 				}
 			}
 			function failed(e:LoaderEvent):void {
-				main.log(say_loader_event(e) + " FAAILED", e.target.content);
+				main.log(say_loader_event(e) + " FAILED", e.target.content);
 			}
 			function IOERROR(e:LoaderEvent):void {
 				main.log(say_loader_event(e) + " IOERROR", e.target.content);

@@ -290,22 +290,52 @@ package imree.display_helpers {
 			}
 			
 			var boxes:Vector.<DisplayObjectContainer> = new Vector.<DisplayObjectContainer>();
+			
 			for (var i:String in xml.result.children.children()) {
+							
 				var bk:box = new box(main.Imree.Device.box_size, main.Imree.Device.box_size, 0xF0F0F0, 1, 1);
 				bk.data = { repository:xml.result.children.children()[i].repository, id:xml.result.children.children()[i].id, collection:xml.result.children.children()[i].collection };
-				
 				var image_portion_of_bk:box = new box(bk.width, bk.height * .75);
 				image_portion_of_bk.y = 2;
 				bk.addChild(image_portion_of_bk);
-				var thumb_loader_vars:ImageLoaderVars = new ImageLoaderVars();
-				thumb_loader_vars.container(image_portion_of_bk);
-				thumb_loader_vars.crop(true);
-				thumb_loader_vars.scaleMode(ScaleMode.PROPORTIONAL_INSIDE);
-				thumb_loader_vars.width(image_portion_of_bk.width);
-				thumb_loader_vars.height(image_portion_of_bk.height);
-				new ImageLoader(String(xml.result.children.children()[i].thumbnail_url), thumb_loader_vars).load();
+				trace(xml.result.children.children()[i]);
+				if (xml.result.children.children()[i].thumbnail_url != "0"){
+					
+					var thumb_loader_vars:ImageLoaderVars = new ImageLoaderVars();
+						thumb_loader_vars.container(image_portion_of_bk);
+						thumb_loader_vars.crop(true);
+						thumb_loader_vars.scaleMode(ScaleMode.PROPORTIONAL_INSIDE);
+						thumb_loader_vars.width(image_portion_of_bk.width);
+						thumb_loader_vars.height(image_portion_of_bk.height);
+						new ImageLoader(String(xml.result.children.children()[i].thumbnail_url), thumb_loader_vars).load(); 
+				}
+					
 				
+				if (String(xml.result.children.children()[i].type).indexOf("aud") != -1) {
+					
+					var gen_aud_thumb: button_audio = new button_audio();
+					gen_aud_thumb.width = bk.width - 10;
+					gen_aud_thumb.height = bk.height - 10;
+					bk.addChild(gen_aud_thumb);
+				}
+				if (String(xml.result.children.children()[i].type).indexOf("vid") != -1) {
+					
+					var gen_vid_thumb: VideoIcon = new VideoIcon();
+					gen_vid_thumb.width = bk.width - 10;
+					gen_vid_thumb.height = bk.height - 10;
+					bk.addChild(gen_vid_thumb);
+				}
+					
+					if (String(xml.result.children.children()[i].type).indexOf("doc") != -1) {
+					
+					var gen_book_thumb: button_book = new button_book();
+					gen_book_thumb.width = bk.width - 10;
+					gen_book_thumb.height = bk.height - 10;
+					bk.addChild(gen_book_thumb);
+				}
 				
+			
+							
 				var txt:text = new text(String(xml.result.children.children()[i].title), main.Imree.Device.box_size - 10, new textFont('_sans', 14),main.Imree.Device.box_size -image_portion_of_bk.height - 10);
 				txt.y = image_portion_of_bk.height + 5;
 				txt.x = 6;
@@ -313,7 +343,9 @@ package imree.display_helpers {
 				bk.mouseChildren = false;
 				bk.mouseEnabled = true;
 				boxes.push(bk);
+				
 			}
+			
 			
 			TweenLite.to(search_ui_wrapper, .25, { alpha:0 } );
 			TweenLite.from(wrapper, .35, { alpha:0 } );

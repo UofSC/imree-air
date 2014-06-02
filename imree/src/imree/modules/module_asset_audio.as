@@ -64,6 +64,17 @@ package imree.modules
 			var result:box = new box(_w, _h, 0xFFFFFF, .2);
 			thumb_wrapper.addChild(result);
 			
+			var audio_thumb_icon:button_audio = new button_audio();
+			var audio_thumb_icon_wrapper:box = new box(thumb_wrapper.width, thumb_wrapper.height, 0xFFFFFF, .2);			
+			audio_thumb_icon_wrapper.x = 0;
+			audio_thumb_icon_wrapper.y = 0;
+			audio_thumb_icon.width = 30;
+			audio_thumb_icon.height = 30;
+			audio_thumb_icon.x = 0;
+			audio_thumb_icon.y = 0;
+			audio_thumb_icon_wrapper.addChild(audio_thumb_icon);
+			thumb_wrapper.addChild(audio_thumb_icon_wrapper);
+			
 			var url_request:URLRequest;
 			trace("IMAGE :" + asset_specific_thumb_url);
 			if (asset_specific_thumb_url !== null && asset_specific_thumb_url.length > 0) {
@@ -78,7 +89,7 @@ package imree.modules
 					imgvars.alternateURL(asset_specific_thumb_url);
 				new ImageLoader(url_request, imgvars).load();
 			} else	{
-				var audio_thumb:GenericAudio = new GenericAudio();
+				var audio_thumb:button_audio = new button_audio();
 				audio_thumb.width = result.width;
 				audio_thumb.height = result.height;
 				result.addChild(audio_thumb);

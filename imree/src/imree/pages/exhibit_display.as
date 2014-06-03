@@ -32,6 +32,7 @@ package imree.pages
 	import imree.modules.module_asset_audio;
 	import imree.modules.module_asset_image;
 	import imree.modules.module_asset_video;
+	import imree.modules.module_comparison;
 	import imree.modules.module_grid;
 	import imree.modules.module_narrative;
 	import imree.modules.module_next;
@@ -219,6 +220,10 @@ package imree.pages
 				else if (type == 'pager') 
 				{
 					mod = new module_pager(main, t, result);
+				}
+				else if (type == 'comparison') 
+				{
+					mod = new module_comparison(main, t, result);
 				}
 				else 
 				{

@@ -51,7 +51,7 @@ package imree.modules
 		
 		public function module_asset_audio(_main:Main, _Exhibit:exhibit_display, _items:Vector.<module> = null)
 		{
-			this.asset_url;
+			
 			
 			module_supports_reordering = true;
 			super(_main, _Exhibit, _items);
@@ -68,10 +68,11 @@ package imree.modules
 			var audio_thumb_icon_wrapper:box = new box(thumb_wrapper.width, thumb_wrapper.height, 0xFFFFFF, .2);			
 			audio_thumb_icon_wrapper.x = 0;
 			audio_thumb_icon_wrapper.y = 0;
-			audio_thumb_icon.width = 30;
-			audio_thumb_icon.height = 30;
-			audio_thumb_icon.x = 0;
-			audio_thumb_icon.y = 0;
+			
+			audio_thumb_icon.width = thumb_wrapper.width * .4;
+			audio_thumb_icon.height = thumb_wrapper.height * .4;
+			audio_thumb_icon.x = thumb_wrapper.width * .3;
+			audio_thumb_icon.y = thumb_wrapper.height * .3;
 			audio_thumb_icon_wrapper.addChild(audio_thumb_icon);
 			thumb_wrapper.addChild(audio_thumb_icon_wrapper);
 			

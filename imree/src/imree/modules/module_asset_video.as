@@ -91,10 +91,10 @@
 			video_thumb_icon_wrapper.x = 0;
 			video_thumb_icon_wrapper.y = 0;
 			
-			video_thumb_icon.width = 30;
-			video_thumb_icon.height = 30;
-			video_thumb_icon.x = 0;
-			video_thumb_icon.y = 0;
+			video_thumb_icon.width = thumb_wrapper.width * .4;
+			video_thumb_icon.height = thumb_wrapper.height * .4;
+			video_thumb_icon.x = thumb_wrapper.width * .3;
+			video_thumb_icon.y = thumb_wrapper.height * .3;
 			video_thumb_icon_wrapper.addChild(video_thumb_icon);
 			thumb_wrapper.addChild(video_thumb_icon_wrapper);
 			

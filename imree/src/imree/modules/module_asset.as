@@ -213,6 +213,7 @@ package imree.modules
 			var form:f_data = prepare_edit_form(elements);
 			asset_editor = new modal(main.Imree.staging_area.width, main.Imree.staging_area.height, null, form);
 			main.Imree.Exhibit.overlay_add(asset_editor);
+			
 		}
 		
 		public function prepare_edit_form(elements:Vector.<f_element>):f_data {

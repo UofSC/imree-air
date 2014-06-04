@@ -160,6 +160,10 @@ package imree.modules
 					module(e.currentTarget).draw_feature(main.Imree.staging_area.width, main.Imree.staging_area.height);
 				} else if (e.currentTarget is module_pager) {
 					module_pager(e.currentTarget).draw_feature(main.Imree.staging_area.width, main.Imree.staging_area.height);
+				}else if (e.currentTarget is module_comparison) {
+					module_comparison(e.currentTarget).draw_feature(main.Imree.staging_area.width, main.Imree.staging_area.height);
+				} else {
+					trace("item selected, but not recognized. Add a switch in module_grid for new module types. -Dummy");
 				}
 			}
 			if (items.length === 0) {

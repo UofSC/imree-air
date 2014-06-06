@@ -1,9 +1,12 @@
 package imree.modules 
 {
+	import com.greensock.core.TweenCore;
 	import com.greensock.layout.ScaleMode;
 	import com.greensock.loading.data.ImageLoaderVars;
 	import com.greensock.loading.ImageLoader;
 	import com.greensock.events.LoaderEvent;
+	import com.greensock.easing.*;
+	import com.greensock.*;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import com.greensock.TweenLite;
@@ -46,7 +49,7 @@ package imree.modules
 		public var thumbnail_url:String;
 		private var feature_wrapper:box;
 		private var first_child:module_asset;
-		private var seconds_child:module_asset;
+		private var second_child:module_asset;
 		public function module_comparison(_main:Main, _Exhibit:exhibit_display, _items:Vector.<module>=null) 
 		{
 			t = this;
@@ -59,7 +62,7 @@ package imree.modules
 			
 			
 			first_child = module_asset(items[0]);
-			seconds_child = module_asset(items[1]);
+			second_child = module_asset(items[1]);
 			
 			var thumb_wrapper:Sprite = first_child.draw_thumb(_w, _h, true);
 			
@@ -92,15 +95,63 @@ package imree.modules
 		
 		override public function draw_feature(_w:int, _h:int):void 
 		{
-			trace("drawing feature content for comparison viewer");
-			first_child.prepare_asset_window(_w, _h);			
-			first_child.draw_feature_content();
+			trace("loading draw feature for comparison viewer");
+						
+			first_child.prepare_asset_window(_w, _h);
+			first_child.draw_feature_content(false, img_downloaded);			
 			phase_feature = true;
-	
-			///You're working here.
+			
+			
+			
+			
+			function img_downloaded():void {
+				var image_bounding_box:Sprite = module_asset_image(first_child).image_bounding_box;
+				
+				var second_child_image_wrapper:box = new box(image_bounding_box.width, image_bounding_box.height);
+				second_child_image_wrapper.x = image_bounding_box.x;
+				second_child_image_wrapper.y = image_bounding_box.y;
+				first_child.asset_content_wrapper.addChild(second_child_image_wrapper);
 				
 				
-		
+				
+				var target_url1:String = second_child.asset_url;
+				if (first_child.can_resize)
+				{
+					target_url1 = main.image_url_resized(target_url1, second_child_image_wrapper.height);
+				}
+				new ImageLoader(target_url1, main.img_loader_vars(second_child_image_wrapper)).load();
+				
+				//@todo make mask
+				
+				var content_mask:box = new box(second_child_image_wrapper.width, second_child_image_wrapper.height);
+				second_child_image_wrapper.addChild(content_mask);
+				second_child_image_wrapper.mask = content_mask;
+				
+				var icon_box:box = new box(30, 60, 0xFFFFFF, .5, 1, 0x000000);
+				second_child_image_wrapper.addChild(icon_box);
+				icon_box.x = second_child_image_wrapper.width - 40;
+				icon_box.y = second_child_image_wrapper.height / 2;
+				
+				first_child.asset_content_wrapper.addEventListener(MouseEvent.MOUSE_MOVE, move_mask);
+				first_child.asset_content_wrapper.mouseEnabled = true;
+				
+				function move_mask(m_evt:MouseEvent = null):void {
+					
+					var new_max_x:int = main.stage.mouseX;
+					new_max_x -= second_child_image_wrapper.getBounds(main.stage).x;
+					TweenLite.to(content_mask, .3, { x:Math.max(new_max_x, 0) } );
+					TweenLite.to(icon_box, .3, { x:Math.max(new_max_x, 0) } );
+					
+					///figure out min. 
+				}
+				
+				first_child.asset_content_wrapper.addEventListener(Event.REMOVED_FROM_STAGE, removeListener);
+				
+				function removeListener(e:Event):void {
+					first_child.asset_content_wrapper.removeEventListener(MouseEvent.MOUSE_MOVE, move_mask);
+					}
+			
+			}
 		}
 		override public function draw_edit_button():void
 		{
@@ -109,8 +160,5 @@ package imree.modules
 		}
 		
 		
-		}
-			
-		
-		}
-
+	}
+}

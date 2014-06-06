@@ -172,7 +172,8 @@ package imree.modules
 		
 		}
 		
-		override public function draw_feature_content():void
+		public var image_bounding_box:box;
+		override public function draw_feature_content(interactive:Boolean = true, onDownloaded:Function = null):void
 		{
 			
 			var vars:ImageLoaderVars = main.img_loader_vars(asset_content_wrapper);
@@ -212,15 +213,23 @@ package imree.modules
 				/**
 				 * Offset the registration point of bitmap to be visual center
 				 */
+				
 				bitmap.x = 0 - bitmap.width / 2;
 				bitmap.y = 0 - bitmap.height / 2;
 				image_wrapper.x = (original_width / 2);
 				image_wrapper.y = (original_height / 2);
 				
+				image_bounding_box = new box(bitmap.width, bitmap.height);
+				image_bounding_box.x = bitmap.getBounds(asset_content_wrapper).x;
+				image_bounding_box.y = bitmap.getBounds(asset_content_wrapper).y;
+				
+				
 				/**
 				 * Handle Mouse scroll wheel interactions
 				 */
-				asset_content_wrapper.addEventListener(MouseEvent.MOUSE_WHEEL, scroll_wheel_on_image);
+				if (interactive) {
+					asset_content_wrapper.addEventListener(MouseEvent.MOUSE_WHEEL, scroll_wheel_on_image);
+				}
 				function scroll_wheel_on_image(m:MouseEvent):void
 				{
 					var factor:Number = m.delta * .1;
@@ -241,7 +250,9 @@ package imree.modules
 				/**
 				 * Handle mouse/finger drag interactions
 				 */
-				asset_content_wrapper.addEventListener(MouseEvent.MOUSE_DOWN, start_feature_drag);
+				if (interactive) {
+					asset_content_wrapper.addEventListener(MouseEvent.MOUSE_DOWN, start_feature_drag);
+				}
 				function start_feature_drag(m:MouseEvent):void
 				{
 					image_wrapper.startDrag();
@@ -258,7 +269,7 @@ package imree.modules
 				/**
 				 * Handle pinch-zoom interactions
 				 */
-				if (Capabilities.touchscreenType != "none")
+				if (Capabilities.touchscreenType != "none" && interactive)
 				{
 					asset_content_wrapper.addEventListener(TransformGestureEvent.GESTURE_ZOOM, gesture_zoom_start);
 				}
@@ -283,6 +294,10 @@ package imree.modules
 					image_wrapper.removeEventListener(MouseEvent.MOUSE_WHEEL, scroll_wheel_on_image);
 					image_wrapper.removeEventListener(TransformGestureEvent.GESTURE_ZOOM, gesture_zoom_start);
 					image_wrapper.removeEventListener(MouseEvent.MOUSE_DOWN, start_feature_drag);
+				}
+				
+				if (onDownloaded !== null) {
+					onDownloaded();
 				}
 			}
 			

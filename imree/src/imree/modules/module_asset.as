@@ -61,7 +61,7 @@ package imree.modules
 			super(_main, _Exhibit, _items);
 		}
 		
-		public function draw_feature_content():void {
+		public function draw_feature_content(interactive:Boolean = true, onDownloaded:Function = null):void {
 			main.log('Loading [id:' + module_id + '] [name: ' + module_name + '] ' + asset_url);
 			main.Imree.Exhibit.navigator.hide();
 			//for the particular asset, draw on the asset_content_wrapper after calling prepare_asset_window

@@ -129,7 +129,7 @@ package imree.modules
 				
 				var icon_box:box = new box(30, 60, 0xFFFFFF, .5, 1, 0x000000);
 				second_child_image_wrapper.addChild(icon_box);
-				icon_box.x = second_child_image_wrapper.width - 40;
+				icon_box.x = 0;
 				icon_box.y = second_child_image_wrapper.height / 2;
 				
 				first_child.asset_content_wrapper.addEventListener(MouseEvent.MOUSE_MOVE, move_mask);
@@ -138,11 +138,14 @@ package imree.modules
 				function move_mask(m_evt:MouseEvent = null):void {
 					
 					var new_max_x:int = main.stage.mouseX;
-					new_max_x -= second_child_image_wrapper.getBounds(main.stage).x;
-					TweenLite.to(content_mask, .3, { x:Math.max(new_max_x, 0) } );
-					TweenLite.to(icon_box, .3, { x:Math.max(new_max_x, 0) } );
+					var new_min_x:int = main.stage.mouseX;
+					new_max_x -= image_bounding_box.getBounds(main.stage).width;
+					new_min_x -= second_child_image_wrapper.getBounds(main.stage).width
 					
-					///figure out min. 
+					TweenLite.to(content_mask, .4, { x:Math.max(new_max_x, 0) } );
+					TweenLite.to(icon_box, .4, { x:Math.max(Math.min(new_min_x,0),new_max_x, 0) } );
+					
+					///grr...the icon is still going over too far.
 				}
 				
 				first_child.asset_content_wrapper.addEventListener(Event.REMOVED_FROM_STAGE, removeListener);

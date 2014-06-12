@@ -581,7 +581,10 @@ package imree.modules
 			else
 			{
 				bk = new box(main.Imree.Device.box_size, main.Imree.Device.box_size);
-				bk.addChild(i.draw_thumb(main.Imree.Device.box_size, main.Imree.Device.box_size, true));
+				var bk_content:DisplayObject = i.draw_thumb(main.Imree.Device.box_size, main.Imree.Device.box_size, true)
+				if(bk_content !== null) {
+					bk.addChild(bk_content);
+				}
 				proxies.push(bk);
 				originals.push(new position_data(main.Imree.Device.box_size, main.Imree.Device.box_size));
 			}

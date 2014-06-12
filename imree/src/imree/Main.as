@@ -71,6 +71,7 @@ package imree
 		public var image_loader_que:LoaderMax;
 		public var aud_loader_queue:LoaderMax;
 		public var preloader:Preloader;
+		public var mode:String;
 		
 		public var t:Main;
 		
@@ -133,6 +134,7 @@ package imree
 				function sign_mode_loader(evt:LoaderEvent):void
 				{
 					var xml:XML = XML(evt.currentTarget.content);
+					mode = String(xml.result.mode);
 					if (xml.result.mode == 'signage')
 					{
 						connection.session_key = xml.result.key;
@@ -158,7 +160,7 @@ package imree
 						}
 						else
 						{
-							toast("Not Tablet");
+							//toast("Not Tablet");
 						}
 					}
 				}

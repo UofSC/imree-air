@@ -94,13 +94,16 @@ package imree.pages
 			form.f_table_key_column_name = "exhibit_id";
 			form.f_table_label_column_name = "exhibit_name";
 			form.f_row_id = target_exhibit.id;
+			form.f_method = "update";
+			form.data_get_row();
 			form.draw();
 			
 			var selector:ComboBox = new ComboBox();
 			selector.prompt = "Add new module";
 			selector.setSize (150, 20);
 			var selector_label:text  = new text("Add a\nnew Module", 215, Theme.font_style_h2);
-			var datas:Array = [{label:"Title", data:"title"}, {label:"Linear/Narrative",data:"narrative"}, {label:"Grid/Gallery",data:"grid"}];
+			//var datas:Array = [{label:"Title", data:"title"}, {label:"Linear/Narrative",data:"narrative"}, {label:"Grid/Gallery",data:"grid"}];
+			var datas:Array = [{label:"Linear/Narrative",data:"narrative"}];
 			selector.dataProvider = new DataProvider(datas);
 			selector.addEventListener(Event.CHANGE, add_module_by_name);
 			selector.x = form.height;

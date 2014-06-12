@@ -3,6 +3,7 @@ package imree.forms
 	import flash.accessibility.Accessibility;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFieldType;
@@ -14,6 +15,10 @@ package imree.forms
 	import imree.text;
 	import imree.textFont;
 	import com.greensock.events.LoaderEvent;
+	import fl.controls.Button;
+	import imree.pages.exhibit_display;
+	import imree.pages.home;
+	
 	/**
 	 * ...
 	 * @author Jason Steelman
@@ -26,6 +31,7 @@ package imree.forms
 		private var status:text;
 		private var auth_wrapper:box;
 		private var main:Main;
+		public var Exhibit:exhibit_display;
 		public function authentication(server:serverConnect, _onSuccess:Function, _main:Main) 
 		{
 			t = this;
@@ -53,8 +59,8 @@ package imree.forms
 				title.center_x(auth_wrapper);
 				
 				var elements:Vector.<f_element> = new Vector.<f_element>();
-					elements.push(new f_element_text("Username", 'username','steelmaj@mailbox.sc.edu'));
-					elements.push(new f_element_password("Password", 'password','helpinghand'));
+					elements.push(new f_element_text("Username", 'username',''));
+					elements.push(new f_element_password("Password", 'password',''));
 				var form:f_data = new f_data(elements);
 					form.layout(16, 380, 300);
 					form.onSubmit = auth;
@@ -66,6 +72,25 @@ package imree.forms
 				status.y = form.height + 50 + 10;
 				status.center_x(auth_wrapper);
 				auth_wrapper.addChild(status);
+				
+				var close_bt:Button = new Button();
+				close_bt.setSize(85, 35);
+				close_bt.label = "close";
+				auth_wrapper.addChild(close_bt);
+				close_bt.x = auth_wrapper.width * .7;
+				close_bt.y = auth_wrapper.height * .85;
+				
+				close_bt.addEventListener(MouseEvent.CLICK, close_auth);
+				
+				function close_auth(e:MouseEvent):void {
+					
+					removeChild(auth_wrapper);
+					removeChild(background);
+					close_bt.removeEventListener(MouseEvent.CLICK, close_auth);
+					
+					
+					}
+				
 				
 				
 			} else {

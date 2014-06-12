@@ -51,10 +51,11 @@ package imree.display_helpers {
 	import imree.textFont;
 	import Icon_book_background;
 	import imree.data_helpers.Theme;
-	
+	import imree.pages.exhibit_display;
+		
 	/**
 	 * ...
-	 * @author Jason Steelman
+	 * @author Jason Steelman // Tonya
 	 */
 	public class search extends Sprite {
 		
@@ -73,6 +74,8 @@ package imree.display_helpers {
 		public var selections:Vector.<data_value_pair>;
 		private var btn_confirm:smart_button;
 		private var btn_cancel:smart_button;
+		private var search_bt:smart_button;
+		public var t:module;
 		public function search(_onComplete:Function, _main:Main, _Module:module, _onDestroy:Function, _w:int = 300, _h:int = 300) {
 			onComplete = _onComplete;
 			main = _main;
@@ -210,6 +213,7 @@ package imree.display_helpers {
 			}
 			function onMediaPromiseLoadError(ioerror:IOErrorEvent):void {
 				main.toast(String(ioerror));
+				main.toast("Failed to load");
 			}
 			function onMediaPromiseLoaded(e:Event):void {
 				var mpLoaderInfo:LoaderInfo = e.target as LoaderInfo;
@@ -285,8 +289,9 @@ package imree.display_helpers {
 			if (xml.result.children.children().length() == 0) {
 				
 				main.toast("No Results");
-				main.loading_indicator_remove();
 				
+				
+							
 			}
 			
 			var boxes:Vector.<DisplayObjectContainer> = new Vector.<DisplayObjectContainer>();
@@ -393,16 +398,23 @@ package imree.display_helpers {
 			 */
 			
 			var btn_cancel_UI:Button = new Button();
-				btn_cancel_UI.setSize(80, 70);
+				btn_cancel_UI.setSize(80, 40);
 				btn_cancel_UI.label = "Cancel";
+				
+			var search_bt_UI:Button = new Button();
+				search_bt_UI.setSize(100, 40);
+				search_bt_UI.label = "Search Again";
+								
 			var btn_confirm_UI:Button = new Button();
-				btn_confirm_UI.setSize(80, 70);
+				btn_confirm_UI.setSize(80, 40);
 				btn_confirm_UI.label = "Import";
+				
 			btn_cancel = new smart_button(btn_cancel_UI, cancel);
+			search_bt = new smart_button(search_bt_UI, goBack);
 			btn_confirm = new smart_button(btn_confirm_UI, confirm);
 			btn_confirm.disable();
 			var top_buttons:Vector.<smart_button> = new Vector.<smart_button>();
-			top_buttons.push(btn_cancel, btn_confirm);
+			top_buttons.push(btn_cancel,search_bt, btn_confirm);
 			
 			
 			function cancel(me:*= null):void {
@@ -411,6 +423,12 @@ package imree.display_helpers {
 				}
 				onDestroy();
 			}
+			
+			function goBack(e:*= null):void {
+				
+				draw_search_box();
+				
+				}
 			function confirm(me:*= null):void {
 				var ingestion_count:int = 0;
 				for each(var selection:data_value_pair in selections) {

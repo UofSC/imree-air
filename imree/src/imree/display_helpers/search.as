@@ -155,7 +155,7 @@ package imree.display_helpers {
 			function upload_get_file_reference(me:MouseEvent):void {
 				reference = new FileReference();
 				reference.addEventListener(Event.SELECT, upload_do_upload);
-				var filefilter:FileFilter = new FileFilter("Videos : (*.m4v, *.mp4)", "*.mp4, *.m4v");
+				//var filefilter:FileFilter = new FileFilter("Videos : (*.m4v, *.mp4)", "*.mp4, *.m4v");
 				reference.browse();
 			}
 			function upload_do_upload(Evt:Event):void {
@@ -165,8 +165,8 @@ package imree.display_helpers {
 			}
 			function upload_asset_loaded(Evt:Event):void {
 				reference.removeEventListener(Event.COMPLETE, upload_asset_loaded);
-				var jpegdata:ByteArray = reference.data;
-				var urlwrapper:URLRequestWrapper = new URLRequestWrapper(jpegdata, 'video.mp4', null, {'command':'upload_bytes','module_id':Module.module_id, 'username':main.connection.username, 'password':main.connection.password})
+				var bytes:ByteArray = reference.data;
+				var urlwrapper:URLRequestWrapper = new URLRequestWrapper(bytes, "file." + reference.extension, null, {'command':'upload_bytes','module_id':Module.module_id, 'username':main.connection.username, 'password':main.connection.password})
 				urlwrapper.url = main.connection.uri;
 				var loader:URLLoader = new URLLoader();
 				loader.dataFormat = URLLoaderDataFormat.BINARY;

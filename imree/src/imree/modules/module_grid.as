@@ -146,7 +146,7 @@ package imree.modules
 					label_background.y = positions[j].height - label_background.height;
 					label_background.addChild(child_label);
 					child_label.x = 5;
-					child_label.y = 5;
+					child_label.y = 10;
 				}			
 				
 				height_calculated = Math.max(positions[j].height + positions[j].y + y_offest, height_calculated);
@@ -167,7 +167,15 @@ package imree.modules
 				}
 			}
 			if (items.length === 0) {
-				wrapper.addChild(new text("Empty Block", 150, Theme.font_style_h1));
+				var empty_bl_bx:box = new box(135, 80, 0x4E4E4E, .4);
+				wrapper.addChild(empty_bl_bx);
+				empty_bl_bx.y = main.Imree.staging_area.height / 5;
+				var empty_bl_tx:text = new text("Empty Block", 150, Theme.font_style_h1);
+				empty_bl_tx.x = 2;
+				empty_bl_tx.y = 2;
+				empty_bl_bx.addChild(empty_bl_tx);		
+				
+				
 			}
 			
 			wrapper.addEventListener(Event.REMOVED_FROM_STAGE, removed_from_stage);

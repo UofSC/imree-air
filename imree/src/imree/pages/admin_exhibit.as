@@ -186,7 +186,7 @@ package imree.pages
 							var dat:Object = { "module_id" : module(tar.data.mod).module_id};
 							main.connection.server_command("remove_module", dat, reload, true);
 						}
-						target_exhibit.modules.splice(target_exhibit.modules.indexOf(box(current_proxy_focus)), 1);
+						target_exhibit.modules.splice(target_exhibit.modules.indexOf(module(tar.data.mod)), 1);
 						dump_edit_UI();
 						standard_edit_UI();
 					}

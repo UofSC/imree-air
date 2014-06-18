@@ -232,12 +232,12 @@ package imree
 				main.User.person_group_id = 			xml.result.user.person_group_id;
 				main.User.ul_user_id = 				xml.result.user.ul_user_id;
 				
-				for each(var xml:XML in xml.result.permissions.children()) {
-					trace(xml);
-					if (xml.name == "super_admin" && xml.value == "ADMIN") {
+				for each(var xml2:XML in xml.result.permissions.children()) {
+					trace(xml2);
+					if (xml2.name == "super_admin" && xml2.value == "ADMIN") {
 						main.User.user_is_superAdmin = true;
 					}
-					main.User.user_privileges.push(new user_privilege(xml.name, xml.value, xml.scope));
+					main.User.user_privileges.push(new user_privilege(xml2.name, xml2.value, xml2.scope));
 				}
 				trace(main.User);
 				main.animator.off_stage(auth);
@@ -245,7 +245,7 @@ package imree
 				for each(var d:Object in Menu.contents) {
 					if (d is smart_button) {
 						if (smart_button(d).button is button_login) {
-							Menu.contents.splice(Menu.contents.indexOf(d), 1);
+							Menu.contents.splice(Menu.contents.indexOf(DisplayObject(d)), 1);
 						}
 					}
 				}

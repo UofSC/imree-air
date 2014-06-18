@@ -50,6 +50,7 @@ package imree
 	import imree.pages.Preloader;
 	import imree.shortcuts.box;
 	import imree.keycommander;
+	import imree.signage.autonomous_fullscreen_image;
 	import imree.signage.signage_stack;
 	
 	//import com.demonsters.debugger.MonsterDebugger;
@@ -138,8 +139,7 @@ package imree
 					if (xml.result.mode == 'signage')
 					{
 						connection.session_key = xml.result.key;
-						trace("Based on our IP, this device has been instructed to be digital signage, but I'm overriding that");
-						load_imree();
+						load_signage();
 						t.preloader.hide();
 					}
 					else
@@ -210,7 +210,10 @@ package imree
 		
 		private function load_signage():void
 		{
-			var stack:signage_stack = new signage_stack(connection, this.stage.stageWidth, this.stage.stageHeight);
+			stage.displayState = StageDisplayState.FULL_SCREEN;
+			var signage:autonomous_fullscreen_image = new autonomous_fullscreen_image(this);
+			addChild(signage);
+			
 			//stage.addChild(stack);
 			//var newsItemz:news_accordion_item = new news_accordion_item("Some headline", "Description Description Description Description Description Description Description Description Description Description Description Description ");
 			//addChild(newsItemz);

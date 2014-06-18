@@ -191,12 +191,12 @@ package imree.modules {
 						page1.visible = false;
 						if (page_num + 2 <= items.length) {
 							if(items[page_num + 1] is module_asset_image) {
-								load_image_on_page(items[page_num++], content1);
-								load_image_on_page(items[page_num++], content2);
+								load_image_on_page(module_asset_image(items[page_num++]), content1);
+								load_image_on_page(module_asset_image(items[page_num++]), content2);
 							}
 							
 						} else if (page_num + 1 <= items.length) {
-							load_image_on_page(items[page_num], content1);
+							load_image_on_page(module_asset_image(items[page_num]), content1);
 							page_num++;
 						}
 					} else {
@@ -216,11 +216,11 @@ package imree.modules {
 						
 						if (page_num >3) {
 							page_num -= 4;
-							load_image_on_page(items[page_num++], content1);
-							load_image_on_page(items[page_num++], content2);
+							load_image_on_page(module_asset_image(items[page_num++]), content1);
+							load_image_on_page(module_asset_image(items[page_num++]), content2);
 						} else if (page_num === 1) {
 							page_num=0;
-							load_image_on_page(items[page_num++], content2);
+							load_image_on_page(module_asset_image(items[page_num++]), content2);
 						}
 						
 					}

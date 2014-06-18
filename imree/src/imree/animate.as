@@ -1,8 +1,8 @@
 package imree 
 {
-	import com.greensock.core.TweenCore;
 	import com.greensock.data.TweenLiteVars;
 	import com.greensock.easing.Cubic;
+	import com.greensock.easing.Ease;
 	import com.greensock.events.LoaderEvent;
 	import com.greensock.TweenLite;
 	import flash.display.DisplayObject;
@@ -15,11 +15,11 @@ package imree
 	{
 		
 		public var off_duration:Number;
-		public var off_ease:Function;
+		public var off_ease:Ease;
 		public var off_direction:String;
 		
 		public var on_duration:Number;
-		public var on_ease:Function;
+		public var on_ease:Ease;
 		public var on_direction:String;
 		
 		private var main:Main;

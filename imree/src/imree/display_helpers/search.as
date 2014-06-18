@@ -205,10 +205,10 @@ package imree.display_helpers {
 				cameraUI.removeEventListener(Event.CANCEL, camera_error);
 				cameraUI.removeEventListener(ErrorEvent.ERROR, camera_error);
 				var mediaPromise:MediaPromise = MediaEvent(e).data;
-				this.mpLoader = new Loader();
-				this.mpLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, onMediaPromiseLoaded);
-				this.mpLoader.addEventListener(IOErrorEvent.IO_ERROR, onMediaPromiseLoadError);
-				this.mpLoader.loadFilePromise(mediaPromise);
+				var mpLoader:Loader = new Loader();
+				mpLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, onMediaPromiseLoaded);
+				mpLoader.addEventListener(IOErrorEvent.IO_ERROR, onMediaPromiseLoadError);
+				mpLoader.loadFilePromise(mediaPromise);
 				
 			}
 			function onMediaPromiseLoadError(ioerror:IOErrorEvent):void {

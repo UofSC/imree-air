@@ -1,6 +1,5 @@
 package imree.modules 
 {
-	import com.greensock.core.TweenCore;
 	import com.greensock.layout.ScaleMode;
 	import com.greensock.loading.data.ImageLoaderVars;
 	import com.greensock.loading.ImageLoader;

@@ -472,7 +472,7 @@ package imree.modules
 						data = {"module_id": module(tar.data.mod).module_id};
 					}
 					main.connection.server_command("remove_module", data, null, true);
-					items.splice(items.indexOf(box(current_proxy_focus)), 1);
+					items.splice(items.indexOf(module(tar.data.mod)), 1);
 					var start_at_position_target2:int = dialog.get_scoll_point().x;
 					dump_edit_UI();
 					draw_edit_UI(e, animate, start_at_position_target2);

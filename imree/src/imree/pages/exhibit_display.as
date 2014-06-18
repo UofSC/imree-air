@@ -383,8 +383,9 @@ package imree.pages
 		
 		public function draw_next(e:* = null):void
 		{
+			
 			dump_module(current_module_i);
-			var target_i:int;
+			var target_i:int = current_module_i;
 			if (current_module_i + 1 > modules.length) {
 				target_i = 0;
 			} else	{

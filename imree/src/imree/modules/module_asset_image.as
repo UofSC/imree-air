@@ -177,7 +177,7 @@ package imree.modules
 		{
 			
 			var vars:ImageLoaderVars = main.img_loader_vars(asset_content_wrapper);
-			//vars.noCache(true);
+			vars.noCache(true);
 			vars.onComplete(image_downloaded);
 			vars.crop(false);
 			vars.container(null);

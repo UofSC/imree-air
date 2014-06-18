@@ -154,6 +154,11 @@ package imree.modules
 				
 				items[j].addEventListener(MouseEvent.CLICK, item_selected);
 			}
+			if (main.Imree.Device.orientation === 'portrait') {
+				wrapper.x = _w / 2 - width_calculated / 2;
+			} else {
+				wrapper.y = _h / 2 - height_calculated / 2;
+			}
 			addChild(wrapper);
 			function item_selected(e:MouseEvent):void {
 				if (e.currentTarget is module_asset) {

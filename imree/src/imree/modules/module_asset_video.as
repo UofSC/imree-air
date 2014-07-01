@@ -87,14 +87,14 @@
 			thumb_wrapper.addChild(result);
 			
 			var video_thumb_icon_wrapper:box = new box(thumb_wrapper.width, thumb_wrapper.height, 0xFFFFFF, .2);
-			var video_thumb_icon:VideoIcon = new VideoIcon();
+			var video_thumb_icon:button_video = new button_video();
 			video_thumb_icon_wrapper.x = 0;
 			video_thumb_icon_wrapper.y = 0;
 			
-			video_thumb_icon.width = thumb_wrapper.width * .4;
-			video_thumb_icon.height = thumb_wrapper.height * .4;
-			video_thumb_icon.x = thumb_wrapper.width * .3;
-			video_thumb_icon.y = thumb_wrapper.height * .3;
+			video_thumb_icon.width = thumb_wrapper.width * .25;
+			video_thumb_icon.height = thumb_wrapper.height * .25;
+			video_thumb_icon.x = thumb_wrapper.width - video_thumb_icon.width;
+			video_thumb_icon.y = 0;
 			video_thumb_icon_wrapper.addChild(video_thumb_icon);
 			thumb_wrapper.addChild(video_thumb_icon_wrapper);
 			
@@ -112,7 +112,7 @@
 				new ImageLoader(url_request, imgvars).load();
 			} else {
 				
-				var vid_thumb: VideoIcon = new VideoIcon();
+				var vid_thumb:button_video = new button_video();
 				vid_thumb.width = result.width;
 				vid_thumb.height = result.height;
 				result.addChild(vid_thumb);

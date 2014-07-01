@@ -233,6 +233,9 @@ package imree.modules {
 					vars.height(page.height);
 					vars.container(page);
 					vars.crop(true);
+					if (img_mod.module_name.toLowerCase() !== "untitled") { 
+						img_mod.module_name = "";
+					}
 					if (page.name === "one") {
 						vars.hAlign(AlignMode.RIGHT);
 						title1 = new text(img_mod.module_name, page.width - arrow_left.width * 2, Theme.font_style_caption);

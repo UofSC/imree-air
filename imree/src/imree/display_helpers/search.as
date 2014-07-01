@@ -325,7 +325,7 @@ package imree.display_helpers {
 				}
 				if (String(xml.result.children.children()[i].type).indexOf("vid") != -1) {
 					
-					var gen_vid_thumb: VideoIcon = new VideoIcon();
+					var gen_vid_thumb:button_video = new button_video();
 					gen_vid_thumb.width = bk.width - 10;
 					gen_vid_thumb.height = bk.height - 10;
 					bk.addChild(gen_vid_thumb);

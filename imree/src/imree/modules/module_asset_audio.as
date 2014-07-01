@@ -69,10 +69,10 @@ package imree.modules
 			audio_thumb_icon_wrapper.x = 0;
 			audio_thumb_icon_wrapper.y = 0;
 			
-			audio_thumb_icon.width = thumb_wrapper.width * .4;
-			audio_thumb_icon.height = thumb_wrapper.height * .4;
-			audio_thumb_icon.x = thumb_wrapper.width * .3;
-			audio_thumb_icon.y = thumb_wrapper.height * .3;
+			audio_thumb_icon.width = thumb_wrapper.width * .25;
+			audio_thumb_icon.height = thumb_wrapper.height * .25;
+			audio_thumb_icon.x = thumb_wrapper.width - audio_thumb_icon.width;
+			audio_thumb_icon.y = 0
 			audio_thumb_icon_wrapper.addChild(audio_thumb_icon);
 			thumb_wrapper.addChild(audio_thumb_icon_wrapper);
 			

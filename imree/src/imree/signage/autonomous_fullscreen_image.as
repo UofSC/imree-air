@@ -7,6 +7,7 @@ package imree.signage
 	import flash.events.Event;
 	import flash.events.TimerEvent;
 	import flash.geom.Rectangle;
+	import flash.ui.Mouse;
 	import flash.utils.Timer;
 	import imree.Main;
 	import imree.shortcuts.box;
@@ -42,6 +43,7 @@ package imree.signage
 			background_timer.stop();
 			main.connection.server_command('signage_properties', '', background_image_info_loaded);
 			function background_image_info_loaded(e:LoaderEvent):void {
+				Mouse.hide();
 				var xml:XML = XML(XMLLoader(e.target).content);
 				var new_url:String = String(xml.result.item.device_background_image_url);
 				if (xml.result.item.signage_device_background_image_url) {

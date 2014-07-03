@@ -130,8 +130,8 @@ package imree
 				LoaderMax.activate([ImageLoader]);
 				image_loader_que.load();
 				
-				connection = new serverConnect("http://imree.tcl.sc.edu/imree-php/api/", t);
-				connection.server_command("mode", '', sign_mode_loader);
+				connection = new serverConnect("http://imree.tcl.sc.edu/imree-php/api/", t, 'mode',sign_mode_loader);
+				
 				function sign_mode_loader(evt:LoaderEvent):void
 				{
 					var xml:XML = XML(evt.currentTarget.content);

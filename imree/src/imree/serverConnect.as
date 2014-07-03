@@ -1,6 +1,7 @@
 package imree
 {
 	import com.adobe.serialization.json.*;
+	import com.demonsters.debugger.MonsterDebugger;
 	import com.greensock.events.*;
 	import com.greensock.loading.*;
 	import com.greensock.loading.data.*;
@@ -10,6 +11,7 @@ package imree
 	import flash.events.SecurityErrorEvent;
 	import flash.filesystem.*;
 	import flash.net.*;
+	import flash.system.Capabilities;
 	import flash.utils.ByteArray;
 	
 	
@@ -23,12 +25,40 @@ package imree
 		public var session_key:String;
 		public var username:String;
 		public var password:String;
+		public var mac_address:String;
 		private var current_loader_number:int;
 		private var main:Main;
-		public function serverConnect(URI:String="", _main:Main=null) {
+		public function serverConnect(URI:String="", _main:Main=null, firstCommand:String = null, firstCommandComplete:Function=null) {
 			this.uri = URI;
 			current_loader_number = 0;
 			main = _main;
+			this.mac_address = '';
+			try {
+				if (Capabilities.playerType == "StandAlone" || Capabilities.playerType == "ActiveX" || Capabilities.playerType == "PlugIn") {
+					trace("Cannot get mac address from flash player.");
+				} else {
+					
+					/** to keep flash player from crashing, i'm using the type "object" instead of Vector.<NetworkInterface> */
+					var vNetworkInterfaces:Object = NetworkInfo.networkInfo.findInterfaces();
+					for each(var networkInterface:Object in vNetworkInterfaces) {
+						if (networkInterface.active) {
+							for each (var add:Object in networkInterface.addresses) {
+								if (add.address !== "127.0.0.1" && add.address.search(":") === -1 && add.address.length > 8 && networkInterface.hardwareAddress.length === 17) {
+									trace(add.address  + "  " +  networkInterface.hardwareAddress);
+									this.mac_address = networkInterface.hardwareAddress;
+								}
+							}
+						}
+					}
+				}
+			} catch (ve:VerifyError) {
+				_main.toast("player type determination failed. Tried to get air specific functions and player said 'no'");
+			}
+			
+			if (firstCommand !== null) {
+				this.server_command(firstCommand, '', firstCommandComplete);
+			}
+			
 		}
 		public function clone():serverConnect {
 			var n:serverConnect = new serverConnect();
@@ -36,6 +66,7 @@ package imree
 			n.session_key = session_key;
 			n.username = username;
 			n.password = password;
+			n.mac_address = mac_address;
 			return n;
 		}
 		public function server_command(command:String, command_parameter:*, onCompleteFunction:Function=null, elevatedPrivileges:Boolean = false):void {
@@ -49,7 +80,8 @@ package imree
 			var post_data:URLVariables = new URLVariables();
 				post_data.command = command;
 				post_data.command_parameter = command_parameter;
-				post_data.session_key = session_key;
+				post_data.macaddress = mac_address;
+				post_data.sessionkey = session_key;
 			
 			var xmlloadervars:XMLLoaderVars = new XMLLoaderVars();
 				xmlloadervars.noCache(true);
@@ -157,6 +189,7 @@ package imree
 				post_data.command = command;
 				post_data.command_parameter = command_parameter;
 				post_data.session_key = session_key;
+				post_data.macaddress = mac_address;
 				
 			if (elevatedPrivileges && username.length > 0 && password.length > 0) {
 				post_data.username = username;

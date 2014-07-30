@@ -75,6 +75,10 @@ package imree.display_helpers {
 		private var btn_confirm:smart_button;
 		private var btn_cancel:smart_button;
 		private var search_bt:smart_button;
+		private var next_page:smart_button;
+		private var prev_page:smart_button;
+		private var page:int;
+		private var search_query:String;
 		public var t:module;
 		public function search(_onComplete:Function, _main:Main, _Module:module, _onDestroy:Function, _w:int = 300, _h:int = 300) {
 			onComplete = _onComplete;
@@ -264,10 +268,11 @@ package imree.display_helpers {
 				//spinner.x = search_submit.x;
 				
 			}
+			this.page = 1;
+			this.search_query = search_box.get_value();
+			var data:Object = { search_query:String(search_box.get_value()), page:int(page) };
 			
-			main.connection.server_command("search", search_box.get_value(), results, true);
-			
-			
+			main.connection.server_command("search", data, results, true);	
 		}
 		
 		private function results(e:LoaderEvent):void {
@@ -278,26 +283,23 @@ package imree.display_helpers {
 				spinner = null;
 								
 				search_submit.visible = true;
-				
-				
-		}
-			
+			}
 			
 			var xml:XML = XML(e.target.content);
+			
+			
 			
 			var scroller_contents:Sprite = new Sprite();
 			if (xml.result.children.children().length() == 0) {
 				
-				main.toast("No Results");
-				
-				
-							
+				main.toast("No Results");			
 			}
+			
+			var count:int = xml.result.children.children().length();
 			
 			var boxes:Vector.<DisplayObjectContainer> = new Vector.<DisplayObjectContainer>();
 			
-			for (var i:String in xml.result.children.children()) {
-							
+			for (var i:String in xml.result.children.children()) {			
 				var bk:box = new box(main.Imree.Device.box_size, main.Imree.Device.box_size, 0xF0F0F0, 1, 1);
 				bk.data = { repository:xml.result.children.children()[i].repository, id:xml.result.children.children()[i].id, collection:xml.result.children.children()[i].collection };
 				var image_portion_of_bk:box = new box(bk.width, bk.height * .75);
@@ -351,7 +353,6 @@ package imree.display_helpers {
 				
 			}
 			
-			
 			TweenLite.to(search_ui_wrapper, .25, { alpha:0 } );
 			TweenLite.from(wrapper, .35, { alpha:0 } );
 			
@@ -398,24 +399,60 @@ package imree.display_helpers {
 			 */
 			
 			var btn_cancel_UI:Button = new Button();
-				btn_cancel_UI.setSize(80, 40);
+				btn_cancel_UI.setSize(80, 50);
 				btn_cancel_UI.label = "Cancel";
 				
 			var search_bt_UI:Button = new Button();
-				search_bt_UI.setSize(100, 40);
+				search_bt_UI.setSize(100, 50);
 				search_bt_UI.label = "Search Again";
 								
 			var btn_confirm_UI:Button = new Button();
-				btn_confirm_UI.setSize(80, 40);
+				btn_confirm_UI.setSize(80, 50);
 				btn_confirm_UI.label = "Import";
+				
+			var next_page_UI:Button = new Button();
+				next_page_UI.setSize(100, 50);
+				next_page_UI.label = "Next Page";
+				
+			var prev_page_UI:Button = new Button();
+				prev_page_UI.setSize(100, 50);
+				prev_page_UI.label = "Previous Page";	
 				
 			btn_cancel = new smart_button(btn_cancel_UI, cancel);
 			search_bt = new smart_button(search_bt_UI, goBack);
 			btn_confirm = new smart_button(btn_confirm_UI, confirm);
+			next_page = new smart_button(next_page_UI, next);
+			prev_page = new smart_button(prev_page_UI, previous);
 			btn_confirm.disable();
 			var top_buttons:Vector.<smart_button> = new Vector.<smart_button>();
-			top_buttons.push(btn_cancel,search_bt, btn_confirm);
+			top_buttons.push(btn_cancel, search_bt, btn_confirm, prev_page, next_page);
+			if (page <= 1)
+				{
+					prev_page.disable();
+				}
 			
+			function next(me:*= null):void
+			{
+				if (!(count < 10)){
+					page += 1;
+					var data:Object = { search_query:String(search_query), page:int(page) };
+					main.connection.server_command("search", data, results, true);
+					next_page.disable();
+				}else {
+					next_page.disable();
+				}
+			}
+			
+			function previous(me:*= null):void
+			{
+				if (page > 1)//extra check
+				{
+					page -= 1;
+					var data:Object = { search_query:String(search_query), page:int(page) };
+					main.connection.server_command("search", data, results, true);
+					prev_page.disable();
+				}
+			}
 			
 			function cancel(me:*= null):void {
 				for each (var bk:box in boxes) {
@@ -428,7 +465,7 @@ package imree.display_helpers {
 				
 				draw_search_box();
 				
-				}
+			}
 			function confirm(me:*= null):void {
 				var ingestion_count:int = 0;
 				for each(var selection:data_value_pair in selections) {

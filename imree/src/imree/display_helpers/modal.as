@@ -76,7 +76,7 @@ package imree.display_helpers {
 			new_buttons(buttons);
 			
 			if (objects !== null) {
-				add_displayObjects_as_grid(objects);
+				add_displayObjects_as_grid(objects); //@todo fix this
 			}
 		}
 		public function close(e:*=null):void {
@@ -120,6 +120,7 @@ package imree.display_helpers {
 			}
 		}
 		
+		//@todo fix this crops top/bottom of images
 		public function add_displayObjects_as_grid(items:Vector.<DisplayObjectContainer>, padding:int = 10 ):void {
 			var proxies:Vector.<position_data> = new Vector.<position_data>();
 			for each(var obj:DisplayObjectContainer in items) {

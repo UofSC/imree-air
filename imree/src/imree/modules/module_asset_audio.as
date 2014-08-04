@@ -16,6 +16,7 @@ package imree.modules
 	import com.greensock.*;
 	import com.greensock.loading.display.*;
 	import com.greensock.plugins.*;
+	import flash.media.MediaPromise;
 	import flash.text.TextFormat;
 	import imree.display_helpers.modal;
 	import imree.forms.f_data;
@@ -27,7 +28,7 @@ package imree.modules
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
 	import flash.display.SimpleButton;
-	import flash.events.MouseEvent;
+	import flash.events.*;
 	import flash.net.URLRequest;
 	import flash.net.URLRequestMethod;
 	import flash.net.URLVariables;
@@ -38,6 +39,18 @@ package imree.modules
 	import imree.shortcuts.box;
 	import fl.controls.Button;
 	
+	//I added these
+	import imree.display_helpers.smart_button;
+	import flash.filesystem.File;
+	import flash.net.FileReference; 
+	import flash.net.FileFilter;
+	import flash.utils.ByteArray;
+	import flash.net.URLLoader;
+	import flash.net.URLLoaderDataFormat;
+	import flash.net.URLStream;
+	import com.marston.utils.URLRequestWrapper;
+	import imree.modules.module;
+	
 	TweenPlugin.activate([VolumePlugin]);
 	
 	/**
@@ -47,7 +60,7 @@ package imree.modules
 	public class module_asset_audio extends module_asset
 	{
 		public var thumbnail_url:String;
-		
+		private var add_image:smart_button;
 		
 		public function module_asset_audio(_main:Main, _Exhibit:exhibit_display, _items:Vector.<module> = null)
 		{
@@ -193,8 +206,53 @@ package imree.modules
 			}
 		
 		}
-	
-	
+		
+		//ADD IMAGE TO AUDIO BUTTON
+		private var f : File = new File; 
+		private var fileRef : FileReference = new FileReference();
+		private var loader:URLLoader;
+		
+	    public function add_image_to_audio(me:*= null):void
+		{
+			fileRef.addEventListener(Event.SELECT, onImageSelected);
+			var ff:FileFilter = new FileFilter("Images", "*.jpg");
+			fileRef.browse([ff]);		
+		}
+		
+		private function onImageSelected(event:Event):void
+		{
+			fileRef.removeEventListener(Event.SELECT, onImageSelected);
+			fileRef.addEventListener(Event.COMPLETE, onImageLoaded);
+			fileRef.load();
+		}
+		
+		
+		private function onImageLoaded(event:Event):void
+		{
+			fileRef.removeEventListener(Event.COMPLETE, onImageLoaded);
+			var bytes:ByteArray = fileRef.data;
+			var urlwrapper:URLRequestWrapper = new URLRequestWrapper(bytes, "image.jpg", null, {'command':'upload_bytes', 'module_asset_id':module_asset_id, 'module_id':0, 'username':main.connection.username, 'password':main.connection.password})
+			urlwrapper.url = main.connection.uri;
+			loader = new URLLoader();
+			loader.addEventListener(Event.COMPLETE, onImageUpload);
+			loader.addEventListener(IOErrorEvent.IO_ERROR, camera_error);
+			loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, camera_error);
+			loader.load(urlwrapper.request);
+		}
+		
+		function camera_error(e:*):void
+		{
+				main.toast(String(e));
+		}
+		
+		private function onImageUpload(event:Event):void
+		{
+			loader.removeEventListener(Event.COMPLETE, onImageUpload);
+			loader.removeEventListener(IOErrorEvent.IO_ERROR, camera_error);
+			loader.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, camera_error);
+		}
+		
+		
 		override public function draw_edit_UI(e:* = null, animate:Boolean = true, start_at_position:int = 0):void {
 			sound.dispose();
 			
@@ -211,7 +269,8 @@ package imree.modules
 			//button_ui.addEventListener(MouseEvent.CLICK);
 			button_ui.x = edit_ui.width * .9;
 			button_ui.y = edit_ui.height * .3;
-			edit_ui.addChild(button_ui);
+			add_image = new smart_button(button_ui, add_image_to_audio);
+			edit_ui.addChild(add_image);
 			
 			asset_editor = new modal(main.Imree.staging_area.width, main.Imree.staging_area.height, null, edit_ui);
 			main.Imree.Exhibit.overlay_add(asset_editor);

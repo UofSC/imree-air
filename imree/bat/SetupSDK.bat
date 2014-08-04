@@ -1,7 +1,8 @@
 :user_configuration
 
 :: Path to Flex SDK
-set FLEX_SDK=C:\Program Files (x86)\FlashDevelop\Tools\flexairsdk\4.6.0+14.0.0
+:: RUN git update-index --assume-unchanged imree/bat/SetupSDK.bat to ignore this file locally
+set FLEX_SDK=C:\Users\COULIB-videoUser\AppData\Local\FlashDevelop\Apps\flexairsdk\4.6.0+14.0.0
 set AUTO_INSTALL_IOS=yes
 
 :: Path to Android SDK

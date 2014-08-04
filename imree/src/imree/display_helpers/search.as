@@ -219,6 +219,7 @@ package imree.display_helpers {
 				main.toast(String(ioerror));
 				main.toast("Failed to load");
 			}
+			
 			function onMediaPromiseLoaded(e:Event):void {
 				var mpLoaderInfo:LoaderInfo = e.target as LoaderInfo;
 				mpLoaderInfo.removeEventListener(Event.COMPLETE, onMediaPromiseLoaded);

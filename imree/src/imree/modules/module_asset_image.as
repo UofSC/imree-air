@@ -6,6 +6,7 @@ package imree.modules
 	import com.greensock.events.LoaderEvent;
 	import com.greensock.layout.ScaleMode;
 	import com.greensock.loading.data.ImageLoaderVars;
+	import com.greensock.loading.data.MP3LoaderVars;
 	import com.greensock.loading.display.ContentDisplay;
 	import com.greensock.loading.ImageLoader;
 	import com.greensock.loading.LoaderMax;
@@ -15,9 +16,8 @@ package imree.modules
 	import flash.display.BlendMode;
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
-	import flash.events.Event;
-	import flash.events.MouseEvent;
-	import flash.events.TransformGestureEvent;
+	import flash.events.*;
+	
 	import flash.net.URLRequest;
 	import flash.net.URLRequestMethod;
 	import flash.net.URLVariables;
@@ -33,12 +33,25 @@ package imree.modules
 	import imree.text;
 	import imree.data_helpers.Theme;
 	
+	import imree.display_helpers.smart_button;
+	import flash.filesystem.File;
+	import flash.net.FileReference; 
+	import flash.net.FileFilter;
+	import flash.utils.ByteArray;
+	import flash.net.URLLoader;
+	import flash.net.URLLoaderDataFormat;
+	import flash.net.URLStream;
+	import com.marston.utils.URLRequestWrapper;
+	import imree.modules.module;
+	import com.greensock.loading.data.MP3LoaderVars;
+	import com.greensock.loading.*;
 	/**
 	 * ...
 	 * @author Jason Steelman
 	 */
 	public class module_asset_image extends module_asset
 	{
+		private var add_audio:smart_button;
 		
 		public function module_asset_image(_main:Main, _Exhibit:exhibit_display, _items:Vector.<module> = null)
 		{
@@ -141,6 +154,15 @@ package imree.modules
 			imgvars_ex_tb.container(ex_bkg_img);
 			imgvars_ex_tb.estimatedBytes(20000);
 			
+			var button_ui:Button = new Button();
+			button_ui.setSize(150, 40);
+			button_ui.label = "Attach an Audio file\nto this Image";
+			//button_ui.addEventListener(MouseEvent.CLICK);
+			button_ui.x = add_as_exhibit_background_ui.x;
+			button_ui.y = add_as_exhibit_background_ui.y + 50;
+			add_audio = new smart_button(button_ui, add_audio_to_image);
+			editor.addChild(add_audio);
+			
 			var target_url:String = asset_url;
 			if (can_resize)
 			{
@@ -155,6 +177,51 @@ package imree.modules
 			main.Imree.Exhibit.overlay_add(asset_editor);
 		
 		}
+		
+		//Add audio to image
+		private var f : File = new File; 
+		private var fileRef : FileReference = new FileReference();
+		private var loader:URLLoader;
+		
+		private function add_audio_to_image(me:*= null):void
+		{
+			fileRef.addEventListener(Event.SELECT, on_audio_selected);
+			var ff:FileFilter = new FileFilter("Audio", "*.mp3");
+			fileRef.browse([ff]);	
+		}
+		
+		private function on_audio_selected(e:Event):void
+		{
+			fileRef.removeEventListener(Event.SELECT, on_audio_selected);
+			fileRef.addEventListener(Event.COMPLETE, on_audio_loaded);
+			fileRef.load();
+		}
+		
+		private function on_audio_loaded(e:Event):void
+		{
+			fileRef.removeEventListener(Event.COMPLETE, on_audio_loaded);
+			var bytes:ByteArray = fileRef.data;
+			var urlwrapper:URLRequestWrapper = new URLRequestWrapper(bytes, "audio.mp3", null, {'command':'upload_bytes', 'module_asset_id':module_asset_id, 'change_thumbnail':false, 'module_id':0, 'username':main.connection.username, 'password':main.connection.password})
+			urlwrapper.url = main.connection.uri;
+			loader = new URLLoader();
+			loader.addEventListener(Event.COMPLETE, on_audio_uploaded);
+			loader.addEventListener(IOErrorEvent.IO_ERROR, camera_error);
+			loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, camera_error);
+			loader.load(urlwrapper.request);
+		}
+		
+		private function camera_error(e:*):void
+		{
+			main.toast(String(e));
+		}
+		
+		private function on_audio_uploaded(e:Event):void 
+		{
+			loader.removeEventListener(Event.COMPLETE, on_audio_uploaded);
+			loader.removeEventListener(IOErrorEvent.IO_ERROR, camera_error);
+			loader.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, camera_error);
+		}
+		
 		
 		private function add_as_exhibit_background_clicked(e:MouseEvent):void
 		{
@@ -173,6 +240,8 @@ package imree.modules
 		}
 		
 		public var image_bounding_box:box;
+		private var sound:MP3Loader;
+		
 		override public function draw_feature_content(interactive:Boolean = true, onDownloaded:Function = null):void
 		{
 			
@@ -300,9 +369,56 @@ package imree.modules
 					onDownloaded();
 				}
 			}
+			if (asset_relations.length === 1) 
+			{
+				var relation:module_asset = asset_relations[0];
+				relation.asset_content_wrapper = asset_content_wrapper;
+				if (relation is module_asset_audio) 
+				{
+					sound = new MP3Loader(relation.asset_url, { autoPlay:true, noCache:true } );
+					sound.load();
+					
+					var play_button:button_play = new button_play();
+					main.Imree.UI_size(play_button);
+					play_button.x = text_backgound.width / 2 - play_button.width / 2;
+					play_button.y = text_backgound.height - play_button.height -30;
+					text_backgound.addChild(play_button);
+					var pause_button:button_pause = new button_pause();
+					main.Imree.UI_size(pause_button);
+					pause_button.x = play_button.x;
+					pause_button.y = play_button.y;
+					text_backgound.addChild(pause_button);
+					play_button.visible = false;
+					
+					TweenLite.from(pause_button, 1, { y:pause_button.y + pause_button.height * 2, x: pause_button.x - pause_button.width * .5, scaleX:2, scaleY:2, ease:Cubic.easeOut } );
+			
+					play_button.addEventListener(MouseEvent.CLICK, play_button_clicked);
+					function play_button_clicked(a_variable_that_dont_matter:MouseEvent):void {
+						TweenLite.to(sound, .5, {volume: 1, onComplete: onCompletePause});
+						play_button.visible = false;
+						pause_button.visible = true;
+					}
+					pause_button.addEventListener(MouseEvent.CLICK, pause_button_clicked);
+					function pause_button_clicked(a_variable_that_dont_matter:MouseEvent):void {
+						TweenLite.to(sound, .5, {volume: 0, onComplete: onCompletePause});
+						play_button.visible = true;
+						pause_button.visible = false;
+					}
+					function onCompletePause(e:* = null):void {
+						sound.paused = !sound.paused;
+					}
+					
+					asset_content_wrapper.addEventListener(Event.REMOVED_FROM_STAGE, stop_playing_the_damn_sound);
+					function stop_playing_the_damn_sound(dummy_var:Event):void {
+						sound.pause();
+						sound.dispose();
+					}
+				}
+			}
 			
 			super.draw_feature_content();
 		}
 	
+		
 	}
 }

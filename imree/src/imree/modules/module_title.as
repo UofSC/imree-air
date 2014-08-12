@@ -28,7 +28,6 @@ package imree.modules
 	{
 		private var edit_x:int;
 		private var edit_y:int;
-		//private var title_h:int;
 		public function module_title(_main:Main, _Exhibit:exhibit_display, _items:Vector.<module>=null)
 		{
 			t = this;
@@ -59,7 +58,6 @@ package imree.modules
 			covertext.y = (_h * .6) / 2 - covertext.height / 2;
 			edit_x = covertext.x;
 			edit_y = covertext.y;
-			//title_h = covertext.height/2;
 			addChild(covertext);
 			addChild(new box(_w * .5, _h * .5));
 			phase_feature = true;

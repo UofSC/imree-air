@@ -3,6 +3,7 @@ package imree.forms
 	import flash.accessibility.Accessibility;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
@@ -68,10 +69,22 @@ package imree.forms
 					form.y = 50;
 				auth_wrapper.addChild(form);
 				
+				
 				status = new text("Supports QR = " + main.Imree.Device.supports_qr, auth_wrapper.width, new textFont( '_sans', 18));
 				status.y = form.height + 50 + 10;
 				status.center_x(auth_wrapper);
 				auth_wrapper.addChild(status);
+				
+				form.addEventListener(KeyboardEvent.KEY_DOWN, enter_pressed);
+				
+				function enter_pressed(e:KeyboardEvent):void
+				{
+					if (e.charCode == 13) 
+					{
+						form.removeEventListener(KeyboardEvent.KEY_DOWN, enter_pressed);
+						form.submit();
+					}
+				}
 				
 				var close_bt:Button = new Button();
 				close_bt.setSize(85, 35);
@@ -87,11 +100,9 @@ package imree.forms
 					removeChild(auth_wrapper);
 					removeChild(background);
 					close_bt.removeEventListener(MouseEvent.CLICK, close_auth);
-					
+					form.removeEventListener(KeyboardEvent.KEY_DOWN, enter_pressed);
 					
 					}
-				
-				
 				
 			} else {
 				trace("how you say already logged in?");

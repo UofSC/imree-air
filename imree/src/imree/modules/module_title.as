@@ -26,6 +26,9 @@ package imree.modules
 	 */
 	public class module_title extends module
 	{
+		private var edit_x:int;
+		private var edit_y:int;
+		//private var title_h:int;
 		public function module_title(_main:Main, _Exhibit:exhibit_display, _items:Vector.<module>=null)
 		{
 			t = this;
@@ -54,6 +57,9 @@ package imree.modules
 			
 			covertext.x = (_w * .6) / 2 - covertext.width / 2;
 			covertext.y = (_h * .6) / 2 - covertext.height / 2;
+			edit_x = covertext.x;
+			edit_y = covertext.y;
+			//title_h = covertext.height/2;
 			addChild(covertext);
 			addChild(new box(_w * .5, _h * .5));
 			phase_feature = true;
@@ -67,11 +73,11 @@ package imree.modules
 			}
 			if (!contains(edit_button)) {
 				addChild(edit_button);
-				edit_button.x = 0
-				edit_button.y -= edit_button.height;
-				edit_button.transform.colorTransform = Theme.color_transform_page_buttons;
-
+				edit_button.x = edit_x - (edit_button.width);
+				edit_button.y = edit_y;
 				
+				edit_button.transform.colorTransform = Theme.color_transform_page_buttons;
+			
 				TweenLite.from(edit_button, 1, {scaleX: .2, scaleY:.2, alpha:0, ease:Cubic.easeOut})
 			}
 			if (!edit_button.hasEventListener(MouseEvent.CLICK)) {

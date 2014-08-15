@@ -251,6 +251,11 @@ package imree
 				}
 				
 				Menu.update();
+				removeChild(Home);
+				Home = new home(staging_area.width, staging_area.height, main);
+				Home.onSelect = load_exhibit;
+				addChild(Home);
+				current_page = Home;
 				for (var i:String in pages) {
 					if (pages[i] is exhibit_display) {
 						exhibit_display(pages[i]).update_user_privileges();

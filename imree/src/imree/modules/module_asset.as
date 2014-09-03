@@ -135,7 +135,7 @@ package imree.modules
 				back.addEventListener(MouseEvent.CLICK, asset_back_click);
 			} else {
 				back.alpha = .3;
-				next.addEventListener(MouseEvent.CLICK, close_asset_window);
+				back.addEventListener(MouseEvent.CLICK, close_asset_window);
 			}
 			function close_asset_window(r:MouseEvent):void {
 				main.Imree.Exhibit.overlay_remove();

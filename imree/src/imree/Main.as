@@ -72,8 +72,9 @@ package imree
 		public var image_loader_que:LoaderMax;
 		public var aud_loader_queue:LoaderMax;
 		public var preloader:Preloader;
+		public var Kiosk:Boolean = false;
 		public var mode:String;
-		
+		public var K:kiosk;
 		public var t:Main;
 		
 		public function Main():void
@@ -142,6 +143,14 @@ package imree
 						load_signage();
 						t.preloader.hide();
 					}
+					else if (xml.result.mode == 'kiosk')
+					{
+						trace("Entering Kiosk Mode");
+						Kiosk = true;
+						t.preloader.hide();
+						connection.session_key = xml.result.key;
+						load_kiosk(t, xml.result.exhibit, xml.result.module);
+					}
 					else
 					{
 						connection.session_key = xml.result.key;
@@ -172,6 +181,14 @@ package imree
 			}
 		}
 		
+		public function load_kiosk(t:Main, exhibit_id:int, start_at_module:int):void
+		{
+			stage.displayState = StageDisplayState.FULL_SCREEN;
+			Imree = new IMREE(t);
+			K = new kiosk(t, Imree, exhibit_id, start_at_module);
+			addChild(K);
+		}
+		
 		public function fullscreen_up(e:MouseEvent):void
 		{
 			stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
@@ -183,6 +200,8 @@ package imree
 			stage.displayState = StageDisplayState.NORMAL;
 		
 		}
+		
+		
 		
 		public function orientation_update(e:* = null):void
 		{

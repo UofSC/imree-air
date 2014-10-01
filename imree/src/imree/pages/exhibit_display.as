@@ -72,6 +72,7 @@ package imree.pages
 		public var overlay:Sprite;
 		public var navigator:exhibit_navigator;
 		public var user_can_edit:Boolean = false;
+		public var next_button_module:module_next;
 		
 		public function exhibit_display(_id:int, _w:int, _h:int, _main:Main)
 		{
@@ -130,7 +131,7 @@ package imree.pages
 					current_module_i = start_at;
 					draw(start_at);
 				}
-				update_user_privileges();
+				//update_user_privileges();
 				update_navigator();
 			}
 		}
@@ -146,9 +147,9 @@ package imree.pages
 				}
 			}
 			
-			if (has_next)
+			if (has_next && (!main.Kiosk))
 			{
-				var next_button_module:module_next = new module_next(main, t, null);
+				next_button_module = new module_next(main, t, null);
 				result.push(next_button_module);
 				next_button_module.onSelect = draw_next;
 			}
@@ -396,7 +397,7 @@ package imree.pages
 		}
 		
 		
-		public function draw(id:int, focus_on_sub_module:int =0):void
+		public function draw(id:int, focus_on_sub_module:int = 0):void
 		{
 			modules[id].show();
 			modules[id].draw_feature(w, h);

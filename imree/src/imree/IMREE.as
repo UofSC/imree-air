@@ -66,6 +66,7 @@ package imree
 		public var menu_items:Vector.<DisplayObject>;
 		public var current_page:DisplayObject;
 		public var staging_area:box;
+	
 		public function IMREE(_main:Main, start_at_exhibit:int = -1, start_at_module:int = 0, start_at_sub_module:int = 0) 
 		{
 			main = _main;
@@ -92,25 +93,26 @@ package imree
 				
 			}
 			
-			
-			Home = new home(staging_area.width, staging_area.height, main);
-			Home.onSelect = load_exhibit;
-			pages = new Vector.<DisplayObject>();
-			addChild(Home);
-			current_page = Home;
-			
-			//menu is added last so it is on top of display list
-			menu_items = new Vector.<DisplayObject>();
-			menu_items.push(new smart_button(new button_home(), show_home));
-			if (!main.connection.password_is_set()) {
-				menu_items.push(new smart_button(new button_login(), show_authentication));
+			//remove menu from kiosk mode
+			if (!main.Kiosk) {
+				Home = new home(staging_area.width, staging_area.height, main);
+				Home.onSelect = load_exhibit;
+				pages = new Vector.<DisplayObject>();
+				addChild(Home);
+				current_page = Home;
+				
+				//menu is added last so it is on top of display list
+				menu_items = new Vector.<DisplayObject>();
+				menu_items.push(new smart_button(new button_home(), show_home));
+				if (!main.connection.password_is_set()) {
+					menu_items.push(new smart_button(new button_login(), show_authentication));
+				}
+				Menu = new menu(menu_items,main,this,menu_can_hide);
+				addChild(Menu);
+				Menu.y = 0 - staging_area.y;
+		
+				pages.push(Home);
 			}
-			Menu = new menu(menu_items,main,this,menu_can_hide);
-			addChild(Menu);
-			Menu.y = 0 - staging_area.y;
-			
-			pages.push(Home);
-			
 			/**
 			 * SECTION: test for QR code support. 
 			 * Scanner.isSupported reports false negative. This is not coming from the src, but the compiled ane.
@@ -365,20 +367,27 @@ package imree
 			}
 			Exhibit = new exhibit_display(int(exhibit_id), staging_area.width, staging_area.height, main);
 			Exhibit.load(start_at, focus_on_sub_module);
-			pages.push(Exhibit);
+			
 			
 			if (freeze_obj !== null) {
 				addChild(freeze_obj);
 				TweenLite.to(freeze_obj, 1, { alpha:0, delay:1 } );
 			}
+			
 			addChild(Exhibit);
-			web_bar()
-			addChildAt(Menu, numChildren);
+			web_bar();
+			if (!main.Kiosk){
+				pages.push(Exhibit);
+				addChildAt(Menu, numChildren);
+			}else {
+				//Exhibit.removeChild(Exhibit.next_button_module);
+			}
 			current_page = Exhibit;
+			
 		}
 		
 		private var web_bar_wrapper:box;
-		private var web_bar_items:Vector.<DisplayObject>
+		private var web_bar_items:Vector.<DisplayObject>;
 		static public var web_bar_height:int;
 		public var fullscreen_button:button_full_screen;
 		public var fullscreen_restore_button:button_restore_screen;
@@ -462,6 +471,8 @@ package imree
 				web_bar();
 			}
 		}
+		
+	
 		
 		private function stage_resized(e:Event):void {
 			web_bar();

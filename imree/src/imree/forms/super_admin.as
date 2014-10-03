@@ -28,13 +28,20 @@ package imree.forms
 			
 			options = new f_element_DynamicOptions(main.connection, 'exhibits', 'exhibit_id', 'exhibit_name');
 			
+			//prepare list of valid themes
+			var theop:Vector.<data_value_pair> = new Vector.<data_value_pair>();
+			theop.push(new data_value_pair("Theme 1", 1));
+			theop.push(new data_value_pair("Theme 2", 2));
+			theop.push(new data_value_pair("Theme 3", 3));
+			theop.push(new data_value_pair("Theme 4", 4));
+			
 			var exh:Vector.<f_element> = new Vector.<f_element>();
 			exh.push(new f_element_text("Name", "exhibit_name"));
 			exh.push(new f_element_text("Start Date", "exhibit_date_start"));
 			exh.push(new f_element_text("Start End", "exhibit_date_end"));
-			var departments:f_element_select = new f_element_select("Deptartment", "exhibit_department_id", null, "Please Select");
+			var departments:f_element_select = new f_element_select("Department", "exhibit_department_id", null, "Please Select");
 			departments.dynamic_options = new f_element_DynamicOptions(main.connection, 'departments', 'department_id', 'department_name');
-			exh.push(new f_element_text("Theme", "theme_id"));
+			exh.push(new f_element_select("Theme", "theme_id", theop, "Please Select"));
 			exh.push(departments);
 			
 			form = new f_data(exh);

@@ -131,7 +131,7 @@ package imree.pages
 					current_module_i = start_at;
 					draw(start_at);
 				}
-				//update_user_privileges();
+				update_user_privileges();
 				update_navigator();
 			}
 		}

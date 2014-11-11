@@ -33,3 +33,8 @@ imree/obj/imreeConfig.old
 imree/obj/imreeConfig.xml
 *.png
 imree/obj/imreeConfig.xml
+imree/bat/SetupSDK.bat
+imree/bat/SetupSDK.bat
+imree/obj/imreeConfig.old
+imree/obj/imreeConfig.xml
+imree/src/IMREE-app.xml

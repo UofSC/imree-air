@@ -34,7 +34,7 @@ package imree.modules
 	import imree.data_helpers.Theme;
 	
 	import imree.display_helpers.smart_button;
-	import flash.filesystem.File;
+	import flash.filesystem.*;
 	import flash.net.FileReference; 
 	import flash.net.FileFilter;
 	import flash.utils.ByteArray;
@@ -179,7 +179,7 @@ package imree.modules
 		}
 		
 		//Add audio to image
-		private var f : File = new File; 
+		//private var f : File = new File; 
 		private var fileRef : FileReference = new FileReference();
 		private var loader:URLLoader;
 		

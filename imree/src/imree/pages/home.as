@@ -115,8 +115,10 @@ package imree.pages
 				if (main.image_is_resizeable(temp_url)) {
 					temp_url = main.image_url_resized(temp_url, String(Math.ceil(exhibit_cover_wrapper.height)));
 				}
-				trace(temp_url);
-				new ImageLoader(temp_url, img_loader_vars).load();
+				if (temp_url !== "") {
+					new ImageLoader(temp_url, img_loader_vars).load();
+				}
+				
 				var format:textFont = new textFont("OpenSans", 18);
 				format.align = TextFormatAlign.CENTER;
 				format.color = 0xDEDEDE;

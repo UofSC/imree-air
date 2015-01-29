@@ -139,11 +139,11 @@ package imree.modules
 			add_as_exhibit_background_ui.label = "Use as Exhibit Background";
 			add_as_exhibit_background_ui.alpha = 1;
 			add_as_exhibit_background_ui.addEventListener(MouseEvent.CLICK, add_as_exhibit_background_clicked);
-			add_as_exhibit_background_ui.x = editor.width * .9;
+			add_as_exhibit_background_ui.x = editor.width * 1.0;
 			add_as_exhibit_background_ui.y = editor.height * .3;
 			
 			var ex_bkg_img:box = new box(175, 175, 0xfdfdfd, 1);
-			ex_bkg_img.x = editor.width * .9;
+			ex_bkg_img.x = add_as_exhibit_background_ui.x;
 			editor.addChild(ex_bkg_img);
 			
 			var imgvars_ex_tb:ImageLoaderVars = new ImageLoaderVars();

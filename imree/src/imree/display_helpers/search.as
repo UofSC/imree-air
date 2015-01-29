@@ -46,6 +46,8 @@ package imree.display_helpers {
 	import imree.layout;
 	import imree.Main;
 	import imree.modules.module;
+	import imree.modules.module_grid;
+	import imree.modules.module_narrative;
 	import imree.shortcuts.box;
 	import imree.text;
 	import imree.textFont;
@@ -125,11 +127,18 @@ package imree.display_helpers {
 			search_ui_wrapper.addChild(search_submit);
 			search_submit.x = search_box.width + 10;
 			
-			if (allow_modules) {
+			//var datas:Array = [{label:"Title", data:"title"}, {label:"Linear/Narrative",data:"narrative"}, {label:"Grid/Gallery",data:"grid"}, {label:'Book/Pagination',data:'pager'} ];
+			var datas:Array;
+			if (Module is module_grid) {
+				datas = [{label:'Book/Pagination',data:'pager'}];
+			} else if (Module is module_narrative) {
+				datas = [{label:"Title", data:"title"}, {label:"Grid/Gallery",data:"grid"}];
+			} 
+			
+			if (allow_modules && datas.length > 0) {
 				var selector:ComboBox = new ComboBox();
 				selector.prompt = "Add new module";
 				selector.setSize(120, 20);
-				var datas:Array = [{label:"Title", data:"title"}, {label:"Linear/Narrative",data:"narrative"}, {label:"Grid/Gallery",data:"grid"}, {label:'Book/Pagination',data:'pager'} ];
 				selector.dataProvider = new DataProvider(datas);
 				selector.addEventListener(Event.CHANGE, add_module_by_name);
 				search_ui_wrapper.addChild(selector);
@@ -146,8 +155,8 @@ package imree.display_helpers {
 			
 			
 			var upload_button:Button = new Button();
-			upload_button.label = "Upload New Video";
-			upload_button.setSize(120, 20);
+			upload_button.label = "Upload Video, Images, or Zip";
+			upload_button.setSize(150, 20);
 			search_ui_wrapper.addChild(upload_button);
 			upload_button.x = search_ui_wrapper.width / 2 - upload_button.width / 2 + 120;
 			upload_button.y = 50;
@@ -159,7 +168,8 @@ package imree.display_helpers {
 			function upload_get_file_reference(me:MouseEvent):void {
 				reference = new FileReference();
 				reference.addEventListener(Event.SELECT, upload_do_upload);
-				//var filefilter:FileFilter = new FileFilter("Videos : (*.m4v, *.mp4)", "*.mp4, *.m4v");
+				//var filefilterVideo:FileFilter = new FileFilter("Videos (*.m4v, *.mp4)", "*.mp4, *.m4v");
+				//var filefilterVideo:FileFilter = new FileFilter("Images (*.jpg, *.jpeg)", "*.jpg, *.jpeg");
 				reference.browse();
 			}
 			function upload_do_upload(Evt:Event):void {

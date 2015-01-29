@@ -113,6 +113,34 @@ package imree.forms
 			
 			
 			
+			var add_user_perm:Vector.<f_element> = new Vector.<f_element>();
+			
+			var add_user_perm_user:f_element_select = new f_element_select("User", "person_id", null, 'User');
+			add_user_perm_user.dynamic_options = new f_element_DynamicOptions(main.connection, 'people', 'person_id', 'person_name_last');
+			add_user_perm.push(add_user_perm_user);
+			
+			var add_user_perm_exhibit:f_element_select = new f_element_select("Exhibit", "exhibit_id", null, 'Exhibit');
+			add_user_perm_exhibit.dynamic_options = new f_element_DynamicOptions(main.connection, 'exhibits', 'exhibit_id', 'exhibit_name');
+			add_user_perm.push(add_user_perm_exhibit);
+			
+			var add_user_perm_form:f_data = new f_data(add_user_perm);
+			add_user_perm_form.onSubmit = add_user_perm_form_submited;
+			add_user_perm_form.edit_siblings_allowed = false;
+			add_user_perm_form.conn = main.connection;
+			add_user_perm_form.draw();
+			addChild(add_user_perm_form);
+			var add_user_perm_form_label:text = new text("Grant someone permission to edit an exhibit", 400, textf);
+			addChild(add_user_perm_form_label);
+			
+			function add_user_perm_form_submited(obj:Object):void {
+				main.connection.server_command("add_permissions", obj, add_user_perm_form_response, true);
+			}
+			function add_user_perm_form_response(data:LoaderEvent):void {
+				main.toast("Permissions Granted");
+			}
+			
+			
+			
 			if (main.Imree.Device.orientation === "portrait") {
 				form_label.x = 20;
 				form_label.y = 20;
@@ -134,15 +162,20 @@ package imree.forms
 				form.x = 20;
 				form.y = form_label.height + form_label.y +10;
 				
-				edit_user_form_label.x =  form.width+100;
+				edit_user_form_label.x =  form.width+50;
 				edit_user_form_label.y = 20;
-				edit_user_form.x = form.width+100;
+				edit_user_form.x = form.width+50;
 				edit_user_form.y = edit_user_form_label.height + edit_user_form_label.y +10;
 				
-				new_user_form_label.x =  edit_user_form.x + edit_user_form.width + 100;
+				new_user_form_label.x =  edit_user_form.x + edit_user_form.width + 50;
 				new_user_form_label.y = 20;
-				new_user_form.x = edit_user_form.x + edit_user_form.width+100;
+				new_user_form.x = edit_user_form.x + edit_user_form.width+50;
 				new_user_form.y = new_user_form_label.height + new_user_form_label.y +10;
+				
+				add_user_perm_form_label.x = new_user_form.x + new_user_form.width + 50;
+				add_user_perm_form_label.y = 20;
+				add_user_perm_form.x = new_user_form.x + new_user_form.width + 50;
+				add_user_perm_form.y = add_user_perm_form_label.height + add_user_perm_form_label.y + 10;
 			}
 		}
 		

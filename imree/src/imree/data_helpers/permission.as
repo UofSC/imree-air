@@ -1,5 +1,6 @@
 package imree.data_helpers 
 {
+	import com.demonsters.debugger.MonsterDebugger;
 	/**
 	 * ...
 	 * @author Jason Steelman
@@ -20,7 +21,8 @@ package imree.data_helpers
 			if (permission_level === NONE) {
 				return false;
 			}
-			return test_level.length < permission_level.length;
+			MonsterDebugger.log(test_level + " VS " + permission_level);
+			return test_level.length <= permission_level.length;
 		}
 		
 	}

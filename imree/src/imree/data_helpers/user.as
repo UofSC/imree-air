@@ -1,5 +1,6 @@
 package imree.data_helpers 
 {
+	import com.demonsters.debugger.MonsterDebugger;
 	import imree.Main;
 	import imree.serverConnect;
 	/**
@@ -39,15 +40,20 @@ package imree.data_helpers
 			
 			var target_privilege:user_privilege;
 			for each(var i:user_privilege in user_privileges) {
-				if(_privilege === i.privilege && i.asset_scope === asset_scope) {
-					target_privilege = i;
+				
+				//MonsterDebugger.log(_privilege + " VS " + i.privilege);
+				//MonsterDebugger.log(asset_scope + " VS " + i.asset_scope);
+				
+				if (_privilege === i.privilege && String(i.asset_scope) === String(asset_scope)) {
+					
+					if (i.can(_permission)) {
+						MonsterDebugger.log("request: " + _permission + " :: " + _privilege + " :: " + asset_scope + " approved");
+						return true;
+					}
 				}
 			}
-			if (target_privilege === null) {
-				return false;
-			} else {
-				return target_privilege.can(_permission);
-			}
+			
+			return false;
 		}
 		public function toString():String {
 			var str:String = "\n\

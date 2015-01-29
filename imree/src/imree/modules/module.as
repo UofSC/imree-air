@@ -356,8 +356,10 @@ package imree.modules
 		var elements:Vector.<f_element> = new Vector.<f_element>();
 		elements.push(new f_element_text('Name', 'module_name'));
 		elements.push(new f_element_select('Show Name', 'module_display_name', truefalse));
-		elements.push(new f_element_date("Date Start", "module_display_date_start"));
-		elements.push(new f_element_date("Date End", "module_display_date_end"));
+		
+		//Timeline module is not ready yet
+		//elements.push(new f_element_date("Date Start", "module_display_date_start"));
+		//elements.push(new f_element_date("Date End", "module_display_date_end"));
 		
 		var form:f_data = new f_data(elements);
 		form.connect(main.connection, int(module_id), 'modules', 'module_id');

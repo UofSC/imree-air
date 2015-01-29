@@ -252,8 +252,8 @@ package imree.modules
 			elements.push(new f_element_text("Title", 'module_asset_title'));
 			elements.push(new f_element_text("Caption", 'caption'));
 			elements.push(new f_element_WYSIWYG("Description", 'description'));
-			elements.push(new f_element_date("Date Start", "module_asset_display_date_start"));
-			elements.push(new f_element_date("Date End", "module_asset_display_date_end"));
+			//elements.push(new f_element_date("Date Start", "module_asset_display_date_start"));
+			//elements.push(new f_element_date("Date End", "module_asset_display_date_end"));
 			elements.push(new f_element_select('Thumbnail Columns', 'thumb_display_columns', column_options));
 			elements.push(new f_element_select('Thumbnail Rows', 'thumb_display_rows', column_options));
 			return elements;

@@ -1,4 +1,4 @@
-package imree.pages
+﻿package imree.pages
 {
 	//import com.demonsters.debugger.MonsterDebugger;
 	import com.greensock.easing.Cubic;
@@ -535,9 +535,9 @@ package imree.pages
 			var Permission:permission = new permission();
 			for each (var i:module in modules)
 			{
-				i.update_user_privileges(main.User.can(Permission.USE, "exhibit", String(id)), main.User.can(Permission.EDIT, "exhibit", String(id)), main.User.can(Permission.ADMIN, "exhibit", String(id)));
+				i.update_user_privileges(main.User.can(Permission.USE,"exhibit",  String(id)), main.User.can(Permission.EDIT, "exhibit",  String(id)), main.User.can(Permission.ADMIN, "exhibit", String(id)));
 			}
-			user_can_edit = main.User.can(Permission.EDIT, "exhibit", String(id));
+			user_can_edit = main.User.can("exhibit", Permission.EDIT, String(id));
 			main.Imree.Menu.update();
 		}
 		

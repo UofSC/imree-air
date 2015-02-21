@@ -365,6 +365,7 @@ package imree.modules
 		form.connect(main.connection, int(module_id), 'modules', 'module_id');
 		form.get_dynamic_data_for_all();
 		form.draw();
+		
 		var form_wrapper:box = new box(form.width + main.Imree.Device.box_size / 2, form.height + main.Imree.Device.box_size / 2);
 		form_wrapper.addChild(form);
 		form.x = main.Imree.Device.box_size / 5;
@@ -558,6 +559,7 @@ package imree.modules
 		var originals:Vector.<position_data> = new Vector.<position_data>();
 		for each (var i:module in items)
 		{
+			
 			var bk:box;
 			if (i is module_next)
 			{
@@ -572,13 +574,13 @@ package imree.modules
 				}
 				else
 				{
-					bk = new box(i.width, i.height);
-					var bits:BitmapData = new BitmapData(i.width, i.height, true, 0);
+					bk = new box(main.Imree.Device.box_size, main.Imree.Device.box_size);
+					var bits:BitmapData = new BitmapData(main.Imree.Device.box_size, main.Imree.Device.box_size, true, 0);
 					bits.draw(i);
 					bk.addChild(new Bitmap(bits));
 				}
 				proxies.push(bk);
-				originals.push(new position_data(i.width, i.height));
+				originals.push(new position_data(main.Imree.Device.box_size, main.Imree.Device.box_size));
 			}
 			else
 			{

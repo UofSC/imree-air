@@ -82,7 +82,7 @@ package imree.display_helpers {
 			
 			
 			
-			wrapper  = new box(max_width, main.Imree.staging_area.height, Theme.background_color_secondary, 1);
+			wrapper  = new box(max_width, main.Imree.staging_area.height, 0x222222 /*PLACEHOLDER COLOR*/, 1);
 			wrapper.x = main.stage.stageWidth - wrapper.width;
 			off_x = 0;
 			off_y = 0 - wrapper.height;
@@ -97,7 +97,7 @@ package imree.display_helpers {
 			addChild(wrapper);
 			
 			var toggle_b:Sprite = new Sprite();
-			toggle_b.addChild(new box(max_width, IMREE.web_bar_height, 0x333333, 1));
+			toggle_b.addChild(new box(max_width, IMREE.web_bar_height, 0x222222 /*PLACEHOLDER COLOR*/, 1));
 			var original_align2:String = format.align;
 			format.align = TextFormatAlign.CENTER;
 			if(exhibit.current_module() !== null) {
